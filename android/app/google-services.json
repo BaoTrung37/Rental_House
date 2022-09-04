@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "711022851722",
+    "firebase_url": "https://rentalhouse-51d20-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "rentalhouse-51d20",
+    "storage_bucket": "rentalhouse-51d20.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:711022851722:android:72e4feca9f535a9f739f73",
+        "android_client_info": {
+          "package_name": "com.example.batru_house_rental"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "711022851722-d16udd36a0nfnm7kh7o9kch0hb4hks93.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbJTV0m0SIGKji_zFpCrIpViwtvv34K9E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "711022851722-d16udd36a0nfnm7kh7o9kch0hb4hks93.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "711022851722-fvcm6ga9q69snk44a8ni8pt6h0kg8qg3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.batruHouseRental"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
