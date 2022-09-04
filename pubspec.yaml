@@ -41,13 +41,13 @@ dependencies:
 
   # Architecture
   flutter_riverpod: ^1.0.4
-  freezed_annotation: ^1.1.0
+  freezed_annotation: ^2.1.0
   json_annotation: ^4.4.0
   get_it: ^7.2.0
 
   # Firebase
   firebase_core: ^1.18.0
-  firebase_messaging: ^11.4.2
+  firebase_messaging: ^13.0.0
 
   # Storage
   shared_preferences: ^2.0.13
@@ -62,7 +62,7 @@ dependencies:
   enum_to_string: ^2.0.1
 
   # Permission
-  permission_handler: ^9.2.0
+  permission_handler: ^10.0.0
 
   # Image picker
   image_picker: ^0.8.5+3  
