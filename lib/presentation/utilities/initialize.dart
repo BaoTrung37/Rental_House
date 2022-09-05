@@ -1,4 +1,4 @@
-import 'package:batru_house_rental/firebase_options.dart';
+import 'package:batru_house_rental/presentation/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 class Initialize {
