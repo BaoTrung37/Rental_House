@@ -4,4 +4,7 @@ class AppRoutes {
 
   /// Empty
   static const String empty = '/';
+
+  /// Home
+  static const String home = 'home';
 }

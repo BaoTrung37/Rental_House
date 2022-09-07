@@ -1,4 +1,5 @@
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
+import 'package:batru_house_rental/presentation/pages/home/home_view.dart';
 import 'package:batru_house_rental/presentation/pages/splash/splash_view.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +16,11 @@ class AppRouter {
         return MaterialPageRoute(
           settings: settings,
           builder: (context) => const SplashView(),
+        );
+      case AppRoutes.home:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => const HomeView(),
         );
 
       case AppRoutes.empty:

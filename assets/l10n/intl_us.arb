@@ -1,1 +1,7 @@
-{}
+{
+  "@@locale": "us",
+  "home_tabBar_home": "Hihi",
+  "@home_tabBar_home": {
+    "description": ""
+  }
+}
