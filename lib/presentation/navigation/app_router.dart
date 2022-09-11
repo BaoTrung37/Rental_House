@@ -1,4 +1,5 @@
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
+import 'package:batru_house_rental/presentation/pages/main_menu/main_menu_view.dart';
 import 'package:batru_house_rental/presentation/pages/splash/splash_view.dart';
 import 'package:flutter/material.dart';
 
@@ -32,6 +33,12 @@ class AppRouter {
           builder: (context) => Container(
               // color: context.colors.backgroundPrimary,
               ),
+        );
+
+      case AppRoutes.mainMenu:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => const MainMenuView(),
         );
       default:
         return null;
