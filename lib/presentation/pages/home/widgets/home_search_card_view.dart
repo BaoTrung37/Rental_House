@@ -15,8 +15,7 @@ class _HomeSearchCardViewState extends ConsumerState<HomeSearchCardView> {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: MediaQuery.of(context).size.height * 0.2,
-      margin: const EdgeInsets.symmetric(horizontal: 16),
+      height: MediaQuery.of(context).size.height * 0.15,
       decoration: BoxDecoration(
         color: context.colors.primaryBackground,
         borderRadius: BorderRadius.circular(16),
@@ -24,9 +23,7 @@ class _HomeSearchCardViewState extends ConsumerState<HomeSearchCardView> {
       child: Column(
         children: [
           Row(
-            children: const [
-              
-            ],
+            children: const [],
           ),
         ],
       ),

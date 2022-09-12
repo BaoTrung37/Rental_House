@@ -20,7 +20,6 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.18.0 <3.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -85,7 +84,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  freezed:
+  freezed: ^2.1.0+1
   build_runner:
   flutter_lints: ^2.0.1
 
@@ -132,7 +131,7 @@ flutter:
   # see https://flutter.dev/custom-fonts/#from-packages
 
 flutter_intl:
-  main_locale: us
+  main_locale: en
   enabled: true
   class_name: AppLocalizations
   arb_dir: assets/l10n
