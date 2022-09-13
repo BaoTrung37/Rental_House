@@ -49,6 +49,26 @@ class AppLocalizations {
   static AppLocalizations? maybeOf(BuildContext context) {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
+
+  /// `Hihi`
+  String get home_tabBar_home {
+    return Intl.message(
+      'Hihi',
+      name: 'home_tabBar_home',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Xu hướng tìm kiếm`
+  String get home_title_search_trends {
+    return Intl.message(
+      'Xu hướng tìm kiếm',
+      name: 'home_title_search_trends',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {
@@ -56,7 +76,7 @@ class AppLocalizationDelegate extends LocalizationsDelegate<AppLocalizations> {
 
   List<Locale> get supportedLocales {
     return const <Locale>[
-      Locale.fromSubtags(languageCode: 'us'),
+      Locale.fromSubtags(languageCode: 'en'),
     ];
   }
 
