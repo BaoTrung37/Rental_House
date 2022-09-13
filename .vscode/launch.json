@@ -5,20 +5,20 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "batru_house_rental",
+            "name": "Rental_House",
             "request": "launch",
             "type": "dart",
             "program": "lib/presentation/main.dart",
             "flutterMode": "debug",
         },
         {
-            "name": "batru_house_rental (profile mode)",
+            "name": "Rental_House (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "batru_house_rental (release mode)",
+            "name": "Rental_House (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"

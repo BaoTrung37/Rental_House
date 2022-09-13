@@ -1,0 +1,11 @@
+{
+    "@@locale": "en",
+    "home_tabBar_home": "Hihi",
+    "@home_tabBar_home": {
+        "description": ""
+    },
+    "home_title_search_trends": "Xu hướng tìm kiếm",
+    "@home_title_search_trends": {
+        "description": ""
+    }  
+}
