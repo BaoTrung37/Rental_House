@@ -1,3 +1,4 @@
+import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:flutter/material.dart';
 
 enum TabPage {
@@ -11,30 +12,44 @@ extension TabPageExtension on TabPage {
   String get title {
     switch (this) {
       case TabPage.home:
-        return 'Home';
+        return 'Trang chủ';
       case TabPage.favorite:
-        return 'Favorite';
+        return 'Yêu thích';
       case TabPage.chat:
-        return 'Chat';
+        return 'Tin nhắn';
       case TabPage.myPage:
-        return 'My Page';
+        return 'Cá nhân';
     }
   }
 
-  IconData icon(
+  Widget icon(
     BuildContext context, {
     required double size,
     bool isSelected = false,
   }) {
+    final color =
+        isSelected ? context.colors.primaryMain : context.colors.iconPrimary;
     switch (this) {
       case TabPage.home:
-        return Icons.home;
+        return AppIcons.home(
+          size: size,
+          color: color,
+        );
       case TabPage.favorite:
-        return Icons.favorite;
+        return AppIcons.favorite(
+          size: size,
+          color: color,
+        );
       case TabPage.chat:
-        return Icons.chat;
+        return AppIcons.message(
+          size: size,
+          color: color,
+        );
       case TabPage.myPage:
-        return Icons.person;
+        return AppIcons.myPage(
+          size: size,
+          color: color,
+        );
     }
   }
 }

@@ -1,5 +1,9 @@
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
+import 'package:batru_house_rental/presentation/pages/chat/chat_view.dart';
+import 'package:batru_house_rental/presentation/pages/favorite/favorite_view.dart';
+import 'package:batru_house_rental/presentation/pages/home/home_view.dart';
 import 'package:batru_house_rental/presentation/pages/main_menu/main_menu_view.dart';
+import 'package:batru_house_rental/presentation/pages/my_page/mypage_view.dart';
 import 'package:batru_house_rental/presentation/pages/splash/splash_view.dart';
 import 'package:flutter/material.dart';
 
@@ -40,6 +44,31 @@ class AppRouter {
           settings: settings,
           builder: (context) => const MainMenuView(),
         );
+
+      case AppRoutes.home:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => const HomeView(),
+        );
+
+      case AppRoutes.favorite:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => const FavoriteView(),
+        );
+
+      case AppRoutes.chat:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => const ChatView(),
+        );
+
+      case AppRoutes.myPage:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => const MyPageView(),
+        );
+
       default:
         return null;
     }

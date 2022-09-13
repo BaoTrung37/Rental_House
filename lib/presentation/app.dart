@@ -34,7 +34,7 @@ class _MyAppState extends ConsumerState<_MyApp> {
       darkTheme: getAppTheme(Brightness.dark),
       // themeMode: isDarkTheme ? ThemeMode.dark : ThemeMode.light,
       themeMode: ThemeMode.light,
-      initialRoute: AppRoutes.splash,
+      initialRoute: AppRoutes.mainMenu,
       navigatorKey: ref.read(appNavigatorProvider).navigatorKey,
       onGenerateRoute: AppRouter.onGenerateRoute,
       // localizationsDelegates: const [
