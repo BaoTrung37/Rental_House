@@ -5,6 +5,18 @@ class AppRoutes {
   /// Empty
   static const String empty = '/';
 
-  /// Home
-  static const String home = 'home';
+  /// main menu
+  static const String mainMenu = '/main_menu';
+
+  /// home
+  static const String home = '/home';
+
+  /// favorite
+  static const String favorite = '/favorite';
+
+  /// chat
+  static const String chat = '/chat';
+
+  /// my page
+  static const String myPage = '/my_page';
 }
