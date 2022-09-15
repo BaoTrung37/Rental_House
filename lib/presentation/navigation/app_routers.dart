@@ -17,6 +17,9 @@ class AppRoutes {
   /// chat
   static const String chat = '/chat';
 
+  /// chat list
+  static const String chatList = '/chat_list';
+
   /// my page
   static const String myPage = '/my_page';
 }

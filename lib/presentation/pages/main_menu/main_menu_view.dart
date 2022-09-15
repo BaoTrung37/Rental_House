@@ -83,22 +83,22 @@ class _MainMenuViewState extends ConsumerState<MainMenuView>
     }).toList();
   }
 
+  Widget _buildIcon(
+    TabPage tab, {
+    bool isSelected = false,
+  }) {
+    return _buildNavigationIcon(
+      icon: tab.icon(
+        context,
+        size: _navigationIconSize,
+        isSelected: isSelected,
+      ),
+    );
+  }
+
   List<BottomNavigationBarItem> _buildBottomNavigationBarItems(
     BuildContext context,
   ) {
-    Widget _buildIcon(
-      TabPage tab, {
-      bool isSelected = false,
-    }) {
-      return _buildNavigationIcon(
-        icon: tab.icon(
-          context,
-          size: _navigationIconSize,
-          isSelected: isSelected,
-        ),
-      );
-    }
-
     return TabPage.values
         .map(
           (e) => BottomNavigationBarItem(
