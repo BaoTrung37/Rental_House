@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:batru_house_rental/injection/app_modules.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/app.dart';
 import 'package:batru_house_rental/presentation/utilities/initialize.dart';
@@ -16,6 +17,7 @@ Future<void> main() async {
   Future<void> startApp() async {
     await Initialize.initializationSetup();
     // Dependency
+    await AppModules.inject();
     await injector.allReady();
 
     runApp(
