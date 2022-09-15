@@ -17,7 +17,7 @@ class ChatNavigatorView extends ConsumerWidget {
       child: Navigator(
         key: ref.read(chatNavigatorProvider).navigatorKey,
         onGenerateRoute: AppRouter.onGenerateRoute,
-        initialRoute: AppRoutes.chat,
+        initialRoute: AppRoutes.chatList,
       ),
     );
   }

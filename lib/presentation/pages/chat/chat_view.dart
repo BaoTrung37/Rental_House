@@ -13,7 +13,9 @@ class _ChatViewState extends ConsumerState<ChatView> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      appBar: BaseAppBar.titleOnly(title: 'Chat'),
+      appBar: BaseAppBar.titleAndBackButton(
+        title: 'Chat',
+      ),
       body: Center(
         child: Text('Chat'),
       ),
