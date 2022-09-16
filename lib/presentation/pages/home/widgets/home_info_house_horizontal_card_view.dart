@@ -8,11 +8,8 @@ class HomeInfoHouseHorizontalCardItemView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 10,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: SizedBox(
         width: double.infinity,
         height: 91.69,
@@ -98,11 +95,14 @@ class HomeInfoHouseHorizontalCardItemView extends StatelessWidget {
   }
 
   Widget _buildImage(String imageUrl) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: Image.network(
-        imageUrl,
-        fit: BoxFit.cover,
+    return AspectRatio(
+      aspectRatio: 1.1,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: Image.network(
+          imageUrl,
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }
