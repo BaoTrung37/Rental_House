@@ -1,4 +1,4 @@
-import 'package:batru_house_rental/presentation/pages/home/widgets/home_info_house_horizontal_card_view.dart';
+import 'package:batru_house_rental/presentation/pages/home/widgets/home_info_room_horizontal_card_view.dart';
 import 'package:batru_house_rental/presentation/pages/home/widgets/home_search_card_view.dart';
 import 'package:batru_house_rental/presentation/resources/localizations/l10n.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
@@ -71,10 +71,10 @@ class _HomeViewState extends ConsumerState<HomeView> {
                       child: _buildImage(mockThumbnail),
                     ),
                     const SizedBox(height: 10),
-                    const HomeInfoHouseHorizontalCardItemView(),
-                    const HomeInfoHouseHorizontalCardItemView(),
-                    const HomeInfoHouseHorizontalCardItemView(),
-                    const HomeInfoHouseHorizontalCardItemView(),
+                    const HomeInfoRoomHorizontalCardItemView(),
+                    const HomeInfoRoomHorizontalCardItemView(),
+                    const HomeInfoRoomHorizontalCardItemView(),
+                    const HomeInfoRoomHorizontalCardItemView(),
                   ],
                 ),
               ),

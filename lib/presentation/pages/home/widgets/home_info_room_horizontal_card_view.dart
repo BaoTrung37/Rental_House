@@ -1,8 +1,8 @@
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:flutter/material.dart';
 
-class HomeInfoHouseHorizontalCardItemView extends StatelessWidget {
-  const HomeInfoHouseHorizontalCardItemView({Key? key}) : super(key: key);
+class HomeInfoRoomHorizontalCardItemView extends StatelessWidget {
+  const HomeInfoRoomHorizontalCardItemView({Key? key}) : super(key: key);
   final mockThumbnail =
       'https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/other/cat_relaxing_on_patio_other/1800x1200_cat_relaxing_on_patio_other.jpg';
 
