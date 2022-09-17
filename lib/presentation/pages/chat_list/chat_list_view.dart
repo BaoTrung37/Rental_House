@@ -1,4 +1,4 @@
-import 'package:batru_house_rental/data/providers/chat_navigator_provider.dart';
+import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
 import 'package:batru_house_rental/presentation/pages/chat_list/chat_list_state.dart';
 import 'package:batru_house_rental/presentation/pages/chat_list/chat_list_view_model.dart';
@@ -30,7 +30,7 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
   }
 
   void _onTapChatItem() {
-    ref.read(chatNavigatorProvider).navigateTo(AppRoutes.chat);
+    ref.read(appNavigatorProvider).navigateTo(AppRoutes.chat);
   }
 
   @override
