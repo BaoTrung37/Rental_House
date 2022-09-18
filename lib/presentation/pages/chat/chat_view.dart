@@ -2,7 +2,9 @@ import 'package:batru_house_rental/domain/use_case/chat/get_chat_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/pages/chat/chat_state.dart';
 import 'package:batru_house_rental/presentation/pages/chat/chat_view_model.dart';
+import 'package:batru_house_rental/presentation/pages/chat/widgets/chat_input_view.dart';
 import 'package:batru_house_rental/presentation/pages/chat/widgets/chat_item.dart';
+import 'package:batru_house_rental/presentation/widgets/app_divider/app_divider.dart';
 import 'package:batru_house_rental/presentation/widgets/base_app_bar/base_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -33,18 +35,34 @@ class _ChatViewState extends ConsumerState<ChatView> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(_provider);
+    late final textEditingController = TextEditingController();
+    // late final focusNode = FocusNode();
 
     return Scaffold(
       appBar: const BaseAppBar.titleAndBackButton(
         title: 'Bảo Trung',
       ),
-      body: ListView.builder(
-        itemCount: state.chatList.length,
-        itemBuilder: (context, index) {
-          return ChatItem(
-            chatEntity: state.chatList[index],
-          );
-        },
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              itemCount: state.chatList.length,
+              itemBuilder: (context, index) {
+                return ChatItem(
+                  chatEntity: state.chatList[index],
+                );
+              },
+            ),
+          ),
+          const AppDivider(),
+          ChatInputView(
+            controller: textEditingController,
+            onSendButtonTapped: (value) {
+              print('text: $value');
+            },
+            // focusNode: focusNode,
+          ),
+        ],
       ),
     );
   }
