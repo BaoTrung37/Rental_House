@@ -75,6 +75,9 @@ dependencies:
   # Datetime
   intl: ^0.17.0
 
+  # Slider
+  intro_slider: ^3.0.10
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
