@@ -5,6 +5,7 @@ import 'package:batru_house_rental/presentation/pages/favorite/favorite_view.dar
 import 'package:batru_house_rental/presentation/pages/home/home_view.dart';
 import 'package:batru_house_rental/presentation/pages/main_menu/main_menu_view.dart';
 import 'package:batru_house_rental/presentation/pages/my_page/mypage_view.dart';
+import 'package:batru_house_rental/presentation/pages/room_detail/room_detail_view.dart';
 import 'package:batru_house_rental/presentation/pages/splash/splash_view.dart';
 import 'package:flutter/material.dart';
 
@@ -50,6 +51,12 @@ class AppRouter {
         return MaterialPageRoute(
           settings: settings,
           builder: (context) => const HomeView(),
+        );
+
+      case AppRoutes.roomDetail:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => const RoomDetailView(),
         );
 
       case AppRoutes.favorite:

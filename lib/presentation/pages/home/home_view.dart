@@ -1,3 +1,5 @@
+import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
+import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
 import 'package:batru_house_rental/presentation/pages/home/widgets/home_info_room_horizontal_card_view.dart';
 import 'package:batru_house_rental/presentation/pages/home/widgets/home_search_card_view.dart';
 import 'package:batru_house_rental/presentation/resources/localizations/l10n.dart';
@@ -87,7 +89,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
       shrinkWrap: true,
       itemCount: 4,
       itemBuilder: (context, index) => HomeInfoRoomHorizontalCardItemView(
-        onTap: () {},
+        onTap: () {
+          ref.read(appNavigatorProvider).navigateTo(AppRoutes.roomDetail);
+        },
       ),
     );
   }
