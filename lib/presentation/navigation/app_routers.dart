@@ -5,6 +5,9 @@ class AppRoutes {
   /// Empty
   static const String empty = '/';
 
+  /// login
+  static const String login = '/login';
+
   /// main menu
   static const String mainMenu = '/main_menu';
 

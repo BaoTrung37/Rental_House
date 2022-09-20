@@ -3,6 +3,7 @@ import 'package:batru_house_rental/presentation/pages/chat/chat_view.dart';
 import 'package:batru_house_rental/presentation/pages/chat_list/chat_list_view.dart';
 import 'package:batru_house_rental/presentation/pages/favorite/favorite_view.dart';
 import 'package:batru_house_rental/presentation/pages/home/home_view.dart';
+import 'package:batru_house_rental/presentation/pages/login/login_view.dart';
 import 'package:batru_house_rental/presentation/pages/main_menu/main_menu_view.dart';
 import 'package:batru_house_rental/presentation/pages/my_page/mypage_view.dart';
 import 'package:batru_house_rental/presentation/pages/room_detail/room_detail_view.dart';
@@ -36,9 +37,13 @@ class AppRouter {
 
         return MaterialPageRoute(
           settings: settings,
-          builder: (context) => Container(
-              // color: context.colors.backgroundPrimary,
-              ),
+          builder: (context) => Container(),
+        );
+
+      case AppRoutes.login:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => const LoginView(),
         );
 
       case AppRoutes.mainMenu:
