@@ -47,6 +47,10 @@ dependencies:
   # Firebase
   firebase_core: ^1.18.0
   firebase_messaging: ^13.0.0
+  firebase_auth: ^3.9.0
+  cloud_firestore: ^3.4.8
+  firebase_storage: ^10.3.8
+  google_sign_in: ^5.4.1
 
   # Storage
   shared_preferences: ^2.0.13

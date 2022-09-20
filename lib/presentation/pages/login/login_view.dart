@@ -1,8 +1,20 @@
+import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
+import 'package:batru_house_rental/domain/use_case/login/google_login_use_case.dart';
+import 'package:batru_house_rental/injection/injector.dart';
+import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
+import 'package:batru_house_rental/presentation/pages/login/login_state.dart';
+import 'package:batru_house_rental/presentation/pages/login/login_view_model.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/widgets/buttons/auth/authentication_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intro_slider/intro_slider.dart';
+
+final _provider = StateNotifierProvider.autoDispose<LoginViewModel, LoginState>(
+  (ref) => LoginViewModel(
+    injector.get<GoogleLoginUseCase>(),
+  ),
+);
 
 class LoginView extends ConsumerStatefulWidget {
   const LoginView({Key? key}) : super(key: key);
@@ -12,6 +24,8 @@ class LoginView extends ConsumerStatefulWidget {
 }
 
 class _LoginViewState extends ConsumerState<LoginView> {
+  LoginViewModel get _viewModel => ref.read(_provider.notifier);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,7 +101,12 @@ class _LoginViewState extends ConsumerState<LoginView> {
         width: 19,
       ),
       color: context.colors.googleButton,
-      onButtonTap: () {},
+      onButtonTap: () async {
+        final isSuccess = await _viewModel.loginSuccess();
+        if (isSuccess) {
+          await ref.read(appNavigatorProvider).navigateTo(AppRoutes.mainMenu);
+        }
+      },
     );
   }
 }
