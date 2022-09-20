@@ -1,4 +1,4 @@
-import 'package:batru_house_rental/domain/use_case/login/google_login_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/auth/google_login_use_case.dart';
 import 'package:batru_house_rental/presentation/pages/login/login_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
