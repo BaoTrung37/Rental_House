@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "711022851722-6jdv8jvqkg9pjppon9kvab7491421n1u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.batru_house_rental",
+            "certificate_hash": "45f0ad3d2609bb59b286a8fe57cd29df6e464f71"
+          }
+        },
+        {
           "client_id": "711022851722-d16udd36a0nfnm7kh7o9kch0hb4hks93.apps.googleusercontent.com",
           "client_type": 3
         }

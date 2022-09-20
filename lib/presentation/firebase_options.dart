@@ -26,7 +26,10 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        return ios;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for ios - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -56,16 +59,5 @@ class DefaultFirebaseOptions {
     projectId: 'rentalhouse-51d20',
     databaseURL: 'https://rentalhouse-51d20-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'rentalhouse-51d20.appspot.com',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyD-UarXfo7LRvxG5wWoBl1JFLrpf431Cho',
-    appId: '1:711022851722:ios:de79085f410a7f4b739f73',
-    messagingSenderId: '711022851722',
-    projectId: 'rentalhouse-51d20',
-    databaseURL: 'https://rentalhouse-51d20-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'rentalhouse-51d20.appspot.com',
-    iosClientId: '711022851722-fvcm6ga9q69snk44a8ni8pt6h0kg8qg3.apps.googleusercontent.com',
-    iosBundleId: 'com.example.batruHouseRental',
   );
 }
