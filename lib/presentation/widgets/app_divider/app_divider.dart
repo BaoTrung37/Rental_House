@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class AppDivider extends StatelessWidget {
   const AppDivider({
     Key? key,
-    this.height = 0.5,
+    this.height = 1,
     this.thickness = 0.5,
   }) : super(key: key);
 
