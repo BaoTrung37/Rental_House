@@ -21,56 +21,171 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
         title: 'Chi tiết phòng',
         shouldShowBottomDivider: true,
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Container(
-            height: MediaQuery.of(context).size.height * 0.4,
-            color: Colors.black,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  'TÌM NGƯỜI THUÊ.',
-                  style: AppTextStyles.labelXSmallLight.copyWith(
-                    color: context.colors.textSecondary,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  'Phòng cho thuê ở Hà Nội, OK,Phòng cho thuê ở Hà Nội, OK',
-                  style: AppTextStyles.headingSmall.copyWith(
-                    color: context.colors.textPrimary,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Center(
-                  child: Text(
-                    'Giá phòng: xxx triệu VND/phòng',
-                    style: AppTextStyles.textMedium.copyWith(
-                      color: context.colors.contentSpecialMain,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _buildRoomStatusInfo(context),
-                    _buildRoomAreaInfo(context),
-                    _buildRoomDepositInfo(context),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                const AppDivider(height: 1),
-                const SizedBox(height: 16),
-              ],
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height * 0.4,
+              color: Colors.black,
             ),
-          )
-        ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _buildSubTitle(context),
+                  const SizedBox(height: 10),
+                  _buildTitle(context),
+                  const SizedBox(height: 10),
+                  _buildRoomPrice(context),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _buildRoomStatusInfo(context),
+                      _buildRoomAreaInfo(context),
+                      _buildRoomDepositInfo(context),
+                    ],
+                  ),
+                  _buildBigDivider(),
+                  _buildNoteTitle(),
+                  // Add luu y
+                  _buildBigDivider(),
+                  _buildDetailTitle(),
+                  const SizedBox(height: 10),
+                  _buildDetailText(context),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    child: AppDivider(height: 1),
+                  ),
+                  _buildSeeMoreOrCollapseButton(context),
+                  _buildBigDivider(),
+                  _buildLocationTitle(),
+                  const SizedBox(height: 10),
+                  _buildSpecificAddressView(context),
+                  const SizedBox(height: 10),
+                  _buildSpecificPhoneNumberView(context),
+                  _buildBigDivider(),
+                  _buildConvenientTitle(),
+                  const SizedBox(height: 10),
+                  _buildConvenientView(context),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Text _buildConvenientTitle() =>
+      const Text('Tiện ích', style: AppTextStyles.headingXSmall);
+
+  Row _buildSpecificPhoneNumberView(BuildContext context) {
+    return Row(
+      children: [
+        const Icon(
+          Icons.phone_enabled,
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Text(
+            'Số điện thoại: 0966222333',
+            style: AppTextStyles.textSmall.copyWith(
+              color: context.colors.textPrimary,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Row _buildSpecificAddressView(BuildContext context) {
+    return Row(
+      children: [
+        const Icon(
+          Icons.location_on_outlined,
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Text(
+            'Ngõ 1, Nguyễn Khuyến, Hà Đông, Hà Nội',
+            style: AppTextStyles.textSmall.copyWith(
+              color: context.colors.textPrimary,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Text _buildLocationTitle() =>
+      const Text('Địa chỉ', style: AppTextStyles.headingXSmall);
+
+  Center _buildSeeMoreOrCollapseButton(BuildContext context) {
+    return Center(
+      child: Text(
+        'Xem thêm',
+        style: AppTextStyles.textMediumBold.copyWith(
+          color: context.colors.primaryText,
+        ),
+      ),
+    );
+  }
+
+  SizedBox _buildDetailText(BuildContext context) {
+    return SizedBox(
+      height: 65,
+      child: Text(
+        'hahahhahahhahahhahahhahahh,ahahhahahhahahhahahhahahhah,ahhahahhahahhahahhahahhahahhaha,hhahahhahahhahahhahahh,ahahhahahhahahhahahha,hahhahah,,hahahhahahhahahhahahh,ahahhahahhahahhahahhahahhahahhah,ahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahah',
+        overflow: TextOverflow.ellipsis,
+        maxLines: 3,
+        style: AppTextStyles.textSmall.copyWith(
+          color: context.colors.textPrimary,
+        ),
+      ),
+    );
+  }
+
+  Text _buildDetailTitle() =>
+      const Text('Chi tiết', style: AppTextStyles.headingXSmall);
+
+  Text _buildNoteTitle() =>
+      const Text('Lưu ý', style: AppTextStyles.headingXSmall);
+
+  Padding _buildBigDivider() {
+    return const Padding(
+      padding: EdgeInsets.symmetric(vertical: 16),
+      child: AppDivider(height: 1, thickness: 6),
+    );
+  }
+
+  Center _buildRoomPrice(BuildContext context) {
+    return Center(
+      child: Text(
+        'Giá phòng: xxx triệu VND/phòng',
+        style: AppTextStyles.textMedium.copyWith(
+          color: context.colors.contentSpecialMain,
+        ),
+      ),
+    );
+  }
+
+  Text _buildTitle(BuildContext context) {
+    return Text(
+      'Phòng cho thuê ở Hà Nội, OK,Phòng cho thuê ở Hà Nội, OK',
+      style: AppTextStyles.headingSmall.copyWith(
+        color: context.colors.textPrimary,
+      ),
+    );
+  }
+
+  Text _buildSubTitle(BuildContext context) {
+    return Text(
+      'TÌM NGƯỜI THUÊ.',
+      style: AppTextStyles.labelXSmallLight.copyWith(
+        color: context.colors.textSecondary,
       ),
     );
   }
@@ -146,5 +261,9 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
         ),
       ],
     );
+  }
+
+  Widget _buildConvenientView(BuildContext context) {
+    return const Text('kok0');
   }
 }
