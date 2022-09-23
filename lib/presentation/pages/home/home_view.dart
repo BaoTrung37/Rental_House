@@ -1,4 +1,6 @@
-import 'package:batru_house_rental/presentation/pages/home/widgets/home_info_house_horizontal_card_view.dart';
+import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
+import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
+import 'package:batru_house_rental/presentation/pages/home/widgets/home_info_room_horizontal_card_view.dart';
 import 'package:batru_house_rental/presentation/pages/home/widgets/home_search_card_view.dart';
 import 'package:batru_house_rental/presentation/resources/localizations/l10n.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
@@ -28,59 +30,83 @@ class _HomeViewState extends ConsumerState<HomeView> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
-              height: MediaQuery.of(context).size.height * .25,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                color: context.colors.backgroundSecondary,
-              ),
-              child: Image.network(
-                mockThumbnail,
-                fit: BoxFit.cover,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const HomeSearchCardView(),
-                  const SizedBox(height: 24),
-                  _buildSearchTrendsTitle(),
-                  _buildSearchTrendListView(context),
-                ],
-              ),
-            ),
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  topRight: Radius.circular(16),
-                ),
-                color: context.colors.backgroundPrimary,
-              ),
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      width: double.infinity,
-                      height: MediaQuery.of(context).size.height * 0.15,
-                      child: _buildImage(mockThumbnail),
-                    ),
-                    const SizedBox(height: 10),
-                    const HomeInfoHouseHorizontalCardItemView(),
-                    const HomeInfoHouseHorizontalCardItemView(),
-                    const HomeInfoHouseHorizontalCardItemView(),
-                    const HomeInfoHouseHorizontalCardItemView(),
-                  ],
-                ),
-              ),
-            ),
+            _buildSlider(context),
+            _buildTrendingBox(context),
+            _buildRoomListView(context),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildSlider(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height * .25,
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        color: context.colors.backgroundSecondary,
+      ),
+      child: Image.network(
+        mockThumbnail,
+        fit: BoxFit.cover,
+      ),
+    );
+  }
+
+  Widget _buildRoomListView(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(16),
+          topRight: Radius.circular(16),
+        ),
+        color: context.colors.backgroundPrimary,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+        child: Column(
+          children: [
+            _buildBanner(context),
+            const SizedBox(height: 10),
+            _buildRoomList(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBanner(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: MediaQuery.of(context).size.height * 0.15,
+      child: _buildImage(mockThumbnail),
+    );
+  }
+
+  ListView _buildRoomList() {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: 4,
+      itemBuilder: (context, index) => HomeInfoRoomHorizontalCardItemView(
+        onTap: () {
+          ref.read(appNavigatorProvider).navigateTo(AppRoutes.roomDetail);
+        },
+      ),
+    );
+  }
+
+  Widget _buildTrendingBox(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const HomeSearchCardView(),
+          const SizedBox(height: 24),
+          _buildSearchTrendsTitle(),
+          _buildSearchTrendListView(context),
+        ],
       ),
     );
   }
