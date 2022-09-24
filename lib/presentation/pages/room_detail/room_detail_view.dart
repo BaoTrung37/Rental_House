@@ -30,29 +30,43 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
           Expanded(
             child: _buildBodyView(context),
           ),
-          Container(
-            height: 60,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: context.colors.backgroundSecondary,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  AppButton(
-                    leftIcon: Icon(
-                      Icons.chat_bubble_outline_sharp,
-                      color: context.colors.iconSecondary,
-                    ),
-                    title: 'Chat',
-                  ),
-                ],
-              ),
-            ),
-          )
+          _buildBottomApp(context)
         ],
+      ),
+    );
+  }
+
+  Widget _buildBottomApp(BuildContext context) {
+    return Container(
+      height: 60,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: context.colors.backgroundSecondary,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            AppButton(
+              onButtonTap: () {},
+              leftIcon: const Icon(
+                Icons.chat_bubble_outline_sharp,
+                color: Colors.white,
+              ),
+              title: 'Chat',
+            ),
+            AppButton(
+              onButtonTap: () {},
+              leftIcon: const Icon(
+                Icons.phone,
+                color: Colors.white,
+              ),
+              title: 'Gọi',
+              backgroundColor: context.colors.contentAlert,
+            ),
+          ],
+        ),
       ),
     );
   }
