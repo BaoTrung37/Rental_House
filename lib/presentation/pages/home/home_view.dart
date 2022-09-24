@@ -27,14 +27,60 @@ class _HomeViewState extends ConsumerState<HomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.colors.backgroundSecondary,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _buildSlider(context),
-            _buildTrendingBox(context),
-            _buildRoomListView(context),
-          ],
-        ),
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: _buildSlider(context),
+          ),
+          const SliverToBoxAdapter(
+            child: SizedBox(height: 10),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  const HomeSearchCardView(),
+                  const SizedBox(height: 24),
+                  _buildSearchTrendsTitle(),
+                  const SizedBox(height: 40),
+                  _buildSearchTrendListView(context),
+                ],
+              ),
+            ),
+          ),
+          const SliverToBoxAdapter(
+            child: SizedBox(height: 10),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  _buildBanner(context),
+                ],
+              ),
+            ),
+          ),
+          const SliverToBoxAdapter(
+            child: SizedBox(height: 10),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) => HomeInfoRoomHorizontalCardItemView(
+                  onTap: () {
+                    ref
+                        .read(appNavigatorProvider)
+                        .navigateTo(AppRoutes.roomDetail);
+                  },
+                ),
+                childCount: 10,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -92,21 +138,6 @@ class _HomeViewState extends ConsumerState<HomeView> {
         onTap: () {
           ref.read(appNavigatorProvider).navigateTo(AppRoutes.roomDetail);
         },
-      ),
-    );
-  }
-
-  Widget _buildTrendingBox(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const HomeSearchCardView(),
-          const SizedBox(height: 24),
-          _buildSearchTrendsTitle(),
-          _buildSearchTrendListView(context),
-        ],
       ),
     );
   }
