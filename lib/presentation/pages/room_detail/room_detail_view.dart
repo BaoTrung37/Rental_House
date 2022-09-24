@@ -233,6 +233,88 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
           SliverToBoxAdapter(
             child: _buildBigDivider(),
           ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  const Text(
+                    'Bài đăng liên quan',
+                    style: AppTextStyles.headingXSmall,
+                  ),
+                  const SizedBox(height: 10),
+                  GridView.builder(
+                    itemCount: 10,
+                    gridDelegate:
+                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 220,
+                      childAspectRatio: 0.8,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                    ),
+                    itemBuilder: (context, index) => Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: AspectRatio(
+                              aspectRatio: 16 / 9,
+                              child: Image.network(
+                                'https://picsum.photos/200',
+                                fit: BoxFit.fill,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            'TÌM NGƯỜI THUÊ.',
+                            style: AppTextStyles.labelXSmallLight.copyWith(
+                              color: context.colors.textSecondary,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          const Text(
+                            'Cho thuê phòng trọ tại 123 Nguyễn Văn Cừ, Quận 5, TP.HCM',
+                            style: AppTextStyles.textMediumBold,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            '2.000.000 đ/tháng',
+                            style: AppTextStyles.textMediumBold.copyWith(
+                              color: context.colors.contentSpecialMain,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          // const Text('Nguyễn Văn A', style: AppTextStyles.,),
+                          Text(
+                            '123 Đường Phạm Hùng, Phường Trung Hoà, Quận Cầu Giấy.',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTextStyles.labelSmall.copyWith(
+                              color: context.colors.textSecondary,
+                            ),
+                          ),
+                          Text(
+                            'Quận Cầu Giấy.',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTextStyles.labelSmall.copyWith(
+                              color: context.colors.textSecondary,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -249,7 +331,7 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
         Expanded(
           child: Text(
             '21 ngày trước - 30/9/2022',
-            style: AppTextStyles.textSmall.copyWith(
+            style: AppTextStyles.textMedium.copyWith(
               color: context.colors.textPrimary,
             ),
           ),
@@ -275,7 +357,7 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
         Expanded(
           child: Text(
             'Số điện thoại: 0966222333',
-            style: AppTextStyles.textSmall.copyWith(
+            style: AppTextStyles.textMedium.copyWith(
               color: context.colors.textPrimary,
             ),
           ),
@@ -294,7 +376,7 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
         Expanded(
           child: Text(
             'Ngõ 1, Nguyễn Khuyến, Hà Đông, Hà Nội',
-            style: AppTextStyles.textSmall.copyWith(
+            style: AppTextStyles.textMedium.copyWith(
               color: context.colors.textPrimary,
             ),
           ),
@@ -319,12 +401,12 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
 
   SizedBox _buildDetailText(BuildContext context) {
     return SizedBox(
-      height: 65,
+      height: 70,
       child: Text(
         'hahahhahahhahahhahahhahahh,ahahhahahhahahhahahhahahhah,ahhahahhahahhahahhahahhahahhaha,hhahahhahahhahahhahahh,ahahhahahhahahhahahha,hahhahah,,hahahhahahhahahhahahh,ahahhahahhahahhahahhahahhahahhah,ahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahah',
         overflow: TextOverflow.ellipsis,
         maxLines: 3,
-        style: AppTextStyles.textSmall.copyWith(
+        style: AppTextStyles.textMedium.copyWith(
           color: context.colors.textPrimary,
         ),
       ),
@@ -345,7 +427,7 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
     return Center(
       child: Text(
         'Giá phòng: xxx triệu VND/phòng',
-        style: AppTextStyles.textMedium.copyWith(
+        style: AppTextStyles.textLarge.copyWith(
           color: context.colors.contentSpecialMain,
         ),
       ),
@@ -364,7 +446,7 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
   Text _buildSubTitle(BuildContext context) {
     return Text(
       'TÌM NGƯỜI THUÊ.',
-      style: AppTextStyles.labelXSmallLight.copyWith(
+      style: AppTextStyles.labelSmallLight.copyWith(
         color: context.colors.textSecondary,
       ),
     );
@@ -375,7 +457,7 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
       children: [
         Text(
           'CÒN PHÒNG',
-          style: AppTextStyles.labelXSmallLight.copyWith(
+          style: AppTextStyles.labelSmallLight.copyWith(
             color: context.colors.textSecondary,
           ),
         ),
@@ -394,7 +476,7 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
       children: [
         Text(
           'DIỆN TÍCH',
-          style: AppTextStyles.labelXSmallLight.copyWith(
+          style: AppTextStyles.labelSmallLight.copyWith(
             color: context.colors.textSecondary,
           ),
         ),
@@ -429,7 +511,7 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
       children: [
         Text(
           'ĐẶT CỌC',
-          style: AppTextStyles.labelXSmallLight.copyWith(
+          style: AppTextStyles.labelSmallLight.copyWith(
             color: context.colors.textSecondary,
           ),
         ),
