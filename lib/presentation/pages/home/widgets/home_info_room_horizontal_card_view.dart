@@ -17,7 +17,7 @@ class HomeInfoRoomHorizontalCardItemView extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 8),
         child: SizedBox(
           width: double.infinity,
-          height: 91.69,
+          height: 100,
           child: AspectRatio(
             aspectRatio: 16 / 9,
             child: Row(
@@ -54,7 +54,7 @@ class HomeInfoRoomHorizontalCardItemView extends StatelessWidget {
       'Quận Cầu Giấy.',
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
-      style: AppTextStyles.labelXSmallLight.copyWith(
+      style: AppTextStyles.labelSmallLight.copyWith(
         color: context.colors.textSecondary,
       ),
     );
@@ -65,7 +65,7 @@ class HomeInfoRoomHorizontalCardItemView extends StatelessWidget {
       '123 Đường Phạm Hùng, Phường Trung Hoà, Quận Cầu Giấy.',
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
-      style: AppTextStyles.labelXSmallLight.copyWith(
+      style: AppTextStyles.labelSmallLight.copyWith(
         color: context.colors.textSecondary,
       ),
     );
@@ -88,11 +88,11 @@ class HomeInfoRoomHorizontalCardItemView extends StatelessWidget {
       children: [
         const Text(
           'Tìm người thuê. ',
-          style: AppTextStyles.labelXSmallLight,
+          style: AppTextStyles.labelSmallLight,
         ),
         Text(
           '5 triệu VND/phòng',
-          style: AppTextStyles.labelXSmall.copyWith(
+          style: AppTextStyles.labelSmall.copyWith(
             color: context.colors.contentSpecialText,
           ),
         ),
