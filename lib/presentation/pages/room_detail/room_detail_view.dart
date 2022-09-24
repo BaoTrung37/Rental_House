@@ -1,5 +1,7 @@
 import 'dart:ui';
 
+import 'package:batru_house_rental/presentation/pages/room_detail/room_detail_state.dart';
+import 'package:batru_house_rental/presentation/pages/room_detail/room_detail_view_model.dart';
 import 'package:batru_house_rental/presentation/pages/room_detail/widgets/convenient_item.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/widgets/app_divider/app_divider.dart';
@@ -7,6 +9,10 @@ import 'package:batru_house_rental/presentation/widgets/base_app_bar/base_app_ba
 import 'package:batru_house_rental/presentation/widgets/buttons/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final _provider = StateNotifierProvider<RoomDetailViewModel, RoomDetailState>(
+  (ref) => RoomDetailViewModel(),
+);
 
 class RoomDetailView extends ConsumerStatefulWidget {
   const RoomDetailView({Key? key}) : super(key: key);
@@ -16,6 +22,21 @@ class RoomDetailView extends ConsumerStatefulWidget {
 }
 
 class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
+  RoomDetailViewModel get _viewModel => ref.read(_provider.notifier);
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _viewModel.init();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
   final mockThumbnail =
       'https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/other/cat_relaxing_on_patio_other/1800x1200_cat_relaxing_on_patio_other.jpg';
   @override
