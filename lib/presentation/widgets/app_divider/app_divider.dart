@@ -16,7 +16,7 @@ class AppDivider extends StatelessWidget {
     return Divider(
       height: height,
       thickness: thickness,
-      color: context.colors.border,
+      color: context.colors.border.withOpacity(0.5),
     );
   }
 }

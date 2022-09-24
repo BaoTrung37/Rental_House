@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:batru_house_rental/presentation/pages/room_detail/widgets/convenient_item.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/widgets/app_divider/app_divider.dart';
 import 'package:batru_house_rental/presentation/widgets/base_app_bar/base_app_bar.dart';
@@ -21,19 +22,24 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
         title: 'Chi tiết phòng',
         shouldShowBottomDivider: true,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              height: MediaQuery.of(context).size.height * 0.4,
-              color: Colors.black,
+      body: CustomScrollView(
+        shrinkWrap: true,
+        slivers: [
+          SliverToBoxAdapter(
+            child: Column(
+              children: [
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.4,
+                  color: Colors.black,
+                ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate(
+                [
                   _buildSubTitle(context),
                   const SizedBox(height: 10),
                   _buildTitle(context),
@@ -48,10 +54,45 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
                       _buildRoomDepositInfo(context),
                     ],
                   ),
-                  _buildBigDivider(),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    child: AppDivider(height: 1),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: const [
+                      ConvenientItem(),
+                      ConvenientItem(),
+                      ConvenientItem(),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: _buildBigDivider(),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate(
+                [
                   _buildNoteTitle(),
+
                   // Add luu y
-                  _buildBigDivider(),
+                ],
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: _buildBigDivider(),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate(
+                [
                   _buildDetailTitle(),
                   const SizedBox(height: 10),
                   _buildDetailText(context),
@@ -60,23 +101,165 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
                     child: AppDivider(height: 1),
                   ),
                   _buildSeeMoreOrCollapseButton(context),
-                  _buildBigDivider(),
+                ],
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: _buildBigDivider(),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate(
+                [
                   _buildLocationTitle(),
                   const SizedBox(height: 10),
                   _buildSpecificAddressView(context),
                   const SizedBox(height: 10),
                   _buildSpecificPhoneNumberView(context),
-                  _buildBigDivider(),
-                  _buildConvenientTitle(),
-                  const SizedBox(height: 10),
-                  _buildConvenientView(context),
                 ],
               ),
-            )
-          ],
-        ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: _buildBigDivider(),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  _buildPostDateTitle(),
+                  const SizedBox(height: 10),
+                  _buildPostDateView(context),
+                ],
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: _buildBigDivider(),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  _buildConvenientTitle(),
+                ],
+              ),
+            ),
+          ),
+          SliverGrid(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4,
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
+              childAspectRatio: 1.5,
+            ),
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => const ConvenientItem(),
+              childCount: 10,
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: _buildBigDivider(),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+            sliver: SliverToBoxAdapter(
+              child: Row(
+                children: [
+                  const CircleAvatar(
+                    radius: 20,
+                    backgroundImage: NetworkImage(
+                      'https://picsum.photos/200',
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'Nguyễn Văn A',
+                          style: AppTextStyles.textMedium,
+                        ),
+                        Text(
+                          '1 phòng',
+                          style: AppTextStyles.labelSmall.copyWith(
+                            color: context.colors.primaryText,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.arrow_forward_ios_sharp,
+                      size: 16,
+                    ),
+                    onPressed: () {},
+                  )
+                ],
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: _buildBigDivider(),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+            sliver: SliverToBoxAdapter(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  AppIcons.flag(
+                    size: 20,
+                    color: context.colors.contentSpecialMain,
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    'Báo cáo tin đăng',
+                    style: AppTextStyles.headingXSmall
+                        .copyWith(color: context.colors.contentSpecialText),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: _buildBigDivider(),
+          ),
+        ],
       ),
     );
+  }
+
+  Row _buildPostDateView(BuildContext context) {
+    return Row(
+      children: [
+        const Icon(
+          Icons.date_range_rounded,
+          size: 20,
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Text(
+            '21 ngày trước - 30/9/2022',
+            style: AppTextStyles.textSmall.copyWith(
+              color: context.colors.textPrimary,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Text _buildPostDateTitle() {
+    return const Text('Ngày đăng', style: AppTextStyles.headingXSmall);
   }
 
   Text _buildConvenientTitle() =>
@@ -154,11 +337,8 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
   Text _buildNoteTitle() =>
       const Text('Lưu ý', style: AppTextStyles.headingXSmall);
 
-  Padding _buildBigDivider() {
-    return const Padding(
-      padding: EdgeInsets.symmetric(vertical: 16),
-      child: AppDivider(height: 1, thickness: 6),
-    );
+  Widget _buildBigDivider() {
+    return const AppDivider(height: 1, thickness: 5);
   }
 
   Center _buildRoomPrice(BuildContext context) {
@@ -261,9 +441,5 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
         ),
       ],
     );
-  }
-
-  Widget _buildConvenientView(BuildContext context) {
-    return const Text('kok0');
   }
 }

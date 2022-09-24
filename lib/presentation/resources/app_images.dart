@@ -111,4 +111,8 @@ class AppImages {
   static const fridge = '$_path/fridge.png';
 
   static const washingMachine = '$_path/washing_machine.png';
+
+  static const water = '$_path/water.png';
+
+  static const eletronic = '$_path/eletronic.png';
 }
