@@ -99,46 +99,11 @@ class _HomeViewState extends ConsumerState<HomeView> {
     );
   }
 
-  Widget _buildRoomListView(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(16),
-          topRight: Radius.circular(16),
-        ),
-        color: context.colors.backgroundPrimary,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-        child: Column(
-          children: [
-            _buildBanner(context),
-            const SizedBox(height: 10),
-            _buildRoomList(),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildBanner(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       height: MediaQuery.of(context).size.height * 0.15,
       child: _buildImage(mockThumbnail),
-    );
-  }
-
-  ListView _buildRoomList() {
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: 4,
-      itemBuilder: (context, index) => HomeInfoRoomHorizontalCardItemView(
-        onTap: () {
-          ref.read(appNavigatorProvider).navigateTo(AppRoutes.roomDetail);
-        },
-      ),
     );
   }
 
