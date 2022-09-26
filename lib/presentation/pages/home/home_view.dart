@@ -3,8 +3,8 @@ import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
 import 'package:batru_house_rental/presentation/pages/home/home_state.dart';
 import 'package:batru_house_rental/presentation/pages/home/home_view_model.dart';
 import 'package:batru_house_rental/presentation/pages/home/widgets/home_info_room_horizontal_card_view.dart';
+import 'package:batru_house_rental/presentation/pages/home/widgets/home_place_small_card.dart';
 import 'package:batru_house_rental/presentation/pages/home/widgets/home_search_card_view.dart';
-import 'package:batru_house_rental/presentation/resources/localizations/l10n.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -58,7 +58,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                 [
                   const HomeSearchCardView(),
                   const SizedBox(height: 24),
-                  _buildSearchTrendsTitle(),
+                  _buildPlaceTitle(),
                   const SizedBox(height: 40),
                   _buildSearchTrendListView(context),
                 ],
@@ -133,16 +133,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
         crossAxisCount: 3,
         crossAxisSpacing: 10,
       ),
-      itemBuilder: (context, index) => Stack(
-        children: [
-          _buildImage(mockThumbnail),
-          Positioned(
-            left: 0,
-            right: 0,
-            child: _buildPlaceNameTitle(context),
-          ),
-        ],
-      ),
+      itemBuilder: (context, index) => const HomePlaceSmallCard(),
     );
   }
 
@@ -168,8 +159,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
     );
   }
 
-  Widget _buildSearchTrendsTitle() => Text(
-        AppLocalizations.current.home_title_search_trends,
+  Widget _buildPlaceTitle() => const Text(
+        'Địa điểm nổi bật',
         style: AppTextStyles.headingSmall,
       );
 }
