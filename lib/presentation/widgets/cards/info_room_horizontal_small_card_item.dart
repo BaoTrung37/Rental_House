@@ -1,8 +1,8 @@
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:flutter/material.dart';
 
-class HomeInfoRoomHorizontalCardItemView extends StatelessWidget {
-  const HomeInfoRoomHorizontalCardItemView({
+class InfoRoomHorizontalCardItemItem extends StatelessWidget {
+  const InfoRoomHorizontalCardItemItem({
     required this.onTap,
     Key? key,
   }) : super(key: key);

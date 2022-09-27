@@ -28,4 +28,7 @@ class AppRoutes {
 
   /// my page
   static const String myPage = '/my_page';
+
+  /// search
+  static const String search = '/search';
 }
