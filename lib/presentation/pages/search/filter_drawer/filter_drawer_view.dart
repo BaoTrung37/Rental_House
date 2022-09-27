@@ -219,7 +219,7 @@ class _FilterDrawerViewState extends ConsumerState<FilterDrawerView> {
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
             child: AppButton(
               isExpanded: true,
-              title: 'Chấp nhận',
+              title: 'Xác nhận',
               onButtonTap: () {},
             ),
           ),
