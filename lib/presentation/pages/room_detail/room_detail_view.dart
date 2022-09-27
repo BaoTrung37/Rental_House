@@ -321,7 +321,7 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
                   itemCount: 10,
                   gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 220,
-                    childAspectRatio: 0.8,
+                    childAspectRatio: 0.75,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
                   ),
