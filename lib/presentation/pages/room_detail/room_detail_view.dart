@@ -1,8 +1,11 @@
 import 'dart:ui';
 
+import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
+import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
 import 'package:batru_house_rental/presentation/pages/room_detail/room_detail_state.dart';
 import 'package:batru_house_rental/presentation/pages/room_detail/room_detail_view_model.dart';
 import 'package:batru_house_rental/presentation/pages/room_detail/widgets/convenient_item.dart';
+import 'package:batru_house_rental/presentation/pages/room_detail/widgets/relative_room_item_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/widgets/app_divider/app_divider.dart';
 import 'package:batru_house_rental/presentation/widgets/base_app_bar/base_app_bar.dart';
@@ -321,63 +324,17 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
                   itemCount: 10,
                   gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 220,
-                    childAspectRatio: 0.8,
+                    childAspectRatio: 0.75,
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
                   ),
-                  itemBuilder: (context, index) => Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: AspectRatio(
-                          aspectRatio: 16 / 9,
-                          child: Image.network(
-                            'https://picsum.photos/200',
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        'TÌM NGƯỜI THUÊ.',
-                        style: AppTextStyles.labelXSmallLight.copyWith(
-                          color: context.colors.textSecondary,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      const Text(
-                        'Cho thuê phòng trọ tại 123 Nguyễn Văn Cừ, Quận 5, TP.HCM',
-                        style: AppTextStyles.textMediumBold,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        '2.000.000 đ/tháng',
-                        style: AppTextStyles.textMediumBold.copyWith(
-                          color: context.colors.contentSpecialMain,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      // const Text('Nguyễn Văn A', style: AppTextStyles.,),
-                      Text(
-                        '123 Đường Phạm Hùng, Phường Trung Hoà, Quận Cầu Giấy.',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppTextStyles.labelSmall.copyWith(
-                          color: context.colors.textSecondary,
-                        ),
-                      ),
-                      Text(
-                        'Quận Cầu Giấy.',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppTextStyles.labelSmall.copyWith(
-                          color: context.colors.textSecondary,
-                        ),
-                      )
-                    ],
+                  itemBuilder: (context, index) => RelativeRoomItemView(
+                    onTap: () {
+                      debugPrint('ontap');
+                      ref
+                          .read(appNavigatorProvider)
+                          .navigateTo(AppRoutes.roomDetail);
+                    },
                   ),
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),

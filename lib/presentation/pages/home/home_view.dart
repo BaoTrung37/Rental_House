@@ -2,10 +2,10 @@ import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
 import 'package:batru_house_rental/presentation/pages/home/home_state.dart';
 import 'package:batru_house_rental/presentation/pages/home/home_view_model.dart';
-import 'package:batru_house_rental/presentation/pages/home/widgets/home_info_room_horizontal_card_view.dart';
 import 'package:batru_house_rental/presentation/pages/home/widgets/home_place_small_card.dart';
 import 'package:batru_house_rental/presentation/pages/home/widgets/home_search_card_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
+import 'package:batru_house_rental/presentation/widgets/cards/info_room_horizontal_small_card_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -85,7 +85,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             sliver: SliverList(
               delegate: SliverChildBuilderDelegate(
-                (context, index) => HomeInfoRoomHorizontalCardItemView(
+                (context, index) => InfoRoomHorizontalCardItemItem(
                   onTap: () {
                     ref
                         .read(appNavigatorProvider)
@@ -133,18 +133,10 @@ class _HomeViewState extends ConsumerState<HomeView> {
         crossAxisCount: 3,
         crossAxisSpacing: 10,
       ),
-      itemBuilder: (context, index) => const HomePlaceSmallCard(),
-    );
-  }
-
-  Widget _buildPlaceNameTitle(BuildContext context) {
-    return Text(
-      'Bắc Từ Liêm',
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      textAlign: TextAlign.center,
-      style: AppTextStyles.textSmallBold.copyWith(
-        color: context.colors.textContrastOnContrastBackground,
+      itemBuilder: (context, index) => HomePlaceSmallCard(
+        onTap: () {
+          ref.read(appNavigatorProvider).navigateTo(AppRoutes.search);
+        },
       ),
     );
   }

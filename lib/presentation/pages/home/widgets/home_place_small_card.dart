@@ -2,13 +2,18 @@ import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:flutter/material.dart';
 
 class HomePlaceSmallCard extends StatelessWidget {
-  const HomePlaceSmallCard({super.key});
+  const HomePlaceSmallCard({
+    required this.onTap,
+    Key? key,
+  }) : super(key: key);
+
+  final VoidCallback onTap;
   final mockThumbnail =
       'https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/other/cat_relaxing_on_patio_other/1800x1200_cat_relaxing_on_patio_other.jpg';
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: onTap,
       child: Stack(
         children: [
           _buildImage(mockThumbnail),

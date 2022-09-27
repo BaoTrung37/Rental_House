@@ -7,6 +7,7 @@ import 'package:batru_house_rental/presentation/pages/login/login_view.dart';
 import 'package:batru_house_rental/presentation/pages/main_menu/main_menu_view.dart';
 import 'package:batru_house_rental/presentation/pages/my_page/mypage_view.dart';
 import 'package:batru_house_rental/presentation/pages/room_detail/room_detail_view.dart';
+import 'package:batru_house_rental/presentation/pages/search/search_view.dart';
 import 'package:batru_house_rental/presentation/pages/splash/splash_view.dart';
 import 'package:flutter/material.dart';
 
@@ -87,7 +88,11 @@ class AppRouter {
           settings: settings,
           builder: (context) => const MyPageView(),
         );
-
+      case AppRoutes.search:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => const SearchView(),
+        );
       default:
         return null;
     }
