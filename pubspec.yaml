@@ -81,6 +81,9 @@ dependencies:
 
   # Slider
   intro_slider: ^3.0.10
+
+  # 
+  im_stepper: ^1.0.1+1
   
 dev_dependencies:
   flutter_test:

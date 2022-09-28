@@ -50,6 +50,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
           Positioned(
             bottom: 10,
             left: 130,
+            height: 40,
             right: 130,
             child: AppButton(
               leftIcon: AppIcons.add(
