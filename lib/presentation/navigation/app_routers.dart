@@ -31,4 +31,7 @@ class AppRoutes {
 
   /// search
   static const String search = '/search';
+
+  /// post article
+  static const String postArticle = '/post_article';
 }
