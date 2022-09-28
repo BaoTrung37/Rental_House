@@ -32,6 +32,17 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
     super.dispose();
   }
 
+  StepState setStepState(int step) {
+    final currentStep = ref.watch(_provider).currentStep;
+    if (step == currentStep) {
+      return StepState.editing;
+    } else if (step < currentStep) {
+      return StepState.complete;
+    } else {
+      return StepState.indexed;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,20 +85,21 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
               ),
             );
           },
-          steps: const [
+          steps: [
             Step(
-              state: StepState.complete,
-              title: Text('Bước 1'),
-              content: Text('Bước 1'),
-              // label: Text('Bước 1'),
+              state: setStepState(0),
+              title: const Text('Bước 1'),
+              content: const Text('Bước 1'),
             ),
             Step(
-              title: Text('Bước 2'),
-              content: Text('Bước 2'),
+              state: setStepState(1),
+              title: const Text('Bước 2'),
+              content: const Text('Bước 2'),
             ),
             Step(
-              title: Text('Bước 3'),
-              content: Text('Bước 3'),
+              state: setStepState(2),
+              title: const Text('Bước 3'),
+              content: const Text('Bước 3'),
             ),
           ],
         ),
