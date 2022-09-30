@@ -7,8 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class FilterDrawerView extends ConsumerStatefulWidget {
-  const FilterDrawerView({Key? key}) : super(key: key);
+  const FilterDrawerView({
+    required this.scaffoldKey,
+    Key? key,
+  }) : super(key: key);
 
+  final GlobalKey<ScaffoldState> scaffoldKey;
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
       _FilterDrawerViewState();
