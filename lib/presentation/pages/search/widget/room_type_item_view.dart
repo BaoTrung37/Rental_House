@@ -1,4 +1,4 @@
-import 'package:batru_house_rental/presentation/pages/search/search_state.dart';
+import 'package:batru_house_rental/data/models/room/room_dto.dart';
 import 'package:batru_house_rental/presentation/pages/search/search_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:flutter/material.dart';

@@ -1,4 +1,4 @@
-import 'package:batru_house_rental/presentation/pages/search/search_state.dart';
+import 'package:batru_house_rental/data/models/room/room_dto.dart';
 import 'package:batru_house_rental/presentation/pages/search/widget/room_type_item_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/widgets/app_divider/app_divider.dart';
@@ -224,30 +224,47 @@ class _FilterDrawerViewState extends ConsumerState<FilterDrawerView> {
   }
 
   SliverPadding _buildPlaceSelectView() {
+    final list = <String>['Hà Đông', 'Cầu Giấy', 'Hoàn Kiếm', 'Tây Hồ'];
+    var dropdownValue = list.first;
     return SliverPadding(
       padding: const EdgeInsets.all(8),
-      sliver: SliverGrid(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          mainAxisSpacing: 6,
-          crossAxisSpacing: 6,
-          childAspectRatio: 1.5,
-        ),
-        delegate: SliverChildBuilderDelegate(
-          (context, index) => Container(
-            alignment: Alignment.center,
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              color: context.colors.action.withOpacity(0.5),
-            ),
-            child: const Text(
-              'Thành phố Hà Nội',
-              textAlign: TextAlign.center,
-              style: AppTextStyles.textMedium,
-            ),
+      sliver: SliverList(
+        delegate: SliverChildListDelegate([
+          DropdownButtonFormField<String>(
+            value: dropdownValue,
+            style: AppTextStyles.textMedium
+                .copyWith(color: context.colors.textPrimary),
+            onChanged: (String? value) {
+              // This is called when the user selects an item.
+              setState(() {
+                dropdownValue = value!;
+              });
+            },
+            items: list.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
           ),
-          childCount: 10,
-        ),
+          DropdownButtonFormField<String>(
+            value: dropdownValue,
+            style: AppTextStyles.textMedium
+                .copyWith(color: context.colors.textPrimary),
+            onChanged: (String? value) {
+              // This is called when the user selects an item.
+              setState(() {
+                dropdownValue = value!;
+              });
+            },
+            items: list.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
+        ]),
       ),
     );
   }
