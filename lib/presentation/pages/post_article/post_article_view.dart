@@ -57,7 +57,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
           onStepCancel: _viewModel.previousStep,
           onStepTapped: (step) => _viewModel.setStep(step),
           controlsBuilder: (context, details) {
-            final isLastStep = ref.watch(_provider).currentStep == 2;
+            final isLastStep = ref.watch(_provider).currentStep == 3;
             final isFirstStep = ref.watch(_provider).currentStep == 0;
             return Container(
               margin: const EdgeInsets.only(top: 16),
@@ -88,8 +88,8 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
           steps: [
             Step(
               state: setStepState(0),
-              title: const Text('Bước 1'),
-              content: const Text('Bước 1'),
+              title: const Text('Thông tin'),
+              content: _buildInfomationInputView(),
             ),
             Step(
               state: setStepState(1),
@@ -101,9 +101,22 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
               title: const Text('Bước 3'),
               content: const Text('Bước 3'),
             ),
+            Step(
+              state: setStepState(3),
+              title: const Text('Bước 4'),
+              content: const Text('Bước 4'),
+            ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildInfomationInputView() {
+    return Column(
+      children: const [
+        Text('Bước 1'),
+      ],
     );
   }
 }

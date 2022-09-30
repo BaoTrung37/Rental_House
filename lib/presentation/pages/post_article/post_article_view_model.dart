@@ -13,7 +13,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
   void nextStep() {
     state = state.copyWith(
         currentStep:
-            state.currentStep < 2 ? state.currentStep + 1 : state.currentStep);
+            state.currentStep < 3 ? state.currentStep + 1 : state.currentStep);
   }
 
   void previousStep() {
