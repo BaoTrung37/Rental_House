@@ -40,7 +40,7 @@ class _SearchViewState extends ConsumerState<SearchView> {
       ),
       body: Scaffold(
         key: scaffoldKey,
-        endDrawer: const FilterDrawerView(),
+        endDrawer: FilterDrawerView(scaffoldKey: scaffoldKey),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
