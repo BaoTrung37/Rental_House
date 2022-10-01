@@ -51,65 +51,68 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
       appBar: const BaseAppBar.titleAndBackButton(
         title: 'Đăng phòng',
       ),
-      body: Center(
-        child: Stepper(
-          type: StepperType.horizontal,
-          currentStep: ref.watch(_provider).currentStep,
-          onStepContinue: _viewModel.nextStep,
-          onStepCancel: _viewModel.previousStep,
-          onStepTapped: (step) => _viewModel.setStep(step),
-          controlsBuilder: (context, details) {
-            final isLastStep = ref.watch(_provider).currentStep == 3;
-            final isFirstStep = ref.watch(_provider).currentStep == 0;
-            return Container(
-              margin: const EdgeInsets.only(top: 16),
-              child: Row(
-                children: [
+      body: Stepper(
+        type: StepperType.horizontal,
+        physics: const ClampingScrollPhysics(),
+        currentStep: ref.watch(_provider).currentStep,
+        onStepContinue: _viewModel.nextStep,
+        onStepCancel: _viewModel.previousStep,
+        onStepTapped: (step) => _viewModel.setStep(step),
+        controlsBuilder: (context, details) {
+          final isLastStep = ref.watch(_provider).currentStep == 3;
+          final isFirstStep = ref.watch(_provider).currentStep == 0;
+          return Container(
+            margin: const EdgeInsets.only(top: 16),
+            child: Row(
+              children: [
+                Expanded(
+                  child: AppButton(
+                    title: isLastStep ? 'Đăng phòng' : 'Tiếp theo',
+                    onButtonTap: details.onStepContinue,
+                  ),
+                ),
+                if (!isFirstStep) ...[
+                  const SizedBox(
+                    width: 16,
+                  ),
                   Expanded(
                     child: AppButton(
-                      title: isLastStep ? 'Đăng phòng' : 'Tiếp theo',
-                      onButtonTap: details.onStepContinue,
+                      title: 'Quay lại',
+                      backgroundColor: context.colors.contentAlert,
+                      onButtonTap: details.onStepCancel,
                     ),
                   ),
-                  if (!isFirstStep) ...[
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    Expanded(
-                      child: AppButton(
-                        title: 'Quay lại',
-                        backgroundColor: context.colors.contentAlert,
-                        onButtonTap: details.onStepCancel,
-                      ),
-                    ),
-                  ],
                 ],
-              ),
-            );
-          },
-          steps: [
-            Step(
-              state: setStepState(0),
-              title: const Text('Thông tin'),
-              content: _buildInfomationInputView(),
+              ],
             ),
-            Step(
-              state: setStepState(1),
-              title: const Text('Địa chỉ'),
-              content: _buildLocationInputView(),
-            ),
-            Step(
-              state: setStepState(2),
-              title: const Text('Tiện ích'),
-              content: _buildConvenientInputView(),
-            ),
-            Step(
-              state: setStepState(3),
-              title: const Text('Bước 4'),
-              content: const Text('Bước 4'),
-            ),
-          ],
-        ),
+          );
+        },
+        steps: [
+          Step(
+            state: setStepState(0),
+            title: const Text(''),
+            label: const Text('Thông tin'),
+            content: _buildInfomationInputView(),
+          ),
+          Step(
+            state: setStepState(1),
+            title: const Text(''),
+            label: const Text('Địa chỉ'),
+            content: _buildLocationInputView(),
+          ),
+          Step(
+            state: setStepState(2),
+            title: const Text(''),
+            label: const Text('Tiện ích'),
+            content: _buildConvenientInputView(),
+          ),
+          Step(
+            state: setStepState(3),
+            title: const Text(''),
+            label: const Text('Xác nhận'),
+            content: const Text('Bước 4'),
+          ),
+        ],
       ),
     );
   }
