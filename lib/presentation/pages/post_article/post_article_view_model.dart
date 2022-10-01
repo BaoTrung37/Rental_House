@@ -21,4 +21,8 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
         currentStep:
             state.currentStep > 0 ? state.currentStep - 1 : state.currentStep);
   }
+
+  void setIsParkingSpace(bool value) {
+    state = state.copyWith(isParkingSpaceAvailable: value);
+  }
 }

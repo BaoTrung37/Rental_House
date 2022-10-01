@@ -100,8 +100,8 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
             ),
             Step(
               state: setStepState(2),
-              title: const Text('Bước 3'),
-              content: const Text('Bước 3'),
+              title: const Text('Tiện ích'),
+              content: _buildConvenientInputView(),
             ),
             Step(
               state: setStepState(3),
@@ -114,8 +114,60 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
     );
   }
 
+  Widget _buildConvenientInputView() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Thông tin hình ảnh và tiện ích',
+          style: AppTextStyles.headingSmall,
+        ),
+        const SizedBox(height: 8),
+        const Text(
+          'Hình ảnh',
+          style: AppTextStyles.textMedium,
+        ),
+        const SizedBox(height: 8),
+        Container(
+          height: 200,
+          color: Colors.black,
+        ),
+        const SizedBox(height: 8),
+        Center(
+          child: AppButton(
+            leftIcon: AppIcons.image(
+              color: context.colors.iconPrimary,
+              size: 20,
+            ),
+            title: 'Chụp hình',
+          ),
+        ),
+        const SizedBox(height: 8),
+        const Text(
+          'Tiện ích',
+          style: AppTextStyles.textMedium,
+        ),
+        const SizedBox(height: 8),
+        GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 8,
+            mainAxisSpacing: 8,
+            mainAxisExtent: 50,
+          ),
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: 16,
+          addAutomaticKeepAlives: true,
+          itemBuilder: (context, index) {
+            return const ConvenientItem();
+          },
+        ),
+      ],
+    );
+  }
+
   Widget _buildLocationInputView() {
-    final list = <String>['Hà Đông', 'Cầu Giấy', 'Hoàn Kiếm', 'Tây Hồ'];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -175,6 +227,8 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
   }
 
   Widget _buildInfomationInputView() {
+    final isParkingSpaceAvailable =
+        ref.watch(_provider).isParkingSpaceAvailable;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -218,7 +272,132 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
           placeholder: 'Số lượng người tối đa có thể chứa',
           keyboardType: TextInputType.number,
         ),
+        const SizedBox(height: 8),
+        const InputTextField(
+          labelText: 'Diện tích (m2)',
+          placeholder: 'Diện tích phòng',
+          initialText: '10',
+          keyboardType: TextInputType.number,
+        ),
+        const SizedBox(height: 8),
+        const Text(
+          'Chi phí',
+          style: AppTextStyles.headingSmall,
+        ),
+        const SizedBox(height: 8),
+        const InputTextField(
+          labelText: 'Giá cho thuê (VNĐ/phòng)',
+          placeholder: 'Diện tích phòng',
+          initialText: '0',
+          keyboardType: TextInputType.number,
+        ),
+        const SizedBox(height: 8),
+        const InputTextField(
+          labelText: 'Đặt cọc (VNĐ/phòng)',
+          placeholder: 'Tiền cọc',
+          initialText: '0',
+          keyboardType: TextInputType.number,
+        ),
+        const SizedBox(height: 8),
+        const InputTextField(
+          labelText: 'Tiền điện (VNĐ/kWh)',
+          placeholder: 'Tiền điện',
+          initialText: '0',
+          keyboardType: TextInputType.number,
+        ),
+        const SizedBox(height: 8),
+        const InputTextField(
+          labelText: 'Tiền nước (VNĐ/người)',
+          placeholder: 'Tiền nước',
+          initialText: '0',
+          keyboardType: TextInputType.number,
+        ),
+        const SizedBox(height: 8),
+        const InputTextField(
+          labelText: 'Tiền Internet (VNĐ/phòng)',
+          placeholder: 'Tiền nước',
+          initialText: '0',
+          keyboardType: TextInputType.number,
+        ),
+        // Checkbox(
+        //   value: true,
+
+        //   onChanged: (value) {},
+        // ),
+        CheckboxListTile(
+          value: isParkingSpaceAvailable,
+          controlAffinity: ListTileControlAffinity.leading,
+          title: const Text(
+            'Có chỗ để xe',
+            style: AppTextStyles.textMedium,
+          ),
+          contentPadding: const EdgeInsets.all(0),
+          onChanged: (value) {
+            ref.read(_provider.notifier).setIsParkingSpace(value!);
+          },
+        ),
+        if (isParkingSpaceAvailable) ...[
+          const SizedBox(height: 8),
+          const InputTextField(
+            labelText: 'Tiền gửi xe',
+            placeholder: 'Tiền gửi xe',
+            initialText: '0',
+            keyboardType: TextInputType.number,
+          ),
+        ],
       ],
+    );
+  }
+}
+
+class ConvenientItem extends StatelessWidget {
+  const ConvenientItem({
+    this.isSelected = true,
+    Key? key,
+  }) : super(key: key);
+  final bool isSelected;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 50,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        border: Border.all(
+          color:
+              isSelected ? context.colors.primaryMain : context.colors.border,
+          width: 1,
+        ),
+        color: isSelected
+            ? context.colors.backgroundPrimary
+            : context.colors.backgroundSecondary,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: 20,
+            height: 20,
+            child: Image(
+              image: const AssetImage(
+                AppImages.tv,
+              ),
+              color: isSelected
+                  ? context.colors.iconPrimary
+                  : context.colors.iconSecondary,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            'Tivi',
+            style: AppTextStyles.textMedium.copyWith(
+              color: isSelected
+                  ? context.colors.textPrimary
+                  : context.colors.textSecondary,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
