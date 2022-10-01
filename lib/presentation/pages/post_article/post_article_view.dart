@@ -110,10 +110,40 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
             state: setStepState(3),
             title: const Text(''),
             label: const Text('Xác nhận'),
-            content: const Text('Bước 4'),
+            content: _buildConfirmInputView(),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildConfirmInputView() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: const [
+        Text(
+          'Xác nhận',
+          style: AppTextStyles.headingSmall,
+        ),
+        SizedBox(height: 8),
+        InputTextField(
+          labelText: 'Số điện thoại',
+          placeholder: 'Nhập số điện thoại',
+          keyboardType: TextInputType.phone,
+        ),
+        SizedBox(height: 8),
+        InputTextField(
+          labelText: 'Tiêu đề bài đăng',
+          placeholder: 'Nhập tiêu đề bài đăng',
+          keyboardType: TextInputType.text,
+        ),
+        SizedBox(height: 8),
+        InputTextField(
+          labelText: 'Nội dung mô tả',
+          placeholder: 'Nhập nội dung mô tả',
+          keyboardType: TextInputType.text,
+        ),
+      ],
     );
   }
 
