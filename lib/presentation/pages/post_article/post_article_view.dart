@@ -238,8 +238,13 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
         ),
         const SizedBox(height: 8),
         const InputTextField(
+          labelText: 'Tên đường',
+          placeholder: 'Nhập tên đường',
+        ),
+        const SizedBox(height: 8),
+        const InputTextField(
           labelText: 'Số nhà',
-          placeholder: 'Địa chỉ nhà',
+          placeholder: 'Nhập địa chỉ nhà',
         ),
         // DropdownSearch<UserModel>(
         //   dropdownSearchDecoration: const InputDecoration(labelText: 'Name'),
