@@ -2,6 +2,7 @@ import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
 import 'package:batru_house_rental/domain/use_case/auth/google_login_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
+import 'package:batru_house_rental/presentation/pages/add_data/add_type.dart';
 import 'package:batru_house_rental/presentation/pages/login/login_state.dart';
 import 'package:batru_house_rental/presentation/pages/login/login_view_model.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
@@ -86,6 +87,23 @@ class _LoginViewState extends ConsumerState<LoginView> {
                     },
                     child: Text(
                       'Skip',
+                      style: AppTextStyles.headingSmall.copyWith(
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AddType(),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      'Admin',
                       style: AppTextStyles.headingSmall.copyWith(
                         color: Colors.blue,
                       ),
