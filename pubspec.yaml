@@ -81,6 +81,12 @@ dependencies:
 
   # Slider
   intro_slider: ^3.0.10
+
+  # 
+  im_stepper: ^1.0.1+1
+
+  #
+  dropdown_search: ^5.0.3
   
 dev_dependencies:
   flutter_test:

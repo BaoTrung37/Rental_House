@@ -6,6 +6,7 @@ class InputTextField extends StatefulWidget {
   const InputTextField({
     this.textInputAction = TextInputAction.done,
     this.description,
+    this.labelText,
     this.onTextChange,
     this.focusNode,
     this.onSubmit,
@@ -41,6 +42,7 @@ class InputTextField extends StatefulWidget {
   const InputTextField.singleLine({
     this.onTextChange,
     this.description,
+    this.labelText,
     this.textInputAction = TextInputAction.done,
     this.focusNode,
     this.onSubmit,
@@ -76,6 +78,7 @@ class InputTextField extends StatefulWidget {
   const InputTextField.expandable({
     this.onTextChange,
     this.description,
+    this.labelText,
     this.textInputAction = TextInputAction.done,
     this.focusNode,
     this.onSubmit,
@@ -110,6 +113,7 @@ class InputTextField extends StatefulWidget {
 
   final String? initialText;
   final String? description;
+  final String? labelText;
   final VoidCallback? onSubmit;
   final GlobalKey<FormFieldState>? textFieldKey;
   final FormFieldValidator<String>? validator;
@@ -212,11 +216,14 @@ class _TextBoxState extends State<InputTextField> {
                 ? null
                 : BoxConstraints(minHeight: widget.minHeight!),
             decoration: BoxDecoration(
-              color: widget.backgroundColor ?? context.colors.action,
+              color: widget.backgroundColor ?? context.colors.backdropSecondary,
               borderRadius: BorderRadius.circular(8),
               border: _errorMessage != null
                   ? Border.all(color: context.colors.error, width: 1)
-                  : null,
+                  : Border.all(
+                      color: context.colors.backdropPrimary,
+                      width: 1,
+                    ),
             ),
             child: Row(
               children: [
@@ -262,6 +269,7 @@ class _TextBoxState extends State<InputTextField> {
                             color: context.colors.textPrimary,
                           ),
                       decoration: InputDecoration(
+                        labelText: widget.labelText,
                         border: InputBorder.none,
                         hintText: widget.placeholder,
                         hintStyle: widget.placeholderTextStyle ??

@@ -5,6 +5,7 @@ import 'package:batru_house_rental/presentation/pages/home/home_view_model.dart'
 import 'package:batru_house_rental/presentation/pages/home/widgets/home_place_small_card.dart';
 import 'package:batru_house_rental/presentation/pages/home/widgets/home_search_card_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
+import 'package:batru_house_rental/presentation/widgets/buttons/app_button.dart';
 import 'package:batru_house_rental/presentation/widgets/cards/info_room_horizontal_small_card_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -43,61 +44,86 @@ class _HomeViewState extends ConsumerState<HomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.colors.backgroundSecondary,
-      body: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: _buildSlider(context),
-          ),
-          const SliverToBoxAdapter(
-            child: SizedBox(height: 10),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  const HomeSearchCardView(),
-                  const SizedBox(height: 24),
-                  _buildPlaceTitle(),
-                  const SizedBox(height: 40),
-                  _buildSearchTrendListView(context),
-                ],
+      body: Stack(
+        children: [
+          _buildBody(context),
+          Positioned(
+            bottom: 10,
+            left: 130,
+            height: 40,
+            right: 130,
+            child: AppButton(
+              leftIcon: AppIcons.add(
+                color: Colors.white,
               ),
-            ),
-          ),
-          const SliverToBoxAdapter(
-            child: SizedBox(height: 10),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  _buildBanner(context),
-                ],
-              ),
-            ),
-          ),
-          const SliverToBoxAdapter(
-            child: SizedBox(height: 10),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) => InfoRoomHorizontalCardItemItem(
-                  onTap: () {
-                    ref
-                        .read(appNavigatorProvider)
-                        .navigateTo(AppRoutes.roomDetail);
-                  },
-                ),
-                childCount: 10,
-              ),
+              title: 'Đăng bài',
+              onButtonTap: () {
+                ref
+                    .read(appNavigatorProvider)
+                    .navigateTo(AppRoutes.postArticle);
+              },
             ),
           ),
         ],
       ),
+    );
+  }
+
+  CustomScrollView _buildBody(BuildContext context) {
+    return CustomScrollView(
+      slivers: [
+        SliverToBoxAdapter(
+          child: _buildSlider(context),
+        ),
+        const SliverToBoxAdapter(
+          child: SizedBox(height: 10),
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          sliver: SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                const HomeSearchCardView(),
+                const SizedBox(height: 24),
+                _buildPlaceTitle(),
+                const SizedBox(height: 40),
+                _buildSearchTrendListView(context),
+              ],
+            ),
+          ),
+        ),
+        const SliverToBoxAdapter(
+          child: SizedBox(height: 10),
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          sliver: SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                _buildBanner(context),
+              ],
+            ),
+          ),
+        ),
+        const SliverToBoxAdapter(
+          child: SizedBox(height: 10),
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          sliver: SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => InfoRoomHorizontalCardItemItem(
+                onTap: () {
+                  ref
+                      .read(appNavigatorProvider)
+                      .navigateTo(AppRoutes.roomDetail);
+                },
+              ),
+              childCount: 10,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
