@@ -11,5 +11,14 @@ class PostArticleState with _$PostArticleState {
     @Default(0) int currentStep,
     @Default(false) bool isParkingSpaceAvailable,
     @Default([]) List<TypeEntity> types,
+    @Default(1) int houseAmount,
+    @Default(1) int houseCapacity,
+    @Default(1) int houseArea,
+    @Default(0) int housePrice,
+    @Default(0) int houseDepositPrice,
+    @Default(0) int houseElectricityPrice,
+    @Default(0) int houseWaterPrice,
+    @Default(0) int houseInternetPrice,
+    @Default(0) int housePackingPrice,
   }) = _PostArticleState;
 }
