@@ -1,3 +1,5 @@
+import 'package:batru_house_rental/domain/use_case/type/get_type_list_use_case.dart';
+import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/pages/post_article/post_article_state.dart';
 import 'package:batru_house_rental/presentation/pages/post_article/post_article_view_model.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
@@ -9,7 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final _provider = StateNotifierProvider<PostArticleViewModel, PostArticleState>(
-  (ref) => PostArticleViewModel(),
+  (ref) => PostArticleViewModel(
+    injector.get<GetTypeListUseCase>(),
+  ),
 );
 
 class PostArticleView extends ConsumerStatefulWidget {
@@ -26,6 +30,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
   @override
   void initState() {
     _viewModel.initData();
+
     super.initState();
   }
 
@@ -265,6 +270,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
   }
 
   Widget _buildInfomationInputView() {
+    final state = ref.watch(_provider);
     final isParkingSpaceAvailable =
         ref.watch(_provider).isParkingSpaceAvailable;
     return Column(
@@ -283,12 +289,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
             showSelectedItems: true,
             fit: FlexFit.loose,
           ),
-          items: const [
-            'Phòng cho thuê',
-            'Home stay',
-            'Nhà nguyên căn',
-            'Căn hộ',
-          ],
+          items: state.types.map((element) => element.name).toList(),
           dropdownDecoratorProps: const DropDownDecoratorProps(
             dropdownSearchDecoration: InputDecoration(
               labelText: 'Loại phòng',

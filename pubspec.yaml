@@ -101,6 +101,8 @@ dev_dependencies:
   build_runner:
   flutter_lints: ^2.0.1
 
+  # Network
+  json_serializable: ^6.3.1
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
