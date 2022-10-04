@@ -16,7 +16,7 @@ class _AddTypeState extends State<AddType> {
     // TODO: implement initState
 
     // AddDistrictFirebase.addDistrict();
-    AddCommuneFirebase.addCommune();
+    // AddCommuneFirebase.addCommune();
     super.initState();
   }
 
@@ -30,12 +30,14 @@ class _AddTypeState extends State<AddType> {
             title: 'Add district',
             onButtonTap: () {
               AddDistrictFirebase.addDistrict();
+              print('Add district');
             },
           ),
           AppButton(
             title: 'Add commune',
             onButtonTap: () {
               AddCommuneFirebase.addCommune();
+              print('Add commune');
             },
           ),
         ],
