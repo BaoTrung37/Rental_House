@@ -4,22 +4,23 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class ProvinceRepository {
   final _fireStore = FirebaseFirestore.instance;
 
+  List<ProvinceResponse> _items = [];
+  List<ProvinceResponse> get items {
+    return [..._items];
+  }
+
   Future<List<ProvinceResponse>> getProvinces() async {
     final snapshot = await _fireStore.collection('province').get();
-    return snapshot.docs
+    final list = snapshot.docs
         .map(
           (e) => ProvinceResponse.fromJson(e.data()),
         )
         .toList();
+    _items = list;
+    return list;
   }
-  Future<String> getProvinceName(String id) async {
-    final snapshot = await _fireStore.collection('province').get();
-    return snapshot.docs
-        .map(
-          (e) => ProvinceResponse.fromJson(e.data()),
-        )
-        .toList()
-        .where((element) => element.id == id)
-        .toList()[0].name;
-  }
+
+  // Future<String> getProvinceName(String id) async {
+  //   return _items.firstWhere((element) => element.id == id).name;
+  // }
 }

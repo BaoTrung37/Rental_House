@@ -7,6 +7,7 @@ class DistrictResponse {
   DistrictResponse({
     required this.id,
     required this.provinceId,
+    required this.province,
     required this.name,
   });
   factory DistrictResponse.fromJson(Map<String, dynamic> json) =>
@@ -14,6 +15,7 @@ class DistrictResponse {
 
   final String id;
   final String provinceId;
+  final String province;
   final String name;
 
   Map<String, dynamic> toJson() => _$DistrictResponseToJson(this);

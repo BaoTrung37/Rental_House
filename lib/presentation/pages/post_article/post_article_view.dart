@@ -1,3 +1,6 @@
+import 'package:batru_house_rental/domain/use_case/commune/get_commune_list_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/district/get_district_list_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/province/get_province_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/type/get_type_list_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/pages/post_article/post_article_state.dart';
@@ -10,9 +13,13 @@ import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final _provider = StateNotifierProvider<PostArticleViewModel, PostArticleState>(
+final _provider =
+    StateNotifierProvider.autoDispose<PostArticleViewModel, PostArticleState>(
   (ref) => PostArticleViewModel(
     injector.get<GetTypeListUseCase>(),
+    injector.get<GetProvinceListUseCase>(),
+    injector.get<GetDistrictListUseCase>(),
+    injector.get<GetCommuneListUseCase>(),
   ),
 );
 
@@ -29,7 +36,9 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
 
   @override
   void initState() {
-    _viewModel.initData();
+    Future.delayed(Duration.zero, () {
+      _viewModel.initData();
+    });
 
     super.initState();
   }
@@ -206,6 +215,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
   }
 
   Widget _buildLocationInputView() {
+    final state = ref.watch(_provider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -217,29 +227,33 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
           popupProps: const PopupProps.menu(
             showSelectedItems: true,
           ),
-          items: const ['Hà Đông', 'Cầu Giấy', 'Hoàn Kiếm', 'Tây Hồ'],
+          items: state.districts.map((e) => e.name).toList(),
           dropdownDecoratorProps: const DropDownDecoratorProps(
             dropdownSearchDecoration: InputDecoration(
               labelText: 'Quận/Huyện',
               hintText: 'Bấm để chọn quận/huyện',
             ),
           ),
-          onChanged: print,
-          selectedItem: 'Hà Đông',
+          onChanged: (value) async {
+            await _viewModel.onDistrictChanged(value!);
+          },
+          selectedItem: state.districts.first.name,
         ),
         DropdownSearch<String>(
           popupProps: const PopupProps.menu(
             showSelectedItems: true,
           ),
-          items: const ['Phường DD', 'Phường DDd', 'Phường 23', 'Phường 2333'],
+          items: state.communes.map((e) => e.name).toList(),
           dropdownDecoratorProps: const DropDownDecoratorProps(
             dropdownSearchDecoration: InputDecoration(
               labelText: 'Phường/Xã',
               hintText: 'Bấm để chọn phường/xã',
             ),
           ),
-          onChanged: print,
-          selectedItem: 'Phường DD',
+          onChanged: (value) {
+            _viewModel.onCommuneChanged(value!);
+          },
+          selectedItem: state.communes.first.name,
         ),
         const SizedBox(height: 8),
         const InputTextField(
