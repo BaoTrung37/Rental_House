@@ -33,38 +33,23 @@ class _LoginViewState extends ConsumerState<LoginView> {
         children: [
           Expanded(
             child: IntroSlider(
-              hideStatusBar: true,
-              showDoneBtn: false,
-              showNextBtn: false,
-              showPrevBtn: false,
-              showSkipBtn: false,
-              autoScroll: true,
-              loopAutoScroll: true,
-              autoScrollInterval: const Duration(seconds: 5),
-              colorActiveDot: Colors.white,
-              slides: [
-                Slide(
-                  title: 'Title 1',
-                  description: 'Description 1',
-                  backgroundColor: Colors.black,
-                  heightImage: 370,
-                  widthImage: 400,
+              listContentConfig: const [
+                ContentConfig(
+                  title: 'Welcome to Batru House Rental',
+                  description: 'We are happy to see you here',
                 ),
-                Slide(
-                  title: 'Title 2',
-                  description: 'Description 2',
-                  backgroundColor: Colors.brown,
-                  heightImage: 370,
-                  widthImage: 400,
-                ),
-                Slide(
-                  title: 'Title 3',
-                  description: 'Description 3',
-                  backgroundColor: Colors.green,
-                  heightImage: 370,
-                  widthImage: 400,
+                ContentConfig(
+                  title: 'Welcome to Batru House Rental',
+                  description: 'We are happy to see you here',
                 ),
               ],
+              isShowDoneBtn: false,
+              isShowNextBtn: false,
+              isShowPrevBtn: false,
+              isShowSkipBtn: false,
+              isAutoScroll: true,
+              isLoopAutoScroll: true,
+              autoScrollInterval: const Duration(seconds: 5),
             ),
           ),
           SizedBox(
