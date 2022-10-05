@@ -1,28 +1,32 @@
 import 'package:batru_house_rental/domain/use_case/commune/get_commune_list_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/convenient/get_convenient_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/district/get_district_list_use_case.dart';
-import 'package:batru_house_rental/domain/use_case/province/get_province_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/type/get_type_list_use_case.dart';
 import 'package:batru_house_rental/presentation/pages/post_article/post_article_state.dart';
 import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class PostArticleViewModel extends StateNotifier<PostArticleState> {
   PostArticleViewModel(
     this._getTypeListUseCase,
-    this._getProvinceListUseCase,
+    // this._getProvinceListUseCase,
     this._getDistrictListUseCase,
     this._getCommuneListUseCase,
+    this._getConvenientListUseCase,
   ) : super(const PostArticleState());
 
   final GetTypeListUseCase _getTypeListUseCase;
-  final GetProvinceListUseCase _getProvinceListUseCase;
+  // final GetProvinceListUseCase _getProvinceListUseCase;
   final GetDistrictListUseCase _getDistrictListUseCase;
   final GetCommuneListUseCase _getCommuneListUseCase;
+  final GetConvenientListUseCase _getConvenientListUseCase;
   Future<void> initData() async {
     try {
       state = state.copyWith(
         status: LoadingStatus.inProgress,
       );
+      final convenients = await _getConvenientListUseCase.run();
       final types = await _getTypeListUseCase.run();
       final districts = await _getDistrictListUseCase.run('01');
       final communes = await _getCommuneListUseCase.run('001');
@@ -31,11 +35,13 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
         types: types,
         districts: districts,
         communes: communes,
+        convenients: convenients,
       );
     } catch (e) {
       state = state.copyWith(
         status: LoadingStatus.error,
       );
+      debugPrint(e.toString());
     }
   }
 

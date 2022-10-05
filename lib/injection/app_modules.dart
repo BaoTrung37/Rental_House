@@ -1,6 +1,7 @@
 import 'package:batru_house_rental/data/repositories/auth/auth_repository.dart';
 import 'package:batru_house_rental/data/repositories/chat/chat_repository.dart';
 import 'package:batru_house_rental/data/repositories/commune/commune_repository.dart';
+import 'package:batru_house_rental/data/repositories/convenient/convenient_repository.dart';
 import 'package:batru_house_rental/data/repositories/district/district_repository.dart';
 import 'package:batru_house_rental/data/repositories/province/province_repository.dart';
 import 'package:batru_house_rental/data/repositories/type/type_repository.dart';
@@ -8,6 +9,7 @@ import 'package:batru_house_rental/domain/use_case/auth/google_login_use_case.da
 import 'package:batru_house_rental/domain/use_case/auth/logout_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/get_chat_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/commune/get_commune_list_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/convenient/get_convenient_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/district/get_district_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/province/get_province_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/type/get_type_list_use_case.dart';
@@ -61,5 +63,13 @@ class AppModules {
     /// commune list use case
     injector.registerLazySingleton<GetCommuneListUseCase>(
         () => GetCommuneListUseCase());
+
+    /// convenient repository
+    injector.registerLazySingleton<ConvenientRepository>(
+        () => ConvenientRepository());
+
+    /// convenient list use case
+    injector.registerLazySingleton<GetConvenientListUseCase>(
+        () => GetConvenientListUseCase());
   }
 }

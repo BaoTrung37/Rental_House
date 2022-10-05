@@ -1,11 +1,14 @@
 import 'package:batru_house_rental/domain/use_case/commune/get_commune_list_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/convenient/get_convenient_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/district/get_district_list_use_case.dart';
-import 'package:batru_house_rental/domain/use_case/province/get_province_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/type/get_type_list_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/pages/post_article/post_article_state.dart';
 import 'package:batru_house_rental/presentation/pages/post_article/post_article_view_model.dart';
+import 'package:batru_house_rental/presentation/pages/post_article/widgets/convenient_item.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
+import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
+import 'package:batru_house_rental/presentation/widgets/app_indicator/app_loading_indicator.dart';
 import 'package:batru_house_rental/presentation/widgets/base_app_bar/base_app_bar.dart';
 import 'package:batru_house_rental/presentation/widgets/buttons/app_button.dart';
 import 'package:batru_house_rental/presentation/widgets/input_text_field/input_text_field.dart';
@@ -17,9 +20,10 @@ final _provider =
     StateNotifierProvider.autoDispose<PostArticleViewModel, PostArticleState>(
   (ref) => PostArticleViewModel(
     injector.get<GetTypeListUseCase>(),
-    injector.get<GetProvinceListUseCase>(),
+    // injector.get<GetProvinceListUseCase>(),
     injector.get<GetDistrictListUseCase>(),
     injector.get<GetCommuneListUseCase>(),
+    injector.get<GetConvenientListUseCase>(),
   ),
 );
 
@@ -33,13 +37,12 @@ class PostArticleView extends ConsumerStatefulWidget {
 
 class _PostArticleViewState extends ConsumerState<PostArticleView> {
   PostArticleViewModel get _viewModel => ref.read(_provider.notifier);
-
+  PostArticleState get state => ref.watch(_provider);
   @override
   void initState() {
-    Future.delayed(Duration.zero, () {
-      _viewModel.initData();
+    Future.delayed(Duration.zero, () async {
+      await _viewModel.initData();
     });
-
     super.initState();
   }
 
@@ -65,69 +68,75 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
       appBar: const BaseAppBar.titleAndBackButton(
         title: 'Đăng phòng',
       ),
-      body: Stepper(
-        type: StepperType.horizontal,
-        physics: const ClampingScrollPhysics(),
-        currentStep: ref.watch(_provider).currentStep,
-        onStepContinue: _viewModel.nextStep,
-        onStepCancel: _viewModel.previousStep,
-        onStepTapped: (step) => _viewModel.setStep(step),
-        controlsBuilder: (context, details) {
-          final isLastStep = ref.watch(_provider).currentStep == 3;
-          final isFirstStep = ref.watch(_provider).currentStep == 0;
-          return Container(
-            margin: const EdgeInsets.only(top: 16),
-            child: Row(
-              children: [
+      body: state.status == LoadingStatus.inProgress
+          ? const AppLoadingIndicator()
+          : _buildBody(),
+    );
+  }
+
+  Stepper _buildBody() {
+    return Stepper(
+      type: StepperType.horizontal,
+      physics: const ClampingScrollPhysics(),
+      currentStep: ref.watch(_provider).currentStep,
+      onStepContinue: _viewModel.nextStep,
+      onStepCancel: _viewModel.previousStep,
+      onStepTapped: (step) => _viewModel.setStep(step),
+      controlsBuilder: (context, details) {
+        final isLastStep = ref.watch(_provider).currentStep == 3;
+        final isFirstStep = ref.watch(_provider).currentStep == 0;
+        return Container(
+          margin: const EdgeInsets.only(top: 16),
+          child: Row(
+            children: [
+              Expanded(
+                child: AppButton(
+                  title: isLastStep ? 'Đăng phòng' : 'Tiếp theo',
+                  onButtonTap: details.onStepContinue,
+                ),
+              ),
+              if (!isFirstStep) ...[
+                const SizedBox(
+                  width: 16,
+                ),
                 Expanded(
                   child: AppButton(
-                    title: isLastStep ? 'Đăng phòng' : 'Tiếp theo',
-                    onButtonTap: details.onStepContinue,
+                    title: 'Quay lại',
+                    backgroundColor: context.colors.contentAlert,
+                    onButtonTap: details.onStepCancel,
                   ),
                 ),
-                if (!isFirstStep) ...[
-                  const SizedBox(
-                    width: 16,
-                  ),
-                  Expanded(
-                    child: AppButton(
-                      title: 'Quay lại',
-                      backgroundColor: context.colors.contentAlert,
-                      onButtonTap: details.onStepCancel,
-                    ),
-                  ),
-                ],
               ],
-            ),
-          );
-        },
-        steps: [
-          Step(
-            state: setStepState(0),
-            title: const Text(''),
-            label: const Text('Thông tin'),
-            content: _buildInfomationInputView(),
+            ],
           ),
-          Step(
-            state: setStepState(1),
-            title: const Text(''),
-            label: const Text('Địa chỉ'),
-            content: _buildLocationInputView(),
-          ),
-          Step(
-            state: setStepState(2),
-            title: const Text(''),
-            label: const Text('Tiện ích'),
-            content: _buildConvenientInputView(),
-          ),
-          Step(
-            state: setStepState(3),
-            title: const Text(''),
-            label: const Text('Xác nhận'),
-            content: _buildConfirmInputView(),
-          ),
-        ],
-      ),
+        );
+      },
+      steps: [
+        Step(
+          state: setStepState(0),
+          title: const Text(''),
+          label: const Text('Thông tin'),
+          content: _buildInfomationInputView(),
+        ),
+        Step(
+          state: setStepState(1),
+          title: const Text(''),
+          label: const Text('Địa chỉ'),
+          content: _buildLocationInputView(),
+        ),
+        Step(
+          state: setStepState(2),
+          title: const Text(''),
+          label: const Text('Tiện ích'),
+          content: _buildConvenientInputView(),
+        ),
+        Step(
+          state: setStepState(3),
+          title: const Text(''),
+          label: const Text('Xác nhận'),
+          content: _buildConfirmInputView(),
+        ),
+      ],
     );
   }
 
@@ -162,6 +171,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
   }
 
   Widget _buildConvenientInputView() {
+    final state = ref.watch(_provider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -204,10 +214,13 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
           ),
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
-          itemCount: 16,
+          itemCount: state.convenients.length,
           addAutomaticKeepAlives: true,
           itemBuilder: (context, index) {
-            return const ConvenientItem();
+            final convenient = state.convenients[index];
+            return ConvenientItem(
+              convenient: convenient,
+            );
           },
         ),
       ],
@@ -237,7 +250,6 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
           onChanged: (value) async {
             await _viewModel.onDistrictChanged(value!);
           },
-          selectedItem: state.districts.first.name,
         ),
         DropdownSearch<String>(
           popupProps: const PopupProps.menu(
@@ -253,7 +265,6 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
           onChanged: (value) {
             _viewModel.onCommuneChanged(value!);
           },
-          selectedItem: state.communes.first.name,
         ),
         const SizedBox(height: 8),
         const InputTextField(
@@ -399,58 +410,6 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
           ),
         ],
       ],
-    );
-  }
-}
-
-class ConvenientItem extends StatelessWidget {
-  const ConvenientItem({
-    this.isSelected = true,
-    Key? key,
-  }) : super(key: key);
-  final bool isSelected;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 50,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        border: Border.all(
-          color:
-              isSelected ? context.colors.primaryMain : context.colors.border,
-          width: 1,
-        ),
-        color: isSelected
-            ? context.colors.backgroundPrimary
-            : context.colors.backgroundSecondary,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: 20,
-            height: 20,
-            child: Image(
-              image: const AssetImage(
-                AppImages.tv,
-              ),
-              color: isSelected
-                  ? context.colors.iconPrimary
-                  : context.colors.iconSecondary,
-            ),
-          ),
-          const SizedBox(width: 8),
-          Text(
-            'Tivi',
-            style: AppTextStyles.textMedium.copyWith(
-              color: isSelected
-                  ? context.colors.textPrimary
-                  : context.colors.textSecondary,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
