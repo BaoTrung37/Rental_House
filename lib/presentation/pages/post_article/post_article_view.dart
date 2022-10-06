@@ -220,6 +220,10 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
             final convenient = state.convenients[index];
             return ConvenientItem(
               convenient: convenient,
+              onTap: () {
+                _viewModel.onConvenientTap(convenient.id);
+                print('tap');
+              },
             );
           },
         ),

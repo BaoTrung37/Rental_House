@@ -45,6 +45,16 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
     }
   }
 
+  void onConvenientTap(String convenientId) {
+    state = state.copyWith(
+        convenients: state.convenients.map((e) {
+      if (e.id == convenientId) {
+        return e.copyWith(isSelected: !e.isSelected);
+      }
+      return e;
+    }).toList());
+  }
+
   Future<void> onDistrictChanged(String districtName) async {
     state = state.copyWith(
       currentDistrict: state.districts.firstWhere(
