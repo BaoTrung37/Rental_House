@@ -6,6 +6,7 @@ import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/pages/post_article/post_article_state.dart';
 import 'package:batru_house_rental/presentation/pages/post_article/post_article_view_model.dart';
 import 'package:batru_house_rental/presentation/pages/post_article/widgets/convenient_item.dart';
+import 'package:batru_house_rental/presentation/pages/post_article/widgets/input_image_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/utilities/common/validator.dart';
 import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
@@ -245,7 +246,18 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
         const SizedBox(height: 8),
         Container(
           height: 200,
-          color: Colors.black,
+          decoration: BoxDecoration(
+            color: context.colors.secondaryBackgroundPrimary,
+            border: Border.all(
+              color: context.colors.border,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: InputImageView(
+            screenshotList: state.screenshotList,
+            onDeleteTap: _viewModel.removeImage,
+          ),
         ),
         const SizedBox(height: 8),
         Center(
@@ -255,6 +267,9 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
               size: 20,
             ),
             title: 'Chụp hình',
+            onButtonTap: () {
+              _viewModel.openImagePicker(context);
+            },
           ),
         ),
         const SizedBox(height: 8),

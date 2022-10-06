@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:batru_house_rental/domain/use_case/commune/get_commune_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/convenient/get_convenient_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/district/get_district_list_use_case.dart';
@@ -5,7 +7,9 @@ import 'package:batru_house_rental/domain/use_case/type/get_type_list_use_case.d
 import 'package:batru_house_rental/presentation/pages/post_article/post_article_state.dart';
 import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 
 class PostArticleViewModel extends StateNotifier<PostArticleState> {
   PostArticleViewModel(
@@ -101,5 +105,34 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
 
   void setIsParkingSpace(bool value) {
     state = state.copyWith(isParkingSpaceAvailable: value);
+  }
+
+  Future<void> openImagePicker(BuildContext context) async {
+    try {
+      File? image;
+      final picker = ImagePicker();
+      final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+      if (pickedImage != null) {
+        image = File(pickedImage.path);
+        addImage(image);
+      }
+    } on PlatformException {
+      // showErrorSnackBar(
+      //   context: context,
+      //   errorMessage: error.message ?? '',
+      // );
+    }
+  }
+
+  void addImage(File image) {
+    final screenshotList = state.screenshotList.toList();
+    screenshotList.add(image);
+    state = state.copyWith(screenshotList: screenshotList);
+  }
+
+  void removeImage(int position) {
+    final screenshotList = state.screenshotList.toList();
+    screenshotList.removeAt(position);
+    state = state.copyWith(screenshotList: screenshotList);
   }
 }
