@@ -1,5 +1,5 @@
-class HouseEntity {
-  HouseEntity({
+class RoomEntity {
+  RoomEntity({
     required this.id,
     required this.userId,
     required this.title,
