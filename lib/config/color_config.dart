@@ -31,8 +31,8 @@ class LightColors {
   LightColors._();
 
   /// Primary
-  static const primaryMain = Color(0xFF9428E8);
-  static const primaryText = Color(0xFF5B089C);
+  static const primaryMain = Color(0xFF4285F4);
+  static const primaryText = Color(0xFF4285F4);
   static const primaryTextOnContrast = Color(0xFFBF84ED);
   static const primaryBackground = Color(0xFFF6EBFF);
 
@@ -101,7 +101,7 @@ class DarkColors {
 
   /// Primary
   static const primaryMain = Color(0xFFA33FF2);
-  static const primaryText = Color(0xFFBF84ED);
+  static const primaryText = Color(0xFF4285F4);
   static const primaryTextOnContrast = Color(0xFF5B089C);
   static const primaryBackground = Color(0xFF4C0E7C);
 

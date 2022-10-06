@@ -14,6 +14,9 @@ class AppRoutes {
   /// home
   static const String home = '/home';
 
+  /// home detail
+  static const String roomDetail = '/room_detail';
+
   /// favorite
   static const String favorite = '/favorite';
 
@@ -25,4 +28,10 @@ class AppRoutes {
 
   /// my page
   static const String myPage = '/my_page';
+
+  /// search
+  static const String search = '/search';
+
+  /// post article
+  static const String postArticle = '/post_article';
 }

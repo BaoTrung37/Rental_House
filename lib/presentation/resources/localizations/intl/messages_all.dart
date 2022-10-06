@@ -3,7 +3,7 @@
 // delegating to the appropriate library.
 
 // Ignore issues from commonly used lints in this file.
-// ignore_for_file:implementation_imports, file_names, unnecessary_new, always_put_control_body_on_new_line, prefer_final_locals, always_use_package_imports
+// ignore_for_file:implementation_imports, file_names, unnecessary_new, always_use_package_imports, prefer_final_locals, always_put_control_body_on_new_line
 // ignore_for_file:unnecessary_brace_in_string_interps, directives_ordering
 // ignore_for_file:argument_type_not_assignable, invalid_assignment
 // ignore_for_file:prefer_single_quotes, prefer_generic_function_type_aliases

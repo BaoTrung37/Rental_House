@@ -776,6 +776,17 @@ class AppIcons {
     );
   }
 
+  static Widget filter({
+    Color? color,
+    double? size,
+  }) {
+    return SvgIcon.from(
+      '$_iconsPath/filter.svg',
+      color: color,
+      size: size,
+    );
+  }
+
   static Widget spotify({
     Color? color,
     double? size,

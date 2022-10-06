@@ -1,5 +1,5 @@
 import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
-import 'package:batru_house_rental/domain/use_case/login/google_login_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/auth/google_login_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
 import 'package:batru_house_rental/presentation/pages/login/login_state.dart';
@@ -33,38 +33,23 @@ class _LoginViewState extends ConsumerState<LoginView> {
         children: [
           Expanded(
             child: IntroSlider(
-              hideStatusBar: true,
-              showDoneBtn: false,
-              showNextBtn: false,
-              showPrevBtn: false,
-              showSkipBtn: false,
-              autoScroll: true,
-              loopAutoScroll: true,
-              autoScrollInterval: const Duration(seconds: 5),
-              colorActiveDot: Colors.white,
-              slides: [
-                Slide(
-                  title: 'Title 1',
-                  description: 'Description 1',
-                  backgroundColor: Colors.black,
-                  heightImage: 370,
-                  widthImage: 400,
+              listContentConfig: const [
+                ContentConfig(
+                  title: 'Welcome to Batru House Rental',
+                  description: 'We are happy to see you here',
                 ),
-                Slide(
-                  title: 'Title 2',
-                  description: 'Description 2',
-                  backgroundColor: Colors.brown,
-                  heightImage: 370,
-                  widthImage: 400,
-                ),
-                Slide(
-                  title: 'Title 3',
-                  description: 'Description 3',
-                  backgroundColor: Colors.green,
-                  heightImage: 370,
-                  widthImage: 400,
+                ContentConfig(
+                  title: 'Welcome to Batru House Rental',
+                  description: 'We are happy to see you here',
                 ),
               ],
+              isShowDoneBtn: false,
+              isShowNextBtn: false,
+              isShowPrevBtn: false,
+              isShowSkipBtn: false,
+              isAutoScroll: true,
+              isLoopAutoScroll: true,
+              autoScrollInterval: const Duration(seconds: 5),
             ),
           ),
           SizedBox(
@@ -77,6 +62,20 @@ class _LoginViewState extends ConsumerState<LoginView> {
                   _buildLoginTitle(),
                   const SizedBox(height: 20),
                   _buildGoogleLoginButton(context),
+                  const SizedBox(height: 20),
+                  GestureDetector(
+                    onTap: () {
+                      ref
+                          .read(appNavigatorProvider)
+                          .navigateTo(AppRoutes.mainMenu);
+                    },
+                    child: Text(
+                      'Skip',
+                      style: AppTextStyles.headingSmall.copyWith(
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
