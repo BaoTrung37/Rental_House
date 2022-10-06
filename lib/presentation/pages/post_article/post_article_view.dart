@@ -295,7 +295,6 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
               convenient: convenient,
               onTap: () {
                 _viewModel.onConvenientTap(convenient.id);
-                print('tap');
               },
             );
           },
