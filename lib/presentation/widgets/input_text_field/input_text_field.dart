@@ -32,7 +32,7 @@ class InputTextField extends StatefulWidget {
     this.inputFormatters,
     this.backgroundColor,
     this.iconColor,
-    this.obscuringCharacter,
+    // this.obscuringCharacter,
     this.isActive = true,
     this.isAutoDisposeController = true,
     this.isAutoValidateWhenOutFocus = true,
@@ -65,7 +65,7 @@ class InputTextField extends StatefulWidget {
     this.inputFormatters,
     this.backgroundColor,
     this.iconColor,
-    this.obscuringCharacter,
+    // this.obscuringCharacter,
     this.isActive = true,
     this.isAutoDisposeController = true,
     this.isAutoValidateWhenOutFocus = true,
@@ -102,7 +102,7 @@ class InputTextField extends StatefulWidget {
     this.inputFormatters,
     this.backgroundColor,
     this.iconColor,
-    this.obscuringCharacter,
+    // this.obscuringCharacter,
     this.isActive = true,
     this.isAutoDisposeController = true,
     this.isAutoValidateWhenOutFocus = true,
@@ -129,7 +129,7 @@ class InputTextField extends StatefulWidget {
   final int? maxLine;
   final int? maxLength;
   final TextInputType? keyboardType;
-  final String? obscuringCharacter;
+  // final String? obscuringCharacter;
   final FocusNode? focusNode;
   final TextInputAction? textInputAction;
   final double? minHeight;
@@ -252,7 +252,7 @@ class _TextBoxState extends State<InputTextField> {
                       },
                       obscureText: _obscureText,
                       // obscuringCharacter: widget.obscuringCharacter ??
-                      //     Constants.obscuringCharacter,
+                      // Constants.obscuringCharacter,
                       enableSuggestions: widget.enableSuggestions,
                       autocorrect: widget.autocorrect,
                       validator: widget.validator,

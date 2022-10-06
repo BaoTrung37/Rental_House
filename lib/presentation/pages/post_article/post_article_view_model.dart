@@ -67,6 +67,14 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
     );
   }
 
+  Future<void> onTypeChanged(String type) async {
+    state = state.copyWith(
+      currentType: state.types.firstWhere(
+        (e) => e.name == type,
+      ),
+    );
+  }
+
   void onCommuneChanged(String communeName) {
     state = state.copyWith(
       currentDistrict: state.communes.firstWhere(

@@ -7,9 +7,11 @@ import 'package:batru_house_rental/presentation/pages/post_article/post_article_
 import 'package:batru_house_rental/presentation/pages/post_article/post_article_view_model.dart';
 import 'package:batru_house_rental/presentation/pages/post_article/widgets/convenient_item.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
+import 'package:batru_house_rental/presentation/utilities/common/validator.dart';
 import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
 import 'package:batru_house_rental/presentation/widgets/app_indicator/app_loading_indicator.dart';
 import 'package:batru_house_rental/presentation/widgets/base_app_bar/base_app_bar.dart';
+import 'package:batru_house_rental/presentation/widgets/base_form/base_form_mixin.dart';
 import 'package:batru_house_rental/presentation/widgets/buttons/app_button.dart';
 import 'package:batru_house_rental/presentation/widgets/input_text_field/input_text_field.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -35,9 +37,29 @@ class PostArticleView extends ConsumerStatefulWidget {
       _PostArticleViewState();
 }
 
-class _PostArticleViewState extends ConsumerState<PostArticleView> {
+class _PostArticleViewState extends ConsumerState<PostArticleView>
+    with BaseFormMixin {
   PostArticleViewModel get _viewModel => ref.read(_provider.notifier);
   PostArticleState get state => ref.watch(_provider);
+
+  TextEditingController _houseAmountController = TextEditingController();
+  TextEditingController _houseCapacityController = TextEditingController();
+  TextEditingController _houseAreaController = TextEditingController();
+  TextEditingController _housePriceController = TextEditingController();
+  TextEditingController _houseDepositPriceController = TextEditingController();
+  TextEditingController _houseElectricityPriceController =
+      TextEditingController();
+  TextEditingController _houseWaterPriceController = TextEditingController();
+  TextEditingController _houseInternetPriceController = TextEditingController();
+  TextEditingController _housePackingPriceController = TextEditingController();
+
+  TextEditingController _streetNameController = TextEditingController();
+  TextEditingController _apartmentNumberController = TextEditingController();
+
+  TextEditingController _phoneNumberController = TextEditingController();
+  TextEditingController _articleTitleController = TextEditingController();
+  TextEditingController _articleDesController = TextEditingController();
+
   @override
   void initState() {
     Future.delayed(Duration.zero, () async {
@@ -48,6 +70,21 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
 
   @override
   void dispose() {
+    _houseAmountController.dispose();
+    _houseCapacityController.dispose();
+    _houseAreaController.dispose();
+    _housePriceController.dispose();
+    _houseDepositPriceController.dispose();
+    _houseElectricityPriceController.dispose();
+    _houseWaterPriceController.dispose();
+    _houseInternetPriceController.dispose();
+    _housePackingPriceController.dispose();
+    _streetNameController.dispose();
+    _apartmentNumberController.dispose();
+    _phoneNumberController.dispose();
+    _articleTitleController.dispose();
+    _articleDesController.dispose();
+
     super.dispose();
   }
 
@@ -63,7 +100,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildFormContent() {
     return Scaffold(
       appBar: const BaseAppBar.titleAndBackButton(
         title: 'Đăng phòng',
@@ -74,7 +111,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
     );
   }
 
-  Stepper _buildBody() {
+  Widget _buildBody() {
     return Stepper(
       type: StepperType.horizontal,
       physics: const ClampingScrollPhysics(),
@@ -143,34 +180,55 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
   Widget _buildConfirmInputView() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [
-        Text(
+      children: [
+        const Text(
           'Xác nhận',
           style: AppTextStyles.headingSmall,
         ),
-        SizedBox(height: 8),
-        InputTextField(
+        const SizedBox(height: 8),
+        InputTextField.singleLine(
           labelText: 'Số điện thoại',
           placeholder: 'Nhập số điện thoại',
           keyboardType: TextInputType.phone,
+          controller: _phoneNumberController,
+          textInputAction: TextInputAction.next,
+          validator: Validator().required().phone().build(),
+          onTextChange: (value) {
+            _phoneNumberController.text = value!;
+          },
         ),
-        SizedBox(height: 8),
-        InputTextField(
+        const SizedBox(height: 8),
+        InputTextField.singleLine(
           labelText: 'Tiêu đề bài đăng',
           placeholder: 'Nhập tiêu đề bài đăng',
           keyboardType: TextInputType.text,
+          controller: _articleTitleController,
+          textInputAction: TextInputAction.next,
+          validator: Validator().required().minLength(1).maxLength(50).build(),
+          onTextChange: (value) {
+            _articleTitleController.text = value!;
+          },
         ),
-        SizedBox(height: 8),
-        InputTextField(
+        const SizedBox(height: 8),
+        InputTextField.singleLine(
           labelText: 'Nội dung mô tả',
           placeholder: 'Nhập nội dung mô tả',
           keyboardType: TextInputType.text,
+          controller: _articleDesController,
+          textInputAction: TextInputAction.next,
+          validator: Validator().required().minLength(1).maxLength(50).build(),
+          onTextChange: (value) {
+            _articleDesController.text = value!;
+          },
         ),
       ],
     );
   }
 
   Widget _buildConvenientInputView() {
+    _phoneNumberController = TextEditingController();
+    _articleTitleController = TextEditingController();
+    _articleDesController = TextEditingController();
     final state = ref.watch(_provider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -232,6 +290,8 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
   }
 
   Widget _buildLocationInputView() {
+    _streetNameController = TextEditingController();
+    _apartmentNumberController = TextEditingController();
     final state = ref.watch(_provider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -271,14 +331,28 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
           },
         ),
         const SizedBox(height: 8),
-        const InputTextField(
+        InputTextField.singleLine(
           labelText: 'Tên đường',
           placeholder: 'Nhập tên đường',
+          keyboardType: TextInputType.text,
+          controller: _streetNameController,
+          textInputAction: TextInputAction.next,
+          validator: Validator().required().minLength(1).maxLength(50).build(),
+          onTextChange: (value) {
+            _streetNameController.text = value!;
+          },
         ),
         const SizedBox(height: 8),
-        const InputTextField(
+        InputTextField.singleLine(
           labelText: 'Số nhà',
           placeholder: 'Nhập địa chỉ nhà',
+          keyboardType: TextInputType.text,
+          controller: _apartmentNumberController,
+          textInputAction: TextInputAction.next,
+          validator: Validator().required().minLength(1).maxLength(40).build(),
+          onTextChange: (value) {
+            _apartmentNumberController.text = value!;
+          },
         ),
         // DropdownSearch<UserModel>(
         //   dropdownSearchDecoration: const InputDecoration(labelText: 'Name'),
@@ -299,6 +373,16 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
   }
 
   Widget _buildInfomationInputView() {
+    _houseAmountController = TextEditingController();
+    _houseCapacityController = TextEditingController();
+    _houseAreaController = TextEditingController();
+    _housePriceController = TextEditingController();
+    _houseDepositPriceController = TextEditingController();
+    _houseElectricityPriceController = TextEditingController();
+    _houseWaterPriceController = TextEditingController();
+    _houseInternetPriceController = TextEditingController();
+    _housePackingPriceController = TextEditingController();
+    //
     final state = ref.watch(_provider);
     final isParkingSpaceAvailable =
         ref.watch(_provider).isParkingSpaceAvailable;
@@ -325,27 +409,48 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
               hintText: 'Bấm để chọn loại phòng',
             ),
           ),
-          onChanged: print,
-          selectedItem: 'Phòng cho thuê',
+          onChanged: (value) {
+            _viewModel.onTypeChanged(value!);
+          },
         ),
         const SizedBox(height: 8),
-        const InputTextField(
+        InputTextField.singleLine(
           labelText: 'Số lượng phòng (phòng)',
           placeholder: 'Số lượng phòng bạn đang quản lý',
           keyboardType: TextInputType.number,
+          initialText: '1',
+          controller: _houseAmountController,
+          textInputAction: TextInputAction.next,
+          validator: Validator().required().minLength(1).build(),
+          onTextChange: (value) {
+            _houseAmountController.text = value!;
+          },
         ),
         const SizedBox(height: 8),
-        const InputTextField(
+        InputTextField.singleLine(
           labelText: 'Sức chứa (người)',
           placeholder: 'Số lượng người tối đa có thể chứa',
           keyboardType: TextInputType.number,
+          controller: _houseCapacityController,
+          initialText: '1',
+          textInputAction: TextInputAction.next,
+          validator: Validator().required().minLength(1).build(),
+          onTextChange: (value) {
+            _houseCapacityController.text = value!;
+          },
         ),
         const SizedBox(height: 8),
-        const InputTextField(
+        InputTextField.singleLine(
           labelText: 'Diện tích (m2)',
           placeholder: 'Diện tích phòng',
           initialText: '10',
           keyboardType: TextInputType.number,
+          controller: _houseAreaController,
+          textInputAction: TextInputAction.next,
+          validator: Validator().required().minLength(1).build(),
+          onTextChange: (value) {
+            _houseAreaController.text = value!;
+          },
         ),
         const SizedBox(height: 8),
         const Text(
@@ -353,39 +458,68 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
           style: AppTextStyles.headingSmall,
         ),
         const SizedBox(height: 8),
-        const InputTextField(
+        InputTextField.singleLine(
           labelText: 'Giá cho thuê (VNĐ/phòng)',
           placeholder: 'Diện tích phòng',
           initialText: '0',
           keyboardType: TextInputType.number,
+          controller: _housePriceController,
+          textInputAction: TextInputAction.next,
+          validator: Validator().required().minLength(1).build(),
+          onTextChange: (value) {
+            _housePriceController.text = value!;
+          },
         ),
         const SizedBox(height: 8),
-        const InputTextField(
+        InputTextField.singleLine(
           labelText: 'Đặt cọc (VNĐ/phòng)',
           placeholder: 'Tiền cọc',
           initialText: '0',
           keyboardType: TextInputType.number,
+          controller: _houseDepositPriceController,
+          textInputAction: TextInputAction.next,
+          onTextChange: (value) {
+            _houseDepositPriceController.text = value!;
+          },
         ),
         const SizedBox(height: 8),
-        const InputTextField(
+        InputTextField.singleLine(
           labelText: 'Tiền điện (VNĐ/kWh)',
           placeholder: 'Tiền điện',
           initialText: '0',
           keyboardType: TextInputType.number,
+          controller: _houseElectricityPriceController,
+          textInputAction: TextInputAction.next,
+          validator: Validator().required().minLength(4).build(),
+          onTextChange: (value) {
+            _houseElectricityPriceController.text = value!;
+          },
         ),
         const SizedBox(height: 8),
-        const InputTextField(
+        InputTextField.singleLine(
           labelText: 'Tiền nước (VNĐ/người)',
           placeholder: 'Tiền nước',
           initialText: '0',
           keyboardType: TextInputType.number,
+          controller: _houseWaterPriceController,
+          textInputAction: TextInputAction.next,
+          validator: Validator().required().minLength(4).build(),
+          onTextChange: (value) {
+            _houseWaterPriceController.text = value!;
+          },
         ),
         const SizedBox(height: 8),
-        const InputTextField(
+        InputTextField.singleLine(
           labelText: 'Tiền Internet (VNĐ/phòng)',
           placeholder: 'Tiền nước',
           initialText: '0',
           keyboardType: TextInputType.number,
+          controller: _houseInternetPriceController,
+          textInputAction: TextInputAction.next,
+          validator: Validator().required().minLength(4).build(),
+          onTextChange: (value) {
+            _houseInternetPriceController.text = value!;
+          },
         ),
         // Checkbox(
         //   value: true,
@@ -406,11 +540,17 @@ class _PostArticleViewState extends ConsumerState<PostArticleView> {
         ),
         if (isParkingSpaceAvailable) ...[
           const SizedBox(height: 8),
-          const InputTextField(
+          InputTextField.singleLine(
             labelText: 'Tiền gửi xe',
             placeholder: 'Tiền gửi xe',
             initialText: '0',
             keyboardType: TextInputType.number,
+            controller: _housePackingPriceController,
+            textInputAction: TextInputAction.next,
+            validator: Validator().required().minLength(4).build(),
+            onTextChange: (value) {
+              _housePackingPriceController.text = value!;
+            },
           ),
         ],
       ],
