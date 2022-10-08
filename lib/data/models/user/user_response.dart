@@ -8,15 +8,16 @@ class UserResponse {
     required this.id,
     required this.name,
     required this.avatar,
-    required this.phoneNumber,
+    this.phoneNumber,
   });
   factory UserResponse.fromJson(Map<String, dynamic> json) =>
       _$UserResponseFromJson(json);
-      
+
   final String id;
   final String name;
   final String avatar;
-  final String phoneNumber;
+  @JsonKey(includeIfNull: false)
+  final String? phoneNumber;
 
   Map<String, dynamic> toJson() => _$UserResponseToJson(this);
 }

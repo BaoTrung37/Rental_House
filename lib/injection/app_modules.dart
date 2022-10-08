@@ -5,6 +5,7 @@ import 'package:batru_house_rental/data/repositories/convenient/convenient_repos
 import 'package:batru_house_rental/data/repositories/district/district_repository.dart';
 import 'package:batru_house_rental/data/repositories/province/province_repository.dart';
 import 'package:batru_house_rental/data/repositories/type/type_repository.dart';
+import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/google_login_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/logout_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/get_chat_use_case.dart';
@@ -29,6 +30,10 @@ class AppModules {
     /// auth use case
     injector
         .registerLazySingleton<GoogleLoginUseCase>(() => GoogleLoginUseCase());
+
+    /// get User information
+    injector.registerLazySingleton<GetCurrentUserInformationUseCase>(
+        () => GetCurrentUserInformationUseCase());
 
     /// logout use case
     injector.registerLazySingleton<LogoutUseCase>(() => LogoutUseCase());
