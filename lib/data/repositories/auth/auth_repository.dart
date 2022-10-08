@@ -1,3 +1,4 @@
+import 'package:batru_house_rental/data/models/user/user_response.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -8,6 +9,12 @@ class AuthRepository {
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   User get user => fireAuth.currentUser!;
+
+  Future<UserResponse> getCurrentUserInformation() async {
+    final userDocument = await firestore.collection('user').doc(user.uid).get();
+    final userResponse = UserResponse.fromJson(userDocument.data()!);
+    return userResponse;
+  }
 
   Future<bool> signInWithGoogle() async {
     final googleUser = await googleSignIn.signIn();
@@ -27,13 +34,15 @@ class AuthRepository {
             .get();
         final document = result.docs;
         if (document.isEmpty) {
+          final userResponse = UserResponse(
+            id: firebaseUser.uid,
+            name: firebaseUser.displayName!,
+            avatar: firebaseUser.photoURL!,
+          );
           await firestore
               .collection(FirestoreConstants.pathUserCollection)
               .doc(firebaseUser.uid)
-              .set({
-            FirestoreConstants.avatar: firebaseUser.photoURL,
-            FirestoreConstants.username: firebaseUser.displayName,
-          });
+              .set(userResponse.toJson());
         }
         return true;
       } else {
@@ -52,7 +61,7 @@ class AuthRepository {
 }
 
 class FirestoreConstants {
-  static const pathUserCollection = 'users';
+  static const pathUserCollection = 'user';
   static const pathChatsCollection = 'chats';
   static const username = 'username';
   static const avatar = 'avatar';
