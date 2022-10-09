@@ -1,6 +1,7 @@
 import 'package:batru_house_rental/domain/use_case/commune/get_commune_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/convenient/get_convenient_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/district/get_district_list_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/province/get_province_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/type/get_type_list_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/pages/post_article/post_article_state.dart';
@@ -22,8 +23,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 final _provider =
     StateNotifierProvider.autoDispose<PostArticleViewModel, PostArticleState>(
   (ref) => PostArticleViewModel(
+    injector.get<GetProvinceListUseCase>(),
     injector.get<GetTypeListUseCase>(),
-    // injector.get<GetProvinceListUseCase>(),
     injector.get<GetDistrictListUseCase>(),
     injector.get<GetCommuneListUseCase>(),
     injector.get<GetConvenientListUseCase>(),
@@ -40,26 +41,9 @@ class PostArticleView extends ConsumerStatefulWidget {
 
 class _PostArticleViewState extends ConsumerState<PostArticleView>
     with BaseFormMixin {
+  final _stepperKey = GlobalKey();
   PostArticleViewModel get _viewModel => ref.read(_provider.notifier);
   PostArticleState get state => ref.watch(_provider);
-
-  TextEditingController _houseAmountController = TextEditingController();
-  TextEditingController _houseCapacityController = TextEditingController();
-  TextEditingController _houseAreaController = TextEditingController();
-  TextEditingController _housePriceController = TextEditingController();
-  TextEditingController _houseDepositPriceController = TextEditingController();
-  TextEditingController _houseElectricityPriceController =
-      TextEditingController();
-  TextEditingController _houseWaterPriceController = TextEditingController();
-  TextEditingController _houseInternetPriceController = TextEditingController();
-  TextEditingController _housePackingPriceController = TextEditingController();
-
-  TextEditingController _streetNameController = TextEditingController();
-  TextEditingController _apartmentNumberController = TextEditingController();
-
-  TextEditingController _phoneNumberController = TextEditingController();
-  TextEditingController _articleTitleController = TextEditingController();
-  TextEditingController _articleDesController = TextEditingController();
 
   @override
   void initState() {
@@ -71,21 +55,6 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
 
   @override
   void dispose() {
-    _houseAmountController.dispose();
-    _houseCapacityController.dispose();
-    _houseAreaController.dispose();
-    _housePriceController.dispose();
-    _houseDepositPriceController.dispose();
-    _houseElectricityPriceController.dispose();
-    _houseWaterPriceController.dispose();
-    _houseInternetPriceController.dispose();
-    _housePackingPriceController.dispose();
-    _streetNameController.dispose();
-    _apartmentNumberController.dispose();
-    _phoneNumberController.dispose();
-    _articleTitleController.dispose();
-    _articleDesController.dispose();
-
     super.dispose();
   }
 
@@ -114,6 +83,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
 
   Widget _buildBody() {
     return Stepper(
+      key: _stepperKey,
       type: StepperType.horizontal,
       physics: const ClampingScrollPhysics(),
       currentStep: ref.watch(_provider).currentStep,
@@ -191,45 +161,33 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           labelText: 'Số điện thoại',
           placeholder: 'Nhập số điện thoại',
           keyboardType: TextInputType.phone,
-          controller: _phoneNumberController,
           textInputAction: TextInputAction.next,
           validator: Validator().required().phone().build(),
-          onTextChange: (value) {
-            _phoneNumberController.text = value!;
-          },
+          onTextChange: (value) {},
         ),
         const SizedBox(height: 8),
         InputTextField.singleLine(
           labelText: 'Tiêu đề bài đăng',
           placeholder: 'Nhập tiêu đề bài đăng',
           keyboardType: TextInputType.text,
-          controller: _articleTitleController,
           textInputAction: TextInputAction.next,
           validator: Validator().required().minLength(1).maxLength(50).build(),
-          onTextChange: (value) {
-            _articleTitleController.text = value!;
-          },
+          onTextChange: (value) {},
         ),
         const SizedBox(height: 8),
         InputTextField.singleLine(
           labelText: 'Nội dung mô tả',
           placeholder: 'Nhập nội dung mô tả',
           keyboardType: TextInputType.text,
-          controller: _articleDesController,
           textInputAction: TextInputAction.next,
           validator: Validator().required().minLength(1).maxLength(50).build(),
-          onTextChange: (value) {
-            _articleDesController.text = value!;
-          },
+          onTextChange: (value) {},
         ),
       ],
     );
   }
 
   Widget _buildConvenientInputView() {
-    _phoneNumberController = TextEditingController();
-    _articleTitleController = TextEditingController();
-    _articleDesController = TextEditingController();
     final state = ref.watch(_provider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -304,8 +262,6 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
   }
 
   Widget _buildLocationInputView() {
-    _streetNameController = TextEditingController();
-    _apartmentNumberController = TextEditingController();
     final state = ref.watch(_provider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -349,55 +305,25 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           labelText: 'Tên đường',
           placeholder: 'Nhập tên đường',
           keyboardType: TextInputType.text,
-          controller: _streetNameController,
           textInputAction: TextInputAction.next,
           validator: Validator().required().minLength(1).maxLength(50).build(),
-          onTextChange: (value) {
-            _streetNameController.text = value!;
-          },
+          onTextChange: (value) {},
         ),
         const SizedBox(height: 8),
         InputTextField.singleLine(
           labelText: 'Số nhà',
           placeholder: 'Nhập địa chỉ nhà',
           keyboardType: TextInputType.text,
-          controller: _apartmentNumberController,
           textInputAction: TextInputAction.next,
           validator: Validator().required().minLength(1).maxLength(40).build(),
-          onTextChange: (value) {
-            _apartmentNumberController.text = value!;
-          },
+          onTextChange: (value) {},
         ),
-        // DropdownSearch<UserModel>(
-        //   dropdownSearchDecoration: const InputDecoration(labelText: 'Name'),
-        //   asyncItems: (String filter) async {
-        //     final response = await Dio().get(
-        //       'http://5d85ccfb1e61af001471bf60.mockapi.io/user',
-        //       queryParameters: {'filter': filter},
-        //     );
-        //     final models = UserModel.fromJsonList(response.data);
-        //     return models;
-        //   },
-        //   onChanged: (UserModel? data) {
-        //     print(data);
-        //   },
-        // )
       ],
     );
   }
 
   Widget _buildInfomationInputView() {
-    _houseAmountController = TextEditingController();
-    _houseCapacityController = TextEditingController();
-    _houseAreaController = TextEditingController();
-    _housePriceController = TextEditingController();
-    _houseDepositPriceController = TextEditingController();
-    _houseElectricityPriceController = TextEditingController();
-    _houseWaterPriceController = TextEditingController();
-    _houseInternetPriceController = TextEditingController();
-    _housePackingPriceController = TextEditingController();
-    //
-    final state = ref.watch(_provider);
+    final houseState = ref.watch(_provider).house;
     final isParkingSpaceAvailable =
         ref.watch(_provider).isParkingSpaceAvailable;
     return Column(
@@ -433,37 +359,34 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           placeholder: 'Số lượng phòng bạn đang quản lý',
           keyboardType: TextInputType.number,
           initialText: '1',
-          controller: _houseAmountController,
           textInputAction: TextInputAction.next,
           validator: Validator().required().minLength(1).build(),
-          onTextChange: (value) {
-            _houseAmountController.text = value!;
-          },
+          onTextChange: (value) {},
         ),
         const SizedBox(height: 8),
         InputTextField.singleLine(
           labelText: 'Sức chứa (người)',
           placeholder: 'Số lượng người tối đa có thể chứa',
           keyboardType: TextInputType.number,
-          controller: _houseCapacityController,
-          initialText: '1',
+          initialText: houseState?.capacity.toString(),
           textInputAction: TextInputAction.next,
           validator: Validator().required().minLength(1).build(),
           onTextChange: (value) {
-            _houseCapacityController.text = value!;
+            _viewModel.setHouseCapacity(value!);
+            print('capacity: $value');
           },
         ),
         const SizedBox(height: 8),
         InputTextField.singleLine(
           labelText: 'Diện tích (m2)',
           placeholder: 'Diện tích phòng',
-          initialText: '10',
+          initialText: houseState?.area.toString(),
           keyboardType: TextInputType.number,
-          controller: _houseAreaController,
           textInputAction: TextInputAction.next,
           validator: Validator().required().minLength(1).build(),
           onTextChange: (value) {
-            _houseAreaController.text = value!;
+            _viewModel.setHouseArea(value!);
+            print('area: $value');
           },
         ),
         const SizedBox(height: 8),
@@ -477,12 +400,9 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           placeholder: 'Diện tích phòng',
           initialText: '0',
           keyboardType: TextInputType.number,
-          controller: _housePriceController,
           textInputAction: TextInputAction.next,
           validator: Validator().required().minLength(1).build(),
-          onTextChange: (value) {
-            _housePriceController.text = value!;
-          },
+          onTextChange: (value) {},
         ),
         const SizedBox(height: 8),
         InputTextField.singleLine(
@@ -490,11 +410,8 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           placeholder: 'Tiền cọc',
           initialText: '0',
           keyboardType: TextInputType.number,
-          controller: _houseDepositPriceController,
           textInputAction: TextInputAction.next,
-          onTextChange: (value) {
-            _houseDepositPriceController.text = value!;
-          },
+          onTextChange: (value) {},
         ),
         const SizedBox(height: 8),
         InputTextField.singleLine(
@@ -502,12 +419,9 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           placeholder: 'Tiền điện',
           initialText: '0',
           keyboardType: TextInputType.number,
-          controller: _houseElectricityPriceController,
           textInputAction: TextInputAction.next,
           validator: Validator().required().minLength(4).build(),
-          onTextChange: (value) {
-            _houseElectricityPriceController.text = value!;
-          },
+          onTextChange: (value) {},
         ),
         const SizedBox(height: 8),
         InputTextField.singleLine(
@@ -515,12 +429,9 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           placeholder: 'Tiền nước',
           initialText: '0',
           keyboardType: TextInputType.number,
-          controller: _houseWaterPriceController,
           textInputAction: TextInputAction.next,
           validator: Validator().required().minLength(4).build(),
-          onTextChange: (value) {
-            _houseWaterPriceController.text = value!;
-          },
+          onTextChange: (value) {},
         ),
         const SizedBox(height: 8),
         InputTextField.singleLine(
@@ -528,18 +439,10 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           placeholder: 'Tiền nước',
           initialText: '0',
           keyboardType: TextInputType.number,
-          controller: _houseInternetPriceController,
           textInputAction: TextInputAction.next,
           validator: Validator().required().minLength(4).build(),
-          onTextChange: (value) {
-            _houseInternetPriceController.text = value!;
-          },
+          onTextChange: (value) {},
         ),
-        // Checkbox(
-        //   value: true,
-
-        //   onChanged: (value) {},
-        // ),
         CheckboxListTile(
           value: isParkingSpaceAvailable,
           controlAffinity: ListTileControlAffinity.leading,
@@ -559,12 +462,9 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
             placeholder: 'Tiền gửi xe',
             initialText: '0',
             keyboardType: TextInputType.number,
-            controller: _housePackingPriceController,
             textInputAction: TextInputAction.next,
             validator: Validator().required().minLength(4).build(),
-            onTextChange: (value) {
-              _housePackingPriceController.text = value!;
-            },
+            onTextChange: (value) {},
           ),
         ],
       ],

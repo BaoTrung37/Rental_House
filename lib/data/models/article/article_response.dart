@@ -1,7 +1,9 @@
+import 'package:batru_house_rental/data/utilities/common/json_date_time_converter.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'article_response.g.dart';
 
+@JsonDateTimeConverter()
 @JsonSerializable()
 class ArticleResponse {
   ArticleResponse({
@@ -10,6 +12,7 @@ class ArticleResponse {
     required this.userId,
     required this.title,
     required this.createdAt,
+    this.updatedAt,
   });
   factory ArticleResponse.fromJson(Map<String, dynamic> json) =>
       _$ArticleResponseFromJson(json);
@@ -19,6 +22,7 @@ class ArticleResponse {
   final String userId;
   final String title;
   final DateTime createdAt;
+  final DateTime? updatedAt;
 
   Map<String, dynamic> toJson() => _$ArticleResponseToJson(this);
 }

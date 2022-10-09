@@ -1,39 +1,22 @@
-class HouseEntity {
-  HouseEntity({
-    required this.id,
-    required this.userId,
-    required this.title,
-    required this.roomType,
-    required this.roomDescription,
-    required this.roomAreage,
-    required this.gender,
-    required this.roomPrice,
-    required this.deposit,
-    required this.district,
-    required this.numberPhone,
-    required this.capacity,
-    required this.createdAt,
-    this.electricityBill,
-    this.waterBill,
-    this.internetBill,
-    this.parkingFee,
-  });
-  final String id;
-  final String userId;
-  final String title;
-  final String roomType;
-  final String roomDescription;
-  final int roomAreage;
-  final String gender;
-  final int roomPrice;
-  final int deposit;
-  final int? electricityBill;
-  final int? waterBill;
-  final int? internetBill;
-  final int? parkingFee;
-  final String district;
-  final String numberPhone;
-  final int capacity;
-  final DateTime createdAt;
-  final List<String> images = [];
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'house_entity.freezed.dart';
+
+@freezed
+class HouseEntity with _$HouseEntity {
+  const factory HouseEntity({
+    required String id,
+    required String streetName,
+    required String houseNumber,
+    required String phoneNumber,
+    required String description,
+    @Default(0) int area,
+    @Default(1) int capacity,
+    @Default(500000) int rentalPrice,
+    @Default(0) int depositPrice,
+    @Default(0) int waterPrice,
+    @Default(0) int electricPrice,
+    @Default(0) int internetPrice,
+    @Default(0) int parkingPrice,
+  }) = _HouseEntity;
 }

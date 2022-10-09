@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import 'package:batru_house_rental/domain/entities/house/house_entity.dart';
 import 'package:batru_house_rental/domain/use_case/commune/get_commune_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/convenient/get_convenient_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/district/get_district_list_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/province/get_province_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/type/get_type_list_use_case.dart';
 import 'package:batru_house_rental/presentation/pages/post_article/post_article_state.dart';
 import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
@@ -13,33 +15,37 @@ import 'package:image_picker/image_picker.dart';
 
 class PostArticleViewModel extends StateNotifier<PostArticleState> {
   PostArticleViewModel(
+    this._getProvinceListUseCase,
     this._getTypeListUseCase,
-    // this._getProvinceListUseCase,
     this._getDistrictListUseCase,
     this._getCommuneListUseCase,
     this._getConvenientListUseCase,
-  ) : super(const PostArticleState());
+  ) : super(PostArticleState());
 
   final GetTypeListUseCase _getTypeListUseCase;
-  // final GetProvinceListUseCase _getProvinceListUseCase;
+  final GetProvinceListUseCase _getProvinceListUseCase;
   final GetDistrictListUseCase _getDistrictListUseCase;
   final GetCommuneListUseCase _getCommuneListUseCase;
   final GetConvenientListUseCase _getConvenientListUseCase;
+
   Future<void> initData() async {
     try {
       state = state.copyWith(
         status: LoadingStatus.inProgress,
       );
+      await getHouseInitial();
+      final provinces = await _getProvinceListUseCase.run();
       final convenients = await _getConvenientListUseCase.run();
       final types = await _getTypeListUseCase.run();
       final districts = await _getDistrictListUseCase.run('01');
       final communes = await _getCommuneListUseCase.run('001');
       state = state.copyWith(
-        status: LoadingStatus.success,
+        provinces: provinces,
         types: types,
         districts: districts,
         communes: communes,
         convenients: convenients,
+        status: LoadingStatus.success,
       );
     } catch (e) {
       state = state.copyWith(
@@ -47,6 +53,98 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
       );
       debugPrint(e.toString());
     }
+  }
+
+  Future<void> getHouseInitial() async {
+    state = state.copyWith(
+      house: const HouseEntity(
+        description: '',
+        houseNumber: '',
+        id: '',
+        phoneNumber: '',
+        streetName: '',
+        area: 0,
+        capacity: 1,
+        depositPrice: 0,
+        electricPrice: 0,
+        waterPrice: 0,
+        internetPrice: 0,
+        parkingPrice: 0,
+        rentalPrice: 0,
+      ),
+    );
+  }
+
+  // void setHouseAmount(int amount) {
+  //   state = state.house.;
+  // }
+
+  void setHouseCapacity(String capacity) {
+    state = state.copyWith(
+      house: state.house?.copyWith(
+        capacity: int.parse(capacity),
+      ),
+    );
+  }
+
+  void setHouseArea(String area) {
+    try {
+      state = state.copyWith(
+        house: state.house?.copyWith(
+          area: int.parse(area),
+        ),
+      );
+    } on Exception catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  void setRentalPrice(int price) {
+    state = state.copyWith(
+      house: state.house?.copyWith(
+        rentalPrice: price,
+      ),
+    );
+  }
+
+  void setDipositPrice(int price) {
+    state = state.copyWith(
+      house: state.house?.copyWith(
+        depositPrice: price,
+      ),
+    );
+  }
+
+  void setElectricPrice(int price) {
+    state = state.copyWith(
+      house: state.house?.copyWith(
+        electricPrice: price,
+      ),
+    );
+  }
+
+  void setWaterPrice(int price) {
+    state = state.copyWith(
+      house: state.house?.copyWith(
+        waterPrice: price,
+      ),
+    );
+  }
+
+  void setInternetPrice(int price) {
+    state = state.copyWith(
+      house: state.house?.copyWith(
+        internetPrice: price,
+      ),
+    );
+  }
+
+  void setParkingPrice(int price) {
+    state = state.copyWith(
+      house: state.house?.copyWith(
+        parkingPrice: price,
+      ),
+    );
   }
 
   void onConvenientTap(String convenientId) {

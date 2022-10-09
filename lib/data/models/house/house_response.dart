@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'house_reponse.g.dart';
+part 'house_response.g.dart';
 
 @JsonSerializable()
 class HouseResponse {
@@ -11,12 +11,13 @@ class HouseResponse {
     required this.description,
     required this.streetName,
     required this.houseNumber,
-    required this.despoitPrice,
+    required this.depositPrice,
     required this.waterPrice,
     required this.electricPrice,
     required this.internetPrice,
     required this.parkingPrice,
     required this.roomPrice,
+    required this.phoneNumber,
   });
   factory HouseResponse.fromJson(Map<String, dynamic> json) =>
       _$HouseResponseFromJson(json);
@@ -27,12 +28,13 @@ class HouseResponse {
   final String description;
   final String streetName;
   final String houseNumber;
-  final String despoitPrice;
-  final String waterPrice;
-  final String electricPrice;
-  final String internetPrice;
-  final String parkingPrice;
-  final String roomPrice;
-  
+  final int depositPrice;
+  final int waterPrice;
+  final int electricPrice;
+  final int internetPrice;
+  final int parkingPrice;
+  final int roomPrice;
+  final String phoneNumber;
+
   Map<String, dynamic> toJson() => _$HouseResponseToJson(this);
 }
