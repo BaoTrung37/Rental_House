@@ -58,10 +58,8 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
   Future<void> getHouseInitial() async {
     state = state.copyWith(
       house: const HouseEntity(
-        description: '',
         houseNumber: '',
         id: '',
-        phoneNumber: '',
         streetName: '',
         area: 0,
         capacity: 1,
@@ -80,11 +78,15 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
   // }
 
   void setHouseCapacity(String capacity) {
-    state = state.copyWith(
-      house: state.house?.copyWith(
-        capacity: int.parse(capacity),
-      ),
-    );
+    try {
+      state = state.copyWith(
+        house: state.house?.copyWith(
+          capacity: int.parse(capacity),
+        ),
+      );
+    } on Exception catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
   void setHouseArea(String area) {
@@ -99,53 +101,117 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
     }
   }
 
-  void setRentalPrice(int price) {
+  void setRentalPrice(String rentalPrice) {
+    try {
+      state = state.copyWith(
+        house: state.house?.copyWith(
+          rentalPrice: int.parse(rentalPrice),
+        ),
+      );
+    } on Exception catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  void setDipositPrice(String depositPrice) {
+    try {
+      state = state.copyWith(
+        house: state.house?.copyWith(
+          depositPrice: int.parse(depositPrice),
+        ),
+      );
+    } on Exception catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  void setElectricPrice(String electricPrice) {
+    try {
+      state = state.copyWith(
+        house: state.house?.copyWith(
+          electricPrice: int.parse(electricPrice),
+        ),
+      );
+    } on Exception catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  void setWaterPrice(String waterPrice) {
+    try {
+      state = state.copyWith(
+        house: state.house?.copyWith(
+          waterPrice: int.parse(waterPrice),
+        ),
+      );
+    } on Exception catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  void setInternetPrice(String internetPrice) {
+    try {
+      state = state.copyWith(
+        house: state.house?.copyWith(
+          internetPrice: int.parse(internetPrice),
+        ),
+      );
+    } on Exception catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  void setParkingPrice(String parkingPrice) {
+    try {
+      state = state.copyWith(
+        house: state.house?.copyWith(
+          parkingPrice: int.parse(parkingPrice),
+        ),
+      );
+    } on Exception catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  void setStreetName(String streetName) {
     state = state.copyWith(
       house: state.house?.copyWith(
-        rentalPrice: price,
+        streetName: streetName,
       ),
     );
   }
 
-  void setDipositPrice(int price) {
+  void setHouseNumber(String houseNumber) {
     state = state.copyWith(
       house: state.house?.copyWith(
-        depositPrice: price,
+        houseNumber: houseNumber,
       ),
     );
   }
 
-  void setElectricPrice(int price) {
-    state = state.copyWith(
-      house: state.house?.copyWith(
-        electricPrice: price,
-      ),
-    );
-  }
+  // void setNumberPhone(String numberPhone) {
+  //   state = state.copyWith(
+  //     house: state.house?.copyWith(
+  //       phoneNumber: numberPhone,
+  //     ),
+  //   );
+  // }
 
-  void setWaterPrice(int price) {
-    state = state.copyWith(
-      house: state.house?.copyWith(
-        waterPrice: price,
-      ),
-    );
-  }
+  // void setDescription(String description) {
+  //   state = state.copyWith(
+  //     house: state.house?.copyWith(
+  //       description: description,
+  //     ),
+  //   );
+  // }
 
-  void setInternetPrice(int price) {
-    state = state.copyWith(
-      house: state.house?.copyWith(
-        internetPrice: price,
-      ),
-    );
-  }
-
-  void setParkingPrice(int price) {
-    state = state.copyWith(
-      house: state.house?.copyWith(
-        parkingPrice: price,
-      ),
-    );
-  }
+  // void setTitle(String title) {
+  //   state = state.copyWith(
+  //     house: state.house?.copyWith(
+  //       title: title,
+  //     ),
+  //   );
+  // }
 
   void onConvenientTap(String convenientId) {
     state = state.copyWith(

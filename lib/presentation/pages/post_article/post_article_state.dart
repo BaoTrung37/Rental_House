@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:batru_house_rental/domain/entities/article/article_entity.dart';
 import 'package:batru_house_rental/domain/entities/commune/commune_entity.dart';
 import 'package:batru_house_rental/domain/entities/convenient/convenient_entity.dart';
 import 'package:batru_house_rental/domain/entities/district/district_entity.dart';
@@ -30,5 +31,6 @@ class PostArticleState with _$PostArticleState {
     @Default([]) List<File> screenshotList,
     HouseEntity? house,
     ImageHouseEntity? imageHouse,
+    ArticleEntity? article,
   }) = _PostArticleState;
 }

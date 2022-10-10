@@ -7,6 +7,7 @@ class ArticleEntity with _$ArticleEntity {
   const factory ArticleEntity({
     required String id,
     required String title,
+    required String phoneNumber,
     required String description,
     required String houseId,
     required String userId,

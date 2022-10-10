@@ -305,18 +305,24 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           labelText: 'Tên đường',
           placeholder: 'Nhập tên đường',
           keyboardType: TextInputType.text,
+          initialText: state.house?.streetName,
           textInputAction: TextInputAction.next,
           validator: Validator().required().minLength(1).maxLength(50).build(),
-          onTextChange: (value) {},
+          onTextChange: (value) {
+            _viewModel.setStreetName(value!);
+          },
         ),
         const SizedBox(height: 8),
         InputTextField.singleLine(
           labelText: 'Số nhà',
           placeholder: 'Nhập địa chỉ nhà',
           keyboardType: TextInputType.text,
+          initialText: state.house?.houseNumber,
           textInputAction: TextInputAction.next,
           validator: Validator().required().minLength(1).maxLength(40).build(),
-          onTextChange: (value) {},
+          onTextChange: (value) {
+            _viewModel.setHouseNumber(value!);
+          },
         ),
       ],
     );
@@ -353,16 +359,16 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
             _viewModel.onTypeChanged(value!);
           },
         ),
-        const SizedBox(height: 8),
-        InputTextField.singleLine(
-          labelText: 'Số lượng phòng (phòng)',
-          placeholder: 'Số lượng phòng bạn đang quản lý',
-          keyboardType: TextInputType.number,
-          initialText: '1',
-          textInputAction: TextInputAction.next,
-          validator: Validator().required().minLength(1).build(),
-          onTextChange: (value) {},
-        ),
+        // const SizedBox(height: 8),
+        // InputTextField.singleLine(
+        //   labelText: 'Số lượng phòng (phòng)',
+        //   placeholder: 'Số lượng phòng bạn đang quản lý',
+        //   keyboardType: TextInputType.number,
+        //   initialText: '1',
+        //   textInputAction: TextInputAction.next,
+        //   validator: Validator().required().minLength(1).build(),
+        //   onTextChange: (value) {},
+        // ),
         const SizedBox(height: 8),
         InputTextField.singleLine(
           labelText: 'Sức chứa (người)',
@@ -373,7 +379,6 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           validator: Validator().required().minLength(1).build(),
           onTextChange: (value) {
             _viewModel.setHouseCapacity(value!);
-            print('capacity: $value');
           },
         ),
         const SizedBox(height: 8),
@@ -386,7 +391,6 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           validator: Validator().required().minLength(1).build(),
           onTextChange: (value) {
             _viewModel.setHouseArea(value!);
-            print('area: $value');
           },
         ),
         const SizedBox(height: 8),
@@ -398,50 +402,60 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
         InputTextField.singleLine(
           labelText: 'Giá cho thuê (VNĐ/phòng)',
           placeholder: 'Diện tích phòng',
-          initialText: '0',
+          initialText: state.house?.rentalPrice.toString(),
           keyboardType: TextInputType.number,
           textInputAction: TextInputAction.next,
           validator: Validator().required().minLength(1).build(),
-          onTextChange: (value) {},
+          onTextChange: (value) {
+            _viewModel.setRentalPrice(value!);
+          },
         ),
         const SizedBox(height: 8),
         InputTextField.singleLine(
           labelText: 'Đặt cọc (VNĐ/phòng)',
           placeholder: 'Tiền cọc',
-          initialText: '0',
+          initialText: state.house?.depositPrice.toString(),
           keyboardType: TextInputType.number,
           textInputAction: TextInputAction.next,
-          onTextChange: (value) {},
+          onTextChange: (value) {
+            _viewModel.setDipositPrice(value!);
+          },
         ),
         const SizedBox(height: 8),
         InputTextField.singleLine(
           labelText: 'Tiền điện (VNĐ/kWh)',
           placeholder: 'Tiền điện',
-          initialText: '0',
+          initialText: state.house?.electricPrice.toString(),
           keyboardType: TextInputType.number,
           textInputAction: TextInputAction.next,
           validator: Validator().required().minLength(4).build(),
-          onTextChange: (value) {},
+          onTextChange: (value) {
+            _viewModel.setElectricPrice(value!);
+          },
         ),
         const SizedBox(height: 8),
         InputTextField.singleLine(
           labelText: 'Tiền nước (VNĐ/người)',
           placeholder: 'Tiền nước',
-          initialText: '0',
+          initialText: state.house?.waterPrice.toString(),
           keyboardType: TextInputType.number,
           textInputAction: TextInputAction.next,
           validator: Validator().required().minLength(4).build(),
-          onTextChange: (value) {},
+          onTextChange: (value) {
+            _viewModel.setWaterPrice(value!);
+          },
         ),
         const SizedBox(height: 8),
         InputTextField.singleLine(
           labelText: 'Tiền Internet (VNĐ/phòng)',
           placeholder: 'Tiền nước',
-          initialText: '0',
+          initialText: state.house?.internetPrice.toString(),
           keyboardType: TextInputType.number,
           textInputAction: TextInputAction.next,
           validator: Validator().required().minLength(4).build(),
-          onTextChange: (value) {},
+          onTextChange: (value) {
+            _viewModel.setInternetPrice(value!);
+          },
         ),
         CheckboxListTile(
           value: isParkingSpaceAvailable,
@@ -460,11 +474,13 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           InputTextField.singleLine(
             labelText: 'Tiền gửi xe',
             placeholder: 'Tiền gửi xe',
-            initialText: '0',
+            initialText: state.house?.parkingPrice.toString(),
             keyboardType: TextInputType.number,
             textInputAction: TextInputAction.next,
             validator: Validator().required().minLength(4).build(),
-            onTextChange: (value) {},
+            onTextChange: (value) {
+              _viewModel.setParkingPrice(value!);
+            },
           ),
         ],
       ],

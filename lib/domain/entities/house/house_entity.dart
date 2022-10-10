@@ -8,8 +8,6 @@ class HouseEntity with _$HouseEntity {
     required String id,
     required String streetName,
     required String houseNumber,
-    required String phoneNumber,
-    required String description,
     @Default(0) int area,
     @Default(1) int capacity,
     @Default(500000) int rentalPrice,
