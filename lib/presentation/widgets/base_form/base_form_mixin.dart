@@ -73,7 +73,7 @@ mixin BaseFormMixin<T extends StatefulWidget> on State<T> {
           if (_formKey.currentState?.validate() == true) {
             onSuccess();
           } else {
-            scrollToInvalidField();
+            // scrollToInvalidField();
             onFailure?.call();
           }
         });

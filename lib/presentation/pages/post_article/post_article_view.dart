@@ -100,7 +100,15 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
               Expanded(
                 child: AppButton(
                   title: isLastStep ? 'Đăng phòng' : 'Tiếp theo',
-                  onButtonTap: details.onStepContinue,
+                  onButtonTap: isLastStep
+                      ? details.onStepContinue
+                      : () {
+                          validate(
+                            onSuccess: () {
+                              _viewModel.postArticle();
+                            },
+                          );
+                        },
                 ),
               ),
               if (!isFirstStep) ...[

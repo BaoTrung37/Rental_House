@@ -16,8 +16,7 @@ class HouseResponse {
     required this.electricPrice,
     required this.internetPrice,
     required this.parkingPrice,
-    required this.roomPrice,
-    required this.phoneNumber,
+    required this.rentalPrice,
   });
   factory HouseResponse.fromJson(Map<String, dynamic> json) =>
       _$HouseResponseFromJson(json);
@@ -33,8 +32,7 @@ class HouseResponse {
   final int electricPrice;
   final int internetPrice;
   final int parkingPrice;
-  final int roomPrice;
-  final String phoneNumber;
+  final int rentalPrice;
 
   Map<String, dynamic> toJson() => _$HouseResponseToJson(this);
 }

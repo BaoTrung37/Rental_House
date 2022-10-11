@@ -77,6 +77,10 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
   //   state = state.house.;
   // }
 
+  Future<void> postArticle() async{
+    
+  }
+
   void setHouseCapacity(String capacity) {
     try {
       state = state.copyWith(
