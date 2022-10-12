@@ -8,7 +8,6 @@ class HouseResponse {
     required this.id,
     required this.area,
     required this.capacity,
-    required this.description,
     required this.streetName,
     required this.houseNumber,
     required this.depositPrice,
@@ -24,7 +23,6 @@ class HouseResponse {
   final String id;
   final int area;
   final int capacity;
-  final String description;
   final String streetName;
   final String houseNumber;
   final int depositPrice;

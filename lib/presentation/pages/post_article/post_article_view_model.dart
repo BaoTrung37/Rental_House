@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:batru_house_rental/data/models/house/house_response.dart';
 import 'package:batru_house_rental/domain/entities/house/house_entity.dart';
 import 'package:batru_house_rental/domain/use_case/commune/get_commune_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/convenient/get_convenient_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/district/get_district_list_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/house/post_house_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/province/get_province_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/type/get_type_list_use_case.dart';
 import 'package:batru_house_rental/presentation/pages/post_article/post_article_state.dart';
@@ -20,6 +22,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
     this._getDistrictListUseCase,
     this._getCommuneListUseCase,
     this._getConvenientListUseCase,
+    this._postHouseUseCase,
   ) : super(PostArticleState());
 
   final GetTypeListUseCase _getTypeListUseCase;
@@ -27,6 +30,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
   final GetDistrictListUseCase _getDistrictListUseCase;
   final GetCommuneListUseCase _getCommuneListUseCase;
   final GetConvenientListUseCase _getConvenientListUseCase;
+  final PostHouseUseCase _postHouseUseCase;
 
   Future<void> initData() async {
     try {
@@ -77,8 +81,38 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
   //   state = state.house.;
   // }
 
-  Future<void> postArticle() async{
-    
+  Future<void> postArticle() async {
+    try {
+      state = state.copyWith(
+        status: LoadingStatus.inProgress,
+      );
+      final houseId = DateTime.now().millisecondsSinceEpoch.toString();
+      await _postHouseUseCase.run(
+        HouseResponse(
+          id: houseId,
+          area: state.house?.area ?? 0,
+          capacity: state.house?.capacity ?? 0,
+          streetName: state.house?.streetName ?? '',
+          houseNumber: state.house?.houseNumber ?? '',
+          depositPrice: state.house?.depositPrice ?? 0,
+          waterPrice: state.house?.waterPrice ?? 0,
+          electricPrice: state.house?.electricPrice ?? 0,
+          internetPrice: state.house?.internetPrice ?? 0,
+          parkingPrice: state.isParkingSpaceAvailable
+              ? state.house?.parkingPrice ?? 0
+              : 0,
+          rentalPrice: state.house!.rentalPrice,
+        ),
+      );
+      state = state.copyWith(
+        status: LoadingStatus.success,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        status: LoadingStatus.error,
+      );
+      debugPrint(e.toString());
+    }
   }
 
   void setHouseCapacity(String capacity) {
@@ -193,29 +227,29 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
     );
   }
 
-  // void setNumberPhone(String numberPhone) {
-  //   state = state.copyWith(
-  //     house: state.house?.copyWith(
-  //       phoneNumber: numberPhone,
-  //     ),
-  //   );
-  // }
+  void setPhoneNumber(String numberPhone) {
+    state = state.copyWith(
+      article: state.article?.copyWith(
+        phoneNumber: numberPhone,
+      ),
+    );
+  }
 
-  // void setDescription(String description) {
-  //   state = state.copyWith(
-  //     house: state.house?.copyWith(
-  //       description: description,
-  //     ),
-  //   );
-  // }
+  void setDescription(String description) {
+    state = state.copyWith(
+      article: state.article?.copyWith(
+        description: description,
+      ),
+    );
+  }
 
-  // void setTitle(String title) {
-  //   state = state.copyWith(
-  //     house: state.house?.copyWith(
-  //       title: title,
-  //     ),
-  //   );
-  // }
+  void setTitle(String title) {
+    state = state.copyWith(
+      article: state.article?.copyWith(
+        title: title,
+      ),
+    );
+  }
 
   void onConvenientTap(String convenientId) {
     state = state.copyWith(
