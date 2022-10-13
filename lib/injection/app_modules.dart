@@ -3,6 +3,7 @@ import 'package:batru_house_rental/data/repositories/auth/auth_repository.dart';
 import 'package:batru_house_rental/data/repositories/chat/chat_repository.dart';
 import 'package:batru_house_rental/data/repositories/commune/commune_repository.dart';
 import 'package:batru_house_rental/data/repositories/convenient/convenient_repository.dart';
+import 'package:batru_house_rental/data/repositories/convenient_house/convenient_house_repository.dart';
 import 'package:batru_house_rental/data/repositories/district/district_repository.dart';
 import 'package:batru_house_rental/data/repositories/house/house_repository.dart';
 import 'package:batru_house_rental/data/repositories/image_house/image_house_repository.dart';
@@ -15,6 +16,7 @@ import 'package:batru_house_rental/domain/use_case/auth/logout_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/get_chat_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/commune/get_commune_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/convenient/get_convenient_list_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/convenient_house/post_convenient_house_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/district/get_district_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/house/get_house_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/house/post_house_use_case.dart';
@@ -83,6 +85,14 @@ class AppModules {
     /// convenient list use case
     injector.registerLazySingleton<GetConvenientListUseCase>(
         () => GetConvenientListUseCase());
+
+    /// convenient house repository
+    injector.registerLazySingleton<ConvenientHouseRepository>(
+        () => ConvenientHouseRepository());
+
+    /// post convenient list use case
+    injector.registerLazySingleton<PostConvenientHouseListUseCase>(
+        () => PostConvenientHouseListUseCase());
 
     /// house repository
     injector.registerLazySingleton<HouseRepository>(() => HouseRepository());

@@ -15,6 +15,9 @@ class AddressRepository {
   }
 
   Future<void> postAddress(AddressResponse addressResponse) async {
-    await _fireStore.collection('address').add(addressResponse.toJson());
+    await _fireStore
+        .collection('address')
+        .doc(addressResponse.id)
+        .set(addressResponse.toJson());
   }
 }

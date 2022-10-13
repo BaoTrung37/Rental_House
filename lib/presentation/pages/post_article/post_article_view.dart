@@ -1,6 +1,7 @@
 import 'package:batru_house_rental/domain/use_case/address/post_address_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/commune/get_commune_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/convenient/get_convenient_list_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/convenient_house/post_convenient_house_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/district/get_district_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/house/post_house_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/province/get_province_list_use_case.dart';
@@ -31,6 +32,7 @@ final _provider =
     injector.get<GetConvenientListUseCase>(),
     injector.get<PostHouseUseCase>(),
     injector.get<PostAddressUseCase>(),
+    injector.get<PostConvenientHouseListUseCase>(),
   ),
 );
 

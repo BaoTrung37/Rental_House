@@ -1,11 +1,14 @@
 import 'dart:io';
 
 import 'package:batru_house_rental/data/models/address/address_reponse.dart';
+import 'package:batru_house_rental/data/models/convenient_house/convenient_house_reponse.dart';
 import 'package:batru_house_rental/data/models/house/house_response.dart';
+import 'package:batru_house_rental/domain/entities/convenient_house/convenient_house_entity.dart';
 import 'package:batru_house_rental/domain/entities/house/house_entity.dart';
 import 'package:batru_house_rental/domain/use_case/address/post_address_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/commune/get_commune_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/convenient/get_convenient_list_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/convenient_house/post_convenient_house_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/district/get_district_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/house/post_house_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/province/get_province_list_use_case.dart';
@@ -26,6 +29,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
     this._getConvenientListUseCase,
     this._postHouseUseCase,
     this._postAddressUseCase,
+    this._postConvenientHouseListUseCase,
   ) : super(PostArticleState());
 
   final GetTypeListUseCase _getTypeListUseCase;
@@ -35,7 +39,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
   final GetConvenientListUseCase _getConvenientListUseCase;
   final PostHouseUseCase _postHouseUseCase;
   final PostAddressUseCase _postAddressUseCase;
-
+  final PostConvenientHouseListUseCase _postConvenientHouseListUseCase;
   Future<void> initData() async {
     try {
       state = state.copyWith(
@@ -120,6 +124,16 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
           houseId: houseId,
         ),
       );
+
+      await _postConvenientHouseListUseCase
+          .run(state.convenientSelected.map((e) {
+        return ConvenientHouseResponse(
+          id: e.convenientId + houseId,
+          houseId: houseId,
+          convenientId: e.convenientId,
+        );
+      }).toList());
+
       state = state.copyWith(
         status: LoadingStatus.success,
       );
@@ -272,12 +286,23 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
 
   void onConvenientTap(String convenientId) {
     state = state.copyWith(
-        convenients: state.convenients.map((e) {
-      if (e.id == convenientId) {
-        return e.copyWith(isSelected: !e.isSelected);
-      }
-      return e;
-    }).toList());
+      convenients: state.convenients.map((e) {
+        if (e.id == convenientId) {
+          return e.copyWith(isSelected: !e.isSelected);
+        }
+        return e;
+      }).toList(),
+    );
+    state = state.copyWith(
+      convenientSelected: state.convenients
+          .where((element) => element.isSelected == true)
+          .toList()
+          .map((e) => ConvenientHouseEntity(
+                convenientId: e.id,
+              ))
+          .toList(),
+    );
+    // debugPrint(state.convenientSelected.length.toString());
   }
 
   Future<void> onDistrictChanged(String districtName) async {
