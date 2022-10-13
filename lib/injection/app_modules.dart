@@ -1,3 +1,4 @@
+import 'package:batru_house_rental/data/repositories/address/address_repository.dart';
 import 'package:batru_house_rental/data/repositories/auth/auth_repository.dart';
 import 'package:batru_house_rental/data/repositories/chat/chat_repository.dart';
 import 'package:batru_house_rental/data/repositories/commune/commune_repository.dart';
@@ -7,6 +8,7 @@ import 'package:batru_house_rental/data/repositories/house/house_repository.dart
 import 'package:batru_house_rental/data/repositories/image_house/image_house_repository.dart';
 import 'package:batru_house_rental/data/repositories/province/province_repository.dart';
 import 'package:batru_house_rental/data/repositories/type/type_repository.dart';
+import 'package:batru_house_rental/domain/use_case/address/post_address_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/google_login_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/logout_use_case.dart';
@@ -98,5 +100,13 @@ class AppModules {
     /// image house list use case
     injector.registerLazySingleton<GetImageHouseListUseCase>(
         () => GetImageHouseListUseCase());
+
+    /// address repository
+    injector
+        .registerLazySingleton<AddressRepository>(() => AddressRepository());
+
+    /// post address use case
+    injector
+        .registerLazySingleton<PostAddressUseCase>(() => PostAddressUseCase());
   }
 }

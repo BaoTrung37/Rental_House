@@ -1,3 +1,4 @@
+import 'package:batru_house_rental/domain/use_case/address/post_address_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/commune/get_commune_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/convenient/get_convenient_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/district/get_district_list_use_case.dart';
@@ -11,6 +12,7 @@ import 'package:batru_house_rental/presentation/pages/post_article/widgets/conve
 import 'package:batru_house_rental/presentation/pages/post_article/widgets/input_image_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/utilities/common/validator.dart';
+import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
 import 'package:batru_house_rental/presentation/widgets/base_app_bar/base_app_bar.dart';
 import 'package:batru_house_rental/presentation/widgets/base_form/base_form_mixin.dart';
 import 'package:batru_house_rental/presentation/widgets/buttons/app_button.dart';
@@ -28,6 +30,7 @@ final _provider =
     injector.get<GetCommuneListUseCase>(),
     injector.get<GetConvenientListUseCase>(),
     injector.get<PostHouseUseCase>(),
+    injector.get<PostAddressUseCase>(),
   ),
 );
 
@@ -91,39 +94,8 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
       controlsBuilder: (context, details) {
         final isLastStep = ref.watch(_provider).currentStep == 3;
         final isFirstStep = ref.watch(_provider).currentStep == 0;
-        return Container(
-          margin: const EdgeInsets.only(top: 16),
-          child: Row(
-            children: [
-              Expanded(
-                child: AppButton(
-                  title: isLastStep ? 'Đăng phòng' : 'Tiếp theo',
-                  onButtonTap: !isLastStep
-                      ? details.onStepContinue
-                      : () {
-                          validate(
-                            onSuccess: () {
-                              _viewModel.postArticle();
-                            },
-                          );
-                        },
-                ),
-              ),
-              if (!isFirstStep) ...[
-                const SizedBox(
-                  width: 16,
-                ),
-                Expanded(
-                  child: AppButton(
-                    title: 'Quay lại',
-                    backgroundColor: context.colors.contentAlert,
-                    onButtonTap: details.onStepCancel,
-                  ),
-                ),
-              ],
-            ],
-          ),
-        );
+        return _buildButton(
+            isLastStep, details, isFirstStep, context, state.status);
       },
       steps: [
         Step(
@@ -151,6 +123,46 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           content: _buildConfirmInputView(),
         ),
       ],
+    );
+  }
+
+  Container _buildButton(bool isLastStep, ControlsDetails details,
+      bool isFirstStep, BuildContext context, LoadingStatus status) {
+    return Container(
+      margin: const EdgeInsets.only(top: 16),
+      child: Row(
+        children: [
+          Expanded(
+            child: AppButton(
+              isExpanded: true,
+              buttonState: status.buttonState,
+              title: isLastStep ? 'Đăng phòng' : 'Tiếp theo',
+              onButtonTap: !isLastStep
+                  ? details.onStepContinue
+                  : () {
+                      validate(
+                        onSuccess: () {
+                          _viewModel.postArticle();
+                        },
+                      );
+                    },
+            ),
+          ),
+          if (!isFirstStep) ...[
+            const SizedBox(
+              width: 16,
+            ),
+            Expanded(
+              child: AppButton(
+                isExpanded: true,
+                title: 'Quay lại',
+                backgroundColor: context.colors.contentAlert,
+                onButtonTap: details.onStepCancel,
+              ),
+            ),
+          ],
+        ],
+      ),
     );
   }
 

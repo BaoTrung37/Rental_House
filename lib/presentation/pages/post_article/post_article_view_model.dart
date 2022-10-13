@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:batru_house_rental/data/models/address/address_reponse.dart';
 import 'package:batru_house_rental/data/models/house/house_response.dart';
 import 'package:batru_house_rental/domain/entities/house/house_entity.dart';
+import 'package:batru_house_rental/domain/use_case/address/post_address_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/commune/get_commune_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/convenient/get_convenient_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/district/get_district_list_use_case.dart';
@@ -23,6 +25,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
     this._getCommuneListUseCase,
     this._getConvenientListUseCase,
     this._postHouseUseCase,
+    this._postAddressUseCase,
   ) : super(PostArticleState());
 
   final GetTypeListUseCase _getTypeListUseCase;
@@ -31,6 +34,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
   final GetCommuneListUseCase _getCommuneListUseCase;
   final GetConvenientListUseCase _getConvenientListUseCase;
   final PostHouseUseCase _postHouseUseCase;
+  final PostAddressUseCase _postAddressUseCase;
 
   Future<void> initData() async {
     try {
@@ -80,13 +84,16 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
   // void setHouseAmount(int amount) {
   //   state = state.house.;
   // }
-
   Future<void> postArticle() async {
     try {
       state = state.copyWith(
         status: LoadingStatus.inProgress,
       );
       final houseId = DateTime.now().millisecondsSinceEpoch.toString();
+      final postId = DateTime.now()
+          .add(const Duration(milliseconds: 1))
+          .millisecondsSinceEpoch
+          .toString();
       await _postHouseUseCase.run(
         HouseResponse(
           id: houseId,
@@ -104,8 +111,20 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
           rentalPrice: state.house!.rentalPrice,
         ),
       );
+      await _postAddressUseCase.run(
+        AddressResponse(
+          id: postId,
+          provinceId: state.currentProvince?.id ?? '01',
+          districtId: state.currentDistrict!.id,
+          communeId: state.currentCommune!.id,
+          houseId: houseId,
+        ),
+      );
       state = state.copyWith(
         status: LoadingStatus.success,
+      );
+      state = state.copyWith(
+        status: LoadingStatus.initial,
       );
     } catch (e) {
       state = state.copyWith(
@@ -267,7 +286,8 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
         (e) => e.name == districtName,
       ),
     );
-    final communes = await _getCommuneListUseCase.run(state.currentDistrict.id);
+    final communes =
+        await _getCommuneListUseCase.run(state.currentDistrict!.id);
     state = state.copyWith(
       communes: communes,
     );
@@ -283,7 +303,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
 
   void onCommuneChanged(String communeName) {
     state = state.copyWith(
-      currentDistrict: state.communes.firstWhere(
+      currentCommune: state.communes.firstWhere(
         (e) => e.name == communeName,
       ),
     );
