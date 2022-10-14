@@ -1,6 +1,9 @@
+import 'package:batru_house_rental/domain/use_case/address/post_address_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/commune/get_commune_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/convenient/get_convenient_list_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/convenient_house/post_convenient_house_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/district/get_district_list_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/house/post_house_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/province/get_province_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/type/get_type_list_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
@@ -11,7 +14,6 @@ import 'package:batru_house_rental/presentation/pages/post_article/widgets/input
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/utilities/common/validator.dart';
 import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
-import 'package:batru_house_rental/presentation/widgets/app_indicator/app_loading_indicator.dart';
 import 'package:batru_house_rental/presentation/widgets/base_app_bar/base_app_bar.dart';
 import 'package:batru_house_rental/presentation/widgets/base_form/base_form_mixin.dart';
 import 'package:batru_house_rental/presentation/widgets/buttons/app_button.dart';
@@ -28,6 +30,9 @@ final _provider =
     injector.get<GetDistrictListUseCase>(),
     injector.get<GetCommuneListUseCase>(),
     injector.get<GetConvenientListUseCase>(),
+    injector.get<PostHouseUseCase>(),
+    injector.get<PostAddressUseCase>(),
+    injector.get<PostConvenientHouseListUseCase>(),
   ),
 );
 
@@ -75,9 +80,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
       appBar: const BaseAppBar.titleAndBackButton(
         title: 'Đăng phòng',
       ),
-      body: state.status == LoadingStatus.inProgress
-          ? const AppLoadingIndicator()
-          : _buildBody(),
+      body: _buildBody(),
     );
   }
 
@@ -93,31 +96,8 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
       controlsBuilder: (context, details) {
         final isLastStep = ref.watch(_provider).currentStep == 3;
         final isFirstStep = ref.watch(_provider).currentStep == 0;
-        return Container(
-          margin: const EdgeInsets.only(top: 16),
-          child: Row(
-            children: [
-              Expanded(
-                child: AppButton(
-                  title: isLastStep ? 'Đăng phòng' : 'Tiếp theo',
-                  onButtonTap: details.onStepContinue,
-                ),
-              ),
-              if (!isFirstStep) ...[
-                const SizedBox(
-                  width: 16,
-                ),
-                Expanded(
-                  child: AppButton(
-                    title: 'Quay lại',
-                    backgroundColor: context.colors.contentAlert,
-                    onButtonTap: details.onStepCancel,
-                  ),
-                ),
-              ],
-            ],
-          ),
-        );
+        return _buildButton(
+            isLastStep, details, isFirstStep, context, state.status);
       },
       steps: [
         Step(
@@ -148,6 +128,46 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
     );
   }
 
+  Container _buildButton(bool isLastStep, ControlsDetails details,
+      bool isFirstStep, BuildContext context, LoadingStatus status) {
+    return Container(
+      margin: const EdgeInsets.only(top: 16),
+      child: Row(
+        children: [
+          Expanded(
+            child: AppButton(
+              isExpanded: true,
+              buttonState: status.buttonState,
+              title: isLastStep ? 'Đăng phòng' : 'Tiếp theo',
+              onButtonTap: !isLastStep
+                  ? details.onStepContinue
+                  : () {
+                      validate(
+                        onSuccess: () {
+                          _viewModel.postArticle();
+                        },
+                      );
+                    },
+            ),
+          ),
+          if (!isFirstStep) ...[
+            const SizedBox(
+              width: 16,
+            ),
+            Expanded(
+              child: AppButton(
+                isExpanded: true,
+                title: 'Quay lại',
+                backgroundColor: context.colors.contentAlert,
+                onButtonTap: details.onStepCancel,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
   Widget _buildConfirmInputView() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -163,7 +183,9 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           keyboardType: TextInputType.phone,
           textInputAction: TextInputAction.next,
           validator: Validator().required().phone().build(),
-          onTextChange: (value) {},
+          onTextChange: (value) {
+            _viewModel.setPhoneNumber(value!);
+          },
         ),
         const SizedBox(height: 8),
         InputTextField.singleLine(
@@ -172,7 +194,9 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           keyboardType: TextInputType.text,
           textInputAction: TextInputAction.next,
           validator: Validator().required().minLength(1).maxLength(50).build(),
-          onTextChange: (value) {},
+          onTextChange: (value) {
+            _viewModel.setTitle(value!);
+          },
         ),
         const SizedBox(height: 8),
         InputTextField.singleLine(
@@ -181,7 +205,9 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           keyboardType: TextInputType.text,
           textInputAction: TextInputAction.next,
           validator: Validator().required().minLength(1).maxLength(50).build(),
-          onTextChange: (value) {},
+          onTextChange: (value) {
+            _viewModel.setDescription(value!);
+          },
         ),
       ],
     );
@@ -376,7 +402,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           keyboardType: TextInputType.number,
           initialText: houseState?.capacity.toString(),
           textInputAction: TextInputAction.next,
-          validator: Validator().required().minLength(1).build(),
+          validator: Validator().required().build(),
           onTextChange: (value) {
             _viewModel.setHouseCapacity(value!);
           },
@@ -388,7 +414,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           initialText: houseState?.area.toString(),
           keyboardType: TextInputType.number,
           textInputAction: TextInputAction.next,
-          validator: Validator().required().minLength(1).build(),
+          validator: Validator().required().build(),
           onTextChange: (value) {
             _viewModel.setHouseArea(value!);
           },
@@ -405,7 +431,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           initialText: state.house?.rentalPrice.toString(),
           keyboardType: TextInputType.number,
           textInputAction: TextInputAction.next,
-          validator: Validator().required().minLength(1).build(),
+          validator: Validator().required().build(),
           onTextChange: (value) {
             _viewModel.setRentalPrice(value!);
           },
@@ -428,7 +454,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           initialText: state.house?.electricPrice.toString(),
           keyboardType: TextInputType.number,
           textInputAction: TextInputAction.next,
-          validator: Validator().required().minLength(4).build(),
+          validator: Validator().required().build(),
           onTextChange: (value) {
             _viewModel.setElectricPrice(value!);
           },
@@ -440,7 +466,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           initialText: state.house?.waterPrice.toString(),
           keyboardType: TextInputType.number,
           textInputAction: TextInputAction.next,
-          validator: Validator().required().minLength(4).build(),
+          validator: Validator().required().build(),
           onTextChange: (value) {
             _viewModel.setWaterPrice(value!);
           },
@@ -452,7 +478,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           initialText: state.house?.internetPrice.toString(),
           keyboardType: TextInputType.number,
           textInputAction: TextInputAction.next,
-          validator: Validator().required().minLength(4).build(),
+          validator: Validator().required().build(),
           onTextChange: (value) {
             _viewModel.setInternetPrice(value!);
           },
@@ -477,7 +503,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
             initialText: state.house?.parkingPrice.toString(),
             keyboardType: TextInputType.number,
             textInputAction: TextInputAction.next,
-            validator: Validator().required().minLength(4).build(),
+            validator: Validator().required().build(),
             onTextChange: (value) {
               _viewModel.setParkingPrice(value!);
             },

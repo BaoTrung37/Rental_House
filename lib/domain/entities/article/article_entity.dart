@@ -11,7 +11,7 @@ class ArticleEntity with _$ArticleEntity {
     required String description,
     required String houseId,
     required String userId,
-    required String createdAt,
-    String? updatedAt,
+    required DateTime createdAt,
+    DateTime? updatedAt,
   }) = _ArticleEntity;
 }

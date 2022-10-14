@@ -1,9 +1,16 @@
 import 'dart:io';
 
+import 'package:batru_house_rental/data/models/address/address_reponse.dart';
+import 'package:batru_house_rental/data/models/convenient_house/convenient_house_reponse.dart';
+import 'package:batru_house_rental/data/models/house/house_response.dart';
+import 'package:batru_house_rental/domain/entities/convenient_house/convenient_house_entity.dart';
 import 'package:batru_house_rental/domain/entities/house/house_entity.dart';
+import 'package:batru_house_rental/domain/use_case/address/post_address_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/commune/get_commune_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/convenient/get_convenient_list_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/convenient_house/post_convenient_house_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/district/get_district_list_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/house/post_house_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/province/get_province_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/type/get_type_list_use_case.dart';
 import 'package:batru_house_rental/presentation/pages/post_article/post_article_state.dart';
@@ -20,6 +27,9 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
     this._getDistrictListUseCase,
     this._getCommuneListUseCase,
     this._getConvenientListUseCase,
+    this._postHouseUseCase,
+    this._postAddressUseCase,
+    this._postConvenientHouseListUseCase,
   ) : super(PostArticleState());
 
   final GetTypeListUseCase _getTypeListUseCase;
@@ -27,7 +37,9 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
   final GetDistrictListUseCase _getDistrictListUseCase;
   final GetCommuneListUseCase _getCommuneListUseCase;
   final GetConvenientListUseCase _getConvenientListUseCase;
-
+  final PostHouseUseCase _postHouseUseCase;
+  final PostAddressUseCase _postAddressUseCase;
+  final PostConvenientHouseListUseCase _postConvenientHouseListUseCase;
   Future<void> initData() async {
     try {
       state = state.copyWith(
@@ -76,6 +88,65 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
   // void setHouseAmount(int amount) {
   //   state = state.house.;
   // }
+  Future<void> postArticle() async {
+    try {
+      state = state.copyWith(
+        status: LoadingStatus.inProgress,
+      );
+      final houseId = DateTime.now().millisecondsSinceEpoch.toString();
+      final postId = DateTime.now()
+          .add(const Duration(milliseconds: 1))
+          .millisecondsSinceEpoch
+          .toString();
+      await _postHouseUseCase.run(
+        HouseResponse(
+          id: houseId,
+          area: state.house?.area ?? 0,
+          capacity: state.house?.capacity ?? 0,
+          streetName: state.house?.streetName ?? '',
+          houseNumber: state.house?.houseNumber ?? '',
+          depositPrice: state.house?.depositPrice ?? 0,
+          waterPrice: state.house?.waterPrice ?? 0,
+          electricPrice: state.house?.electricPrice ?? 0,
+          internetPrice: state.house?.internetPrice ?? 0,
+          parkingPrice: state.isParkingSpaceAvailable
+              ? state.house?.parkingPrice ?? 0
+              : 0,
+          rentalPrice: state.house!.rentalPrice,
+        ),
+      );
+      await _postAddressUseCase.run(
+        AddressResponse(
+          id: postId,
+          provinceId: state.currentProvince?.id ?? '01',
+          districtId: state.currentDistrict!.id,
+          communeId: state.currentCommune!.id,
+          houseId: houseId,
+        ),
+      );
+
+      await _postConvenientHouseListUseCase
+          .run(state.convenientSelected.map((e) {
+        return ConvenientHouseResponse(
+          id: e.convenientId + houseId,
+          houseId: houseId,
+          convenientId: e.convenientId,
+        );
+      }).toList());
+
+      state = state.copyWith(
+        status: LoadingStatus.success,
+      );
+      state = state.copyWith(
+        status: LoadingStatus.initial,
+      );
+    } catch (e) {
+      state = state.copyWith(
+        status: LoadingStatus.error,
+      );
+      debugPrint(e.toString());
+    }
+  }
 
   void setHouseCapacity(String capacity) {
     try {
@@ -189,38 +260,49 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
     );
   }
 
-  // void setNumberPhone(String numberPhone) {
-  //   state = state.copyWith(
-  //     house: state.house?.copyWith(
-  //       phoneNumber: numberPhone,
-  //     ),
-  //   );
-  // }
+  void setPhoneNumber(String numberPhone) {
+    state = state.copyWith(
+      article: state.article?.copyWith(
+        phoneNumber: numberPhone,
+      ),
+    );
+  }
 
-  // void setDescription(String description) {
-  //   state = state.copyWith(
-  //     house: state.house?.copyWith(
-  //       description: description,
-  //     ),
-  //   );
-  // }
+  void setDescription(String description) {
+    state = state.copyWith(
+      article: state.article?.copyWith(
+        description: description,
+      ),
+    );
+  }
 
-  // void setTitle(String title) {
-  //   state = state.copyWith(
-  //     house: state.house?.copyWith(
-  //       title: title,
-  //     ),
-  //   );
-  // }
+  void setTitle(String title) {
+    state = state.copyWith(
+      article: state.article?.copyWith(
+        title: title,
+      ),
+    );
+  }
 
   void onConvenientTap(String convenientId) {
     state = state.copyWith(
-        convenients: state.convenients.map((e) {
-      if (e.id == convenientId) {
-        return e.copyWith(isSelected: !e.isSelected);
-      }
-      return e;
-    }).toList());
+      convenients: state.convenients.map((e) {
+        if (e.id == convenientId) {
+          return e.copyWith(isSelected: !e.isSelected);
+        }
+        return e;
+      }).toList(),
+    );
+    state = state.copyWith(
+      convenientSelected: state.convenients
+          .where((element) => element.isSelected == true)
+          .toList()
+          .map((e) => ConvenientHouseEntity(
+                convenientId: e.id,
+              ))
+          .toList(),
+    );
+    // debugPrint(state.convenientSelected.length.toString());
   }
 
   Future<void> onDistrictChanged(String districtName) async {
@@ -229,7 +311,8 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
         (e) => e.name == districtName,
       ),
     );
-    final communes = await _getCommuneListUseCase.run(state.currentDistrict.id);
+    final communes =
+        await _getCommuneListUseCase.run(state.currentDistrict!.id);
     state = state.copyWith(
       communes: communes,
     );
@@ -245,7 +328,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
 
   void onCommuneChanged(String communeName) {
     state = state.copyWith(
-      currentDistrict: state.communes.firstWhere(
+      currentCommune: state.communes.firstWhere(
         (e) => e.name == communeName,
       ),
     );
