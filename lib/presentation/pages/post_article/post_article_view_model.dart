@@ -13,6 +13,7 @@ import 'package:batru_house_rental/domain/use_case/convenient_house/post_conveni
 import 'package:batru_house_rental/domain/use_case/district/get_district_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/house/post_house_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/image_house/post_image_house_list_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/image_house/post_image_to_storage_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/province/get_province_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/type/get_type_list_use_case.dart';
 import 'package:batru_house_rental/presentation/pages/post_article/post_article_state.dart';
@@ -33,6 +34,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
     this._postAddressUseCase,
     this._postConvenientHouseListUseCase,
     this._postImageHouseListUseCase,
+    this._postImageToStorageUseCase,
   ) : super(PostArticleState());
 
   final GetTypeListUseCase _getTypeListUseCase;
@@ -44,6 +46,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
   final PostAddressUseCase _postAddressUseCase;
   final PostConvenientHouseListUseCase _postConvenientHouseListUseCase;
   final PostImageHouseListUseCase _postImageHouseListUseCase;
+  final PostImageToStorageUseCase _postImageToStorageUseCase;
   Future<void> initData() async {
     try {
       state = state.copyWith(
@@ -102,6 +105,10 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
           .add(const Duration(milliseconds: 1))
           .millisecondsSinceEpoch
           .toString();
+      final imageId = DateTime.now()
+          .add(const Duration(milliseconds: 13))
+          .millisecondsSinceEpoch
+          .toString();
       await _postHouseUseCase.run(
         HouseResponse(
           id: houseId,
@@ -138,6 +145,15 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
         );
       }).toList());
 
+      final screenshotUrlList =
+          await _postImageToStorageUseCase.run(state.screenshotList);
+      await _postImageHouseListUseCase.run(
+        screenshotUrlList
+            .map(
+              (e) => ImageHouseResponse(id: imageId, houseId: houseId, url: e),
+            )
+            .toList(),
+      );
       // await _postImageHouseListUseCase.run(
       //   ImageHouseResponse(
       //     id: viewId,

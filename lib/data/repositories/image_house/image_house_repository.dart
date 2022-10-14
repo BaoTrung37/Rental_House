@@ -20,8 +20,16 @@ class ImageHouseRepository {
     );
   }
 
+  Future<List<String>> getImageUrlDowloadList(List<File> files) async {
+    return Future.wait(
+      files.map((e) async {
+        return getImageUrlDownload(e);
+      }).toList(),
+    );
+  }
+
   UploadTask upLoadImageFile(File image, String filename) {
-    final reference = _firebaseStorage.ref().child(filename);
+    final reference = _firebaseStorage.ref('/room_images').child(filename);
     final uploadTask = reference.putFile(image);
     return uploadTask;
   }
