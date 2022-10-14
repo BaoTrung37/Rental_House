@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:batru_house_rental/data/models/address/address_reponse.dart';
 import 'package:batru_house_rental/data/models/convenient_house/convenient_house_reponse.dart';
 import 'package:batru_house_rental/data/models/house/house_response.dart';
+import 'package:batru_house_rental/data/models/image_house/image_house_response.dart';
 import 'package:batru_house_rental/domain/entities/convenient_house/convenient_house_entity.dart';
 import 'package:batru_house_rental/domain/entities/house/house_entity.dart';
 import 'package:batru_house_rental/domain/use_case/address/post_address_use_case.dart';
@@ -11,6 +12,7 @@ import 'package:batru_house_rental/domain/use_case/convenient/get_convenient_lis
 import 'package:batru_house_rental/domain/use_case/convenient_house/post_convenient_house_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/district/get_district_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/house/post_house_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/image_house/post_image_house_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/province/get_province_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/type/get_type_list_use_case.dart';
 import 'package:batru_house_rental/presentation/pages/post_article/post_article_state.dart';
@@ -30,6 +32,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
     this._postHouseUseCase,
     this._postAddressUseCase,
     this._postConvenientHouseListUseCase,
+    this._postImageHouseListUseCase,
   ) : super(PostArticleState());
 
   final GetTypeListUseCase _getTypeListUseCase;
@@ -40,6 +43,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
   final PostHouseUseCase _postHouseUseCase;
   final PostAddressUseCase _postAddressUseCase;
   final PostConvenientHouseListUseCase _postConvenientHouseListUseCase;
+  final PostImageHouseListUseCase _postImageHouseListUseCase;
   Future<void> initData() async {
     try {
       state = state.copyWith(
@@ -133,6 +137,14 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
           convenientId: e.convenientId,
         );
       }).toList());
+
+      // await _postImageHouseListUseCase.run(
+      //   ImageHouseResponse(
+      //     id: viewId,
+      //     imageFile: imageFile,
+      //     houseId: houseId,
+      //   ),
+      // );
 
       state = state.copyWith(
         status: LoadingStatus.success,

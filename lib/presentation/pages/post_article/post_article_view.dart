@@ -4,6 +4,7 @@ import 'package:batru_house_rental/domain/use_case/convenient/get_convenient_lis
 import 'package:batru_house_rental/domain/use_case/convenient_house/post_convenient_house_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/district/get_district_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/house/post_house_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/image_house/post_image_house_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/province/get_province_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/type/get_type_list_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
@@ -33,6 +34,7 @@ final _provider =
     injector.get<PostHouseUseCase>(),
     injector.get<PostAddressUseCase>(),
     injector.get<PostConvenientHouseListUseCase>(),
+    injector.get<PostImageHouseListUseCase>(),
   ),
 );
 
@@ -103,25 +105,25 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
         Step(
           state: setStepState(0),
           title: const Text(''),
-          label: const Text('Thông tin'),
+          // label: const Text('Thông tin'),
           content: _buildInfomationInputView(),
         ),
         Step(
           state: setStepState(1),
           title: const Text(''),
-          label: const Text('Địa chỉ'),
+          // label: const Text('Địa chỉ'),
           content: _buildLocationInputView(),
         ),
         Step(
           state: setStepState(2),
           title: const Text(''),
-          label: const Text('Tiện ích'),
+          // label: const Text('Tiện ích'),
           content: _buildConvenientInputView(),
         ),
         Step(
           state: setStepState(3),
           title: const Text(''),
-          label: const Text('Xác nhận'),
+          // label: const Text('Xác nhận'),
           content: _buildConfirmInputView(),
         ),
       ],
