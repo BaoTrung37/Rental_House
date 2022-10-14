@@ -1,12 +1,24 @@
 import 'dart:io';
 
+import 'package:batru_house_rental/data/models/image_house/image_house_response.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 
 class ImageHouseRepository {
-  // final _fireStore = FirebaseFirestore.instance;
+  final _fireStore = FirebaseFirestore.instance;
   final _firebaseStorage = FirebaseStorage.instance;
-  
+
+  Future<void> postImageHouse(
+      List<ImageHouseResponse> imageHouseResponseList) async {
+    await Future.wait(
+      imageHouseResponseList.map(
+        (e) async {
+          await _fireStore.collection('imageHouse').doc(e.id).set(e.toJson());
+        },
+      ),
+    );
+  }
 
   UploadTask upLoadImageFile(File image, String filename) {
     final reference = _firebaseStorage.ref().child(filename);
@@ -14,7 +26,7 @@ class ImageHouseRepository {
     return uploadTask;
   }
 
-  Future<String> uploadImageFile(File imageFile) async {
+  Future<String> getImageUrlDownload(File imageFile) async {
     final filename = DateTime.now().millisecondsSinceEpoch.toString();
     final uploadTask = upLoadImageFile(imageFile, filename);
     try {
