@@ -1,10 +1,13 @@
 import 'package:batru_house_rental/domain/use_case/address/post_address_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/article/post_article_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/commune/get_commune_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/convenient/get_convenient_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/convenient_house/post_convenient_house_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/district/get_district_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/house/post_house_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/image_house/post_image_house_list_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/image_house/post_image_to_storage_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/province/get_province_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/type/get_type_list_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
@@ -15,6 +18,7 @@ import 'package:batru_house_rental/presentation/pages/post_article/widgets/input
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/utilities/common/validator.dart';
 import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
+import 'package:batru_house_rental/presentation/widgets/app_indicator/app_loading_indicator.dart';
 import 'package:batru_house_rental/presentation/widgets/base_app_bar/base_app_bar.dart';
 import 'package:batru_house_rental/presentation/widgets/base_form/base_form_mixin.dart';
 import 'package:batru_house_rental/presentation/widgets/buttons/app_button.dart';
@@ -35,6 +39,9 @@ final _provider =
     injector.get<PostAddressUseCase>(),
     injector.get<PostConvenientHouseListUseCase>(),
     injector.get<PostImageHouseListUseCase>(),
+    injector.get<PostImageToStorageUseCase>(),
+    injector.get<PostArticleUseCase>(),
+    injector.get<GetCurrentUserInformationUseCase>(),
   ),
 );
 
@@ -82,7 +89,9 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
       appBar: const BaseAppBar.titleAndBackButton(
         title: 'Đăng phòng',
       ),
-      body: _buildBody(),
+      body: state.status == LoadingStatus.initial
+          ? const AppLoadingIndicator()
+          : _buildBody(),
     );
   }
 
