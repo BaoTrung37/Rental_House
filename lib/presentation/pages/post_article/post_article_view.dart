@@ -301,8 +301,6 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
 
   Widget _buildLocationInputView() {
     final state = ref.watch(_provider);
-    // late String district;
-    late String commune;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
