@@ -11,6 +11,8 @@ class ArticleResponse {
     required this.houseId,
     required this.userId,
     required this.title,
+    required this.description,
+    required this.phoneNumber,
     required this.createdAt,
     this.updatedAt,
   });
@@ -21,6 +23,8 @@ class ArticleResponse {
   final String houseId;
   final String userId;
   final String title;
+  final String description;
+  final String phoneNumber;
   final DateTime createdAt;
   final DateTime? updatedAt;
 

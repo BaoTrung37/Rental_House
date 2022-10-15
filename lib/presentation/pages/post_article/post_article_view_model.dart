@@ -1,18 +1,23 @@
 import 'dart:io';
 
 import 'package:batru_house_rental/data/models/address/address_reponse.dart';
+import 'package:batru_house_rental/data/models/article/article_response.dart';
 import 'package:batru_house_rental/data/models/convenient_house/convenient_house_reponse.dart';
 import 'package:batru_house_rental/data/models/house/house_response.dart';
 import 'package:batru_house_rental/data/models/image_house/image_house_response.dart';
+import 'package:batru_house_rental/domain/entities/article/article_entity.dart';
 import 'package:batru_house_rental/domain/entities/convenient_house/convenient_house_entity.dart';
 import 'package:batru_house_rental/domain/entities/house/house_entity.dart';
 import 'package:batru_house_rental/domain/use_case/address/post_address_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/article/post_article_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/commune/get_commune_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/convenient/get_convenient_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/convenient_house/post_convenient_house_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/district/get_district_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/house/post_house_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/image_house/post_image_house_list_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/image_house/post_image_to_storage_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/province/get_province_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/type/get_type_list_use_case.dart';
 import 'package:batru_house_rental/presentation/pages/post_article/post_article_state.dart';
@@ -33,6 +38,9 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
     this._postAddressUseCase,
     this._postConvenientHouseListUseCase,
     this._postImageHouseListUseCase,
+    this._postImageToStorageUseCase,
+    this._postArticleUseCase,
+    this._getCurrentUserInformationUseCase,
   ) : super(PostArticleState());
 
   final GetTypeListUseCase _getTypeListUseCase;
@@ -44,12 +52,16 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
   final PostAddressUseCase _postAddressUseCase;
   final PostConvenientHouseListUseCase _postConvenientHouseListUseCase;
   final PostImageHouseListUseCase _postImageHouseListUseCase;
+  final PostImageToStorageUseCase _postImageToStorageUseCase;
+  final PostArticleUseCase _postArticleUseCase;
+  final GetCurrentUserInformationUseCase _getCurrentUserInformationUseCase;
   Future<void> initData() async {
     try {
       state = state.copyWith(
         status: LoadingStatus.inProgress,
       );
       await getHouseInitial();
+      await getArticleInitial();
       final provinces = await _getProvinceListUseCase.run();
       final convenients = await _getConvenientListUseCase.run();
       final types = await _getTypeListUseCase.run();
@@ -89,6 +101,21 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
     );
   }
 
+  Future<void> getArticleInitial() async {
+    state = state.copyWith(
+      article: ArticleEntity(
+        id: '',
+        title: '',
+        description: '',
+        userId: '',
+        houseId: '',
+        phoneNumber: '',
+        createdAt: DateTime.now(),
+        updatedAt: null,
+      ),
+    );
+  }
+
   // void setHouseAmount(int amount) {
   //   state = state.house.;
   // }
@@ -113,12 +140,27 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
           waterPrice: state.house?.waterPrice ?? 0,
           electricPrice: state.house?.electricPrice ?? 0,
           internetPrice: state.house?.internetPrice ?? 0,
+          isAvailableParking: state.isParkingSpaceAvailable,
           parkingPrice: state.isParkingSpaceAvailable
               ? state.house?.parkingPrice ?? 0
               : 0,
           rentalPrice: state.house!.rentalPrice,
         ),
       );
+      final currentUser = await _getCurrentUserInformationUseCase.run();
+      await _postArticleUseCase.run(
+        ArticleResponse(
+          id: postId,
+          title: state.article!.title,
+          description: state.article!.description,
+          userId: currentUser.id,
+          houseId: houseId,
+          phoneNumber: state.article!.phoneNumber,
+          createdAt: DateTime.now(),
+          updatedAt: null,
+        ),
+      );
+
       await _postAddressUseCase.run(
         AddressResponse(
           id: postId,
@@ -138,19 +180,23 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
         );
       }).toList());
 
-      // await _postImageHouseListUseCase.run(
-      //   ImageHouseResponse(
-      //     id: viewId,
-      //     imageFile: imageFile,
-      //     houseId: houseId,
-      //   ),
-      // );
+      final screenshotUrlList =
+          await _postImageToStorageUseCase.run(state.screenshotList);
+      await _postImageHouseListUseCase.run(
+        screenshotUrlList.map(
+          (e) {
+            final imageId = DateTime.now()
+                .add(const Duration(milliseconds: 13))
+                .millisecondsSinceEpoch
+                .toString();
+            debugPrint('imageId: $imageId');
+            return ImageHouseResponse(id: imageId, houseId: houseId, url: e);
+          },
+        ).toList(),
+      );
 
       state = state.copyWith(
         status: LoadingStatus.success,
-      );
-      state = state.copyWith(
-        status: LoadingStatus.initial,
       );
     } catch (e) {
       state = state.copyWith(
