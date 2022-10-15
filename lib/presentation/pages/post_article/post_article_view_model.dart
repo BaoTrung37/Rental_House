@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:batru_house_rental/data/models/address/address_reponse.dart';
-import 'package:batru_house_rental/data/models/article/article_response.dart';
 import 'package:batru_house_rental/data/models/convenient_house/convenient_house_reponse.dart';
 import 'package:batru_house_rental/data/models/house/house_response.dart';
 import 'package:batru_house_rental/data/models/image_house/image_house_response.dart';
@@ -85,7 +84,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
 
   Future<void> getHouseInitial() async {
     state = state.copyWith(
-      house: const HouseEntity(
+      house: HouseEntity(
         houseNumber: '',
         id: '',
         streetName: '',
@@ -97,6 +96,12 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
         internetPrice: 0,
         parkingPrice: 0,
         rentalPrice: 0,
+        title: '',
+        description: '',
+        userId: '',
+        phoneNumber: '',
+        createdAt: DateTime.now(),
+        updatedAt: null,
       ),
     );
   }
@@ -129,6 +134,8 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
           .add(const Duration(milliseconds: 1))
           .millisecondsSinceEpoch
           .toString();
+
+      final currentUser = await _getCurrentUserInformationUseCase.run();
       await _postHouseUseCase.run(
         HouseResponse(
           id: houseId,
@@ -145,19 +152,12 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
               ? state.house?.parkingPrice ?? 0
               : 0,
           rentalPrice: state.house!.rentalPrice,
-        ),
-      );
-      final currentUser = await _getCurrentUserInformationUseCase.run();
-      await _postArticleUseCase.run(
-        ArticleResponse(
-          id: postId,
-          title: state.article!.title,
-          description: state.article!.description,
-          userId: currentUser.id,
-          houseId: houseId,
-          phoneNumber: state.article!.phoneNumber,
           createdAt: DateTime.now(),
-          updatedAt: null,
+          description: state.house?.description ?? '',
+          title: state.house?.title ?? '',
+          userId: currentUser.id,
+          phoneNumber: state.house?.phoneNumber ?? '',
+          updatedAt: state.house?.updatedAt,
         ),
       );
 
@@ -320,7 +320,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
 
   void setPhoneNumber(String numberPhone) {
     state = state.copyWith(
-      article: state.article?.copyWith(
+      house: state.house?.copyWith(
         phoneNumber: numberPhone,
       ),
     );
@@ -328,7 +328,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
 
   void setDescription(String description) {
     state = state.copyWith(
-      article: state.article?.copyWith(
+      house: state.house?.copyWith(
         description: description,
       ),
     );
@@ -336,7 +336,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
 
   void setTitle(String title) {
     state = state.copyWith(
-      article: state.article?.copyWith(
+      house: state.house?.copyWith(
         title: title,
       ),
     );
@@ -360,7 +360,6 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
               ))
           .toList(),
     );
-    // debugPrint(state.convenientSelected.length.toString());
   }
 
   Future<void> onDistrictChanged(String districtName) async {

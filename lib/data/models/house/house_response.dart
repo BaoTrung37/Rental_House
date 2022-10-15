@@ -17,22 +17,42 @@ class HouseResponse {
     required this.parkingPrice,
     required this.isAvailableParking,
     required this.rentalPrice,
+    required this.userId,
+    required this.title,
+    required this.phoneNumber,
+    required this.description,
+    required this.createdAt,
+    this.updatedAt,
   });
   factory HouseResponse.fromJson(Map<String, dynamic> json) =>
       _$HouseResponseFromJson(json);
 
   final String id;
+  @JsonKey(defaultValue: 0)
   final int area;
+  @JsonKey(defaultValue: 1)
   final int capacity;
   final String streetName;
   final String houseNumber;
+  @JsonKey(defaultValue: 0)
   final int depositPrice;
   final int waterPrice;
+  @JsonKey(defaultValue: 0)
   final int electricPrice;
+  @JsonKey(defaultValue: 0)
   final int internetPrice;
+  @JsonKey(defaultValue: 0)
   final int parkingPrice;
+  @JsonKey(defaultValue: false)
   final bool isAvailableParking;
   final int rentalPrice;
+  final String userId;
+  final String title;
+  final String phoneNumber;
+  final String description;
+  final DateTime createdAt;
+  @JsonKey(required: false)
+  final DateTime? updatedAt;
 
   Map<String, dynamic> toJson() => _$HouseResponseToJson(this);
 }

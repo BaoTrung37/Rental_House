@@ -15,7 +15,6 @@ class DistrictResponse {
       _$DistrictResponseFromJson(json);
 
   final String id;
-
   @JsonKey(required: false)
   final String? imageUrl;
   final String provinceId;
