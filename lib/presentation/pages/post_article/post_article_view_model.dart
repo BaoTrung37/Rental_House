@@ -140,6 +140,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
           waterPrice: state.house?.waterPrice ?? 0,
           electricPrice: state.house?.electricPrice ?? 0,
           internetPrice: state.house?.internetPrice ?? 0,
+          isAvailableParking: state.isParkingSpaceAvailable,
           parkingPrice: state.isParkingSpaceAvailable
               ? state.house?.parkingPrice ?? 0
               : 0,
