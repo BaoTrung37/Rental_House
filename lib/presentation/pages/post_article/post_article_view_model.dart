@@ -1,21 +1,21 @@
 import 'dart:io';
 
 import 'package:batru_house_rental/data/models/address/address_reponse.dart';
-import 'package:batru_house_rental/data/models/article/article_response.dart';
 import 'package:batru_house_rental/data/models/convenient_house/convenient_house_reponse.dart';
 import 'package:batru_house_rental/data/models/house/house_response.dart';
+import 'package:batru_house_rental/data/models/house_type/house_type_response.dart';
 import 'package:batru_house_rental/data/models/image_house/image_house_response.dart';
 import 'package:batru_house_rental/domain/entities/article/article_entity.dart';
 import 'package:batru_house_rental/domain/entities/convenient_house/convenient_house_entity.dart';
 import 'package:batru_house_rental/domain/entities/house/house_entity.dart';
 import 'package:batru_house_rental/domain/use_case/address/post_address_use_case.dart';
-import 'package:batru_house_rental/domain/use_case/article/post_article_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/commune/get_commune_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/convenient/get_convenient_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/convenient_house/post_convenient_house_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/district/get_district_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/house/post_house_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/house_type/post_house_type_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/image_house/post_image_house_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/image_house/post_image_to_storage_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/province/get_province_list_use_case.dart';
@@ -39,8 +39,8 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
     this._postConvenientHouseListUseCase,
     this._postImageHouseListUseCase,
     this._postImageToStorageUseCase,
-    this._postArticleUseCase,
     this._getCurrentUserInformationUseCase,
+    this._postHouseTypeUseCase,
   ) : super(PostArticleState());
 
   final GetTypeListUseCase _getTypeListUseCase;
@@ -53,8 +53,8 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
   final PostConvenientHouseListUseCase _postConvenientHouseListUseCase;
   final PostImageHouseListUseCase _postImageHouseListUseCase;
   final PostImageToStorageUseCase _postImageToStorageUseCase;
-  final PostArticleUseCase _postArticleUseCase;
   final GetCurrentUserInformationUseCase _getCurrentUserInformationUseCase;
+  final PostHouseTypeUseCase _postHouseTypeUseCase;
   Future<void> initData() async {
     try {
       state = state.copyWith(
@@ -85,7 +85,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
 
   Future<void> getHouseInitial() async {
     state = state.copyWith(
-      house: const HouseEntity(
+      house: HouseEntity(
         houseNumber: '',
         id: '',
         streetName: '',
@@ -97,6 +97,12 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
         internetPrice: 0,
         parkingPrice: 0,
         rentalPrice: 0,
+        title: '',
+        description: '',
+        userId: '',
+        phoneNumber: '',
+        createdAt: DateTime.now(),
+        updatedAt: null,
       ),
     );
   }
@@ -129,6 +135,8 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
           .add(const Duration(milliseconds: 1))
           .millisecondsSinceEpoch
           .toString();
+
+      final currentUser = await _getCurrentUserInformationUseCase.run();
       await _postHouseUseCase.run(
         HouseResponse(
           id: houseId,
@@ -145,19 +153,23 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
               ? state.house?.parkingPrice ?? 0
               : 0,
           rentalPrice: state.house!.rentalPrice,
+          createdAt: DateTime.now(),
+          description: state.house?.description ?? '',
+          title: state.house?.title ?? '',
+          userId: currentUser.id,
+          phoneNumber: state.house?.phoneNumber ?? '',
+          updatedAt: state.house?.updatedAt,
         ),
       );
-      final currentUser = await _getCurrentUserInformationUseCase.run();
-      await _postArticleUseCase.run(
-        ArticleResponse(
-          id: postId,
-          title: state.article!.title,
-          description: state.article!.description,
-          userId: currentUser.id,
+
+      await _postHouseTypeUseCase.run(
+        HouseTypeResponse(
+          id: DateTime.now()
+              .add(const Duration(milliseconds: 2))
+              .millisecondsSinceEpoch
+              .toString(),
           houseId: houseId,
-          phoneNumber: state.article!.phoneNumber,
-          createdAt: DateTime.now(),
-          updatedAt: null,
+          typeId: state.currentType!.id,
         ),
       );
 
@@ -320,7 +332,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
 
   void setPhoneNumber(String numberPhone) {
     state = state.copyWith(
-      article: state.article?.copyWith(
+      house: state.house?.copyWith(
         phoneNumber: numberPhone,
       ),
     );
@@ -328,7 +340,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
 
   void setDescription(String description) {
     state = state.copyWith(
-      article: state.article?.copyWith(
+      house: state.house?.copyWith(
         description: description,
       ),
     );
@@ -336,7 +348,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
 
   void setTitle(String title) {
     state = state.copyWith(
-      article: state.article?.copyWith(
+      house: state.house?.copyWith(
         title: title,
       ),
     );
@@ -360,7 +372,6 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
               ))
           .toList(),
     );
-    // debugPrint(state.convenientSelected.length.toString());
   }
 
   Future<void> onDistrictChanged(String districtName) async {

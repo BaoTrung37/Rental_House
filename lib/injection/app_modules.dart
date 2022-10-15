@@ -7,6 +7,7 @@ import 'package:batru_house_rental/data/repositories/convenient/convenient_repos
 import 'package:batru_house_rental/data/repositories/convenient_house/convenient_house_repository.dart';
 import 'package:batru_house_rental/data/repositories/district/district_repository.dart';
 import 'package:batru_house_rental/data/repositories/house/house_repository.dart';
+import 'package:batru_house_rental/data/repositories/house_type/house_type_repository.dart';
 import 'package:batru_house_rental/data/repositories/image_house/image_house_repository.dart';
 import 'package:batru_house_rental/data/repositories/province/province_repository.dart';
 import 'package:batru_house_rental/data/repositories/type/type_repository.dart';
@@ -22,6 +23,7 @@ import 'package:batru_house_rental/domain/use_case/convenient_house/post_conveni
 import 'package:batru_house_rental/domain/use_case/district/get_district_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/house/get_house_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/house/post_house_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/house_type/post_house_type_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/image_house/get_image_house_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/image_house/post_image_house_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/image_house/post_image_to_storage_use_case.dart';
@@ -141,6 +143,12 @@ class AppModules {
     injector
         .registerLazySingleton<PostArticleUseCase>(() => PostArticleUseCase());
 
-    ///
+    /// house type repository
+    injector.registerLazySingleton<HouseTypeRepository>(
+        () => HouseTypeRepository());
+
+    /// post house type use case
+    injector.registerLazySingleton<PostHouseTypeUseCase>(
+        () => PostHouseTypeUseCase());
   }
 }

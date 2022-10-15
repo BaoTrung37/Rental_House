@@ -1,17 +1,23 @@
 import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
+import 'package:batru_house_rental/domain/use_case/district/get_district_list_use_case.dart';
+import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
 import 'package:batru_house_rental/presentation/pages/home/home_state.dart';
 import 'package:batru_house_rental/presentation/pages/home/home_view_model.dart';
 import 'package:batru_house_rental/presentation/pages/home/widgets/home_place_small_card.dart';
 import 'package:batru_house_rental/presentation/pages/home/widgets/home_search_card_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
+import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
+import 'package:batru_house_rental/presentation/widgets/app_indicator/app_loading_indicator.dart';
 import 'package:batru_house_rental/presentation/widgets/buttons/app_button.dart';
 import 'package:batru_house_rental/presentation/widgets/cards/info_room_horizontal_small_card_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final _provider = StateNotifierProvider<HomeViewModel, HomeState>(
-  (ref) => HomeViewModel(),
+final _provider = StateNotifierProvider.autoDispose<HomeViewModel, HomeState>(
+  (ref) => HomeViewModel(
+    injector.get<GetDistrictListUseCase>(),
+  ),
 );
 
 class HomeView extends ConsumerStatefulWidget {
@@ -26,11 +32,13 @@ class _HomeViewState extends ConsumerState<HomeView> {
       'https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/other/cat_relaxing_on_patio_other/1800x1200_cat_relaxing_on_patio_other.jpg';
 
   HomeViewModel get _viewModel => ref.read(_provider.notifier);
+  HomeState get _state => ref.watch(_provider);
 
   @override
   void initState() {
-    // TODO: implement initState
-    _viewModel.init();
+    Future.delayed(Duration.zero, () async {
+      await _viewModel.initData();
+    });
     super.initState();
   }
 
@@ -44,28 +52,32 @@ class _HomeViewState extends ConsumerState<HomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.colors.backgroundSecondary,
-      body: Stack(
-        children: [
-          _buildBody(context),
-          Positioned(
-            bottom: 10,
-            left: 130,
-            height: 40,
-            right: 130,
-            child: AppButton(
-              leftIcon: AppIcons.add(
-                color: Colors.white,
-              ),
-              title: 'Đăng bài',
-              onButtonTap: () {
-                ref
-                    .read(appNavigatorProvider)
-                    .navigateTo(AppRoutes.postArticle);
-              },
+      body: _state.status == LoadingStatus.initial
+          ? const AppLoadingIndicator()
+          : _buildBodyView(context),
+    );
+  }
+
+  Widget _buildBodyView(BuildContext context) {
+    return Stack(
+      children: [
+        _buildBody(context),
+        Positioned(
+          bottom: 10,
+          left: 130,
+          height: 40,
+          right: 130,
+          child: AppButton(
+            leftIcon: AppIcons.add(
+              color: Colors.white,
             ),
+            title: 'Đăng bài',
+            onButtonTap: () {
+              ref.read(appNavigatorProvider).navigateTo(AppRoutes.postArticle);
+            },
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -86,8 +98,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                 const HomeSearchCardView(),
                 const SizedBox(height: 24),
                 _buildPlaceTitle(),
-                const SizedBox(height: 40),
-                _buildSearchTrendListView(context),
+                const SizedBox(height: 10),
+                _buildSearchFamousListView(context),
               ],
             ),
           ),
@@ -145,21 +157,25 @@ class _HomeViewState extends ConsumerState<HomeView> {
     return SizedBox(
       width: double.infinity,
       height: MediaQuery.of(context).size.height * 0.15,
-      child: _buildImage(mockThumbnail),
+      child: _buildImage(),
     );
   }
 
-  Widget _buildSearchTrendListView(BuildContext context) {
+  Widget _buildSearchFamousListView(BuildContext context) {
+    final famousDistrictList = ref.watch(_provider).famousDistrictList;
     return GridView.builder(
       // config list view not scroll on column
       shrinkWrap: true,
       physics: const ClampingScrollPhysics(),
-      itemCount: 6,
+      itemCount: famousDistrictList.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
         crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+        childAspectRatio: 1.5,
       ),
       itemBuilder: (context, index) => HomePlaceSmallCard(
+        district: famousDistrictList[index],
         onTap: () {
           ref.read(appNavigatorProvider).navigateTo(AppRoutes.search);
         },
@@ -167,11 +183,11 @@ class _HomeViewState extends ConsumerState<HomeView> {
     );
   }
 
-  Widget _buildImage(String imageUrl) {
+  Widget _buildImage() {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: Image.network(
-        imageUrl,
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR21hT8DpLDp4fyJzRHGFoZpPCX2MXdsR50nA&usqp=CAU',
         fit: BoxFit.cover,
       ),
     );
