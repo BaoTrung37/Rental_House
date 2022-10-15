@@ -5,7 +5,10 @@ class HouseRepository {
   final _fireStore = FirebaseFirestore.instance;
 
   Future<void> addHouse(HouseResponse houseResponse) async {
-    await _fireStore.collection('house').add(houseResponse.toJson());
+    await _fireStore
+        .collection('house')
+        .doc(houseResponse.id)
+        .set(houseResponse.toJson());
   }
 
   Future<void> updateHouse(HouseResponse houseResponse) async {

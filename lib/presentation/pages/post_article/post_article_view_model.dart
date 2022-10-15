@@ -5,7 +5,6 @@ import 'package:batru_house_rental/data/models/convenient_house/convenient_house
 import 'package:batru_house_rental/data/models/house/house_response.dart';
 import 'package:batru_house_rental/data/models/house_type/house_type_response.dart';
 import 'package:batru_house_rental/data/models/image_house/image_house_response.dart';
-import 'package:batru_house_rental/domain/entities/article/article_entity.dart';
 import 'package:batru_house_rental/domain/entities/convenient_house/convenient_house_entity.dart';
 import 'package:batru_house_rental/domain/entities/house/house_entity.dart';
 import 'package:batru_house_rental/domain/use_case/address/post_address_use_case.dart';
@@ -61,7 +60,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
         status: LoadingStatus.inProgress,
       );
       await getHouseInitial();
-      await getArticleInitial();
+      // await getArticleInitial();
       final provinces = await _getProvinceListUseCase.run();
       final convenients = await _getConvenientListUseCase.run();
       final types = await _getTypeListUseCase.run();
@@ -107,20 +106,20 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
     );
   }
 
-  Future<void> getArticleInitial() async {
-    state = state.copyWith(
-      article: ArticleEntity(
-        id: '',
-        title: '',
-        description: '',
-        userId: '',
-        houseId: '',
-        phoneNumber: '',
-        createdAt: DateTime.now(),
-        updatedAt: null,
-      ),
-    );
-  }
+  // Future<void> getArticleInitial() async {
+  //   state = state.copyWith(
+  //     article: ArticleEntity(
+  //       id: '',
+  //       title: '',
+  //       description: '',
+  //       userId: '',
+  //       houseId: '',
+  //       phoneNumber: '',
+  //       createdAt: DateTime.now(),
+  //       updatedAt: null,
+  //     ),
+  //   );
+  // }
 
   // void setHouseAmount(int amount) {
   //   state = state.house.;

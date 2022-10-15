@@ -1,4 +1,5 @@
 import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
+import 'package:batru_house_rental/domain/use_case/article/get_article_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/district/get_district_list_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
@@ -17,6 +18,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 final _provider = StateNotifierProvider.autoDispose<HomeViewModel, HomeState>(
   (ref) => HomeViewModel(
     injector.get<GetDistrictListUseCase>(),
+    injector.get<GetArticleListUseCase>(),
   ),
 );
 
