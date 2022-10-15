@@ -6,16 +6,18 @@ part 'district_response.g.dart';
 class DistrictResponse {
   DistrictResponse({
     required this.id,
-    required this.imageUrl,
     required this.provinceId,
     required this.province,
     required this.name,
+    this.imageUrl,
   });
   factory DistrictResponse.fromJson(Map<String, dynamic> json) =>
       _$DistrictResponseFromJson(json);
 
   final String id;
-  final String imageUrl;
+
+  @JsonKey(required: false)
+  final String? imageUrl;
   final String provinceId;
   final String province;
   final String name;
