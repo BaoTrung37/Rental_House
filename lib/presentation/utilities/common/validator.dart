@@ -90,14 +90,13 @@ class Validator extends ValidationBuilder {
 //     );
 //   }
 
-//   @override
-//   ValidationBuilder maxLength(int maxLength, [String? message]) {
-//     final error = message ??
-//         AppLocalizations.current.error_NFC_APP_MSG002_content('$maxLength');
-//     return add(
-//       (value) => (value != null && value.length > maxLength) ? error : null,
-//     );
-//   }
+  @override
+  ValidationBuilder maxLength(int maxLength, [String? message]) {
+    final error = message ?? 'Tối đa $maxLength ký tự';
+    return add(
+      (value) => (value != null && value.length > maxLength) ? error : null,
+    );
+  }
 
 //   /// If value contain text in regex, return error
 //   @override

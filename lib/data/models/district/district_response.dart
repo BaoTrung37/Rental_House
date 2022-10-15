@@ -9,11 +9,14 @@ class DistrictResponse {
     required this.provinceId,
     required this.province,
     required this.name,
+    this.imageUrl,
   });
   factory DistrictResponse.fromJson(Map<String, dynamic> json) =>
       _$DistrictResponseFromJson(json);
 
   final String id;
+  @JsonKey(required: false)
+  final String? imageUrl;
   final String provinceId;
   final String province;
   final String name;
