@@ -23,7 +23,7 @@ class InfoRoomHorizontalCardItemItem extends StatelessWidget {
             child: Row(
               children: [
                 _buildImage(mockThumbnail),
-                const SizedBox(width: 4),
+                const SizedBox(width: 8),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 5),
