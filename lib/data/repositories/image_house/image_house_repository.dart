@@ -11,6 +11,7 @@ class ImageHouseRepository {
 
   Future<void> postImageHouse(
       List<ImageHouseResponse> imageHouseResponseList) async {
+    debugPrint('${imageHouseResponseList.length}ahahahaah');
     await Future.wait(
       imageHouseResponseList.map(
         (e) async {

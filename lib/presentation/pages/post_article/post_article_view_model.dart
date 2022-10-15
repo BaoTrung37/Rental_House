@@ -1,12 +1,16 @@
 import 'dart:io';
 
 import 'package:batru_house_rental/data/models/address/address_reponse.dart';
+import 'package:batru_house_rental/data/models/article/article_response.dart';
 import 'package:batru_house_rental/data/models/convenient_house/convenient_house_reponse.dart';
 import 'package:batru_house_rental/data/models/house/house_response.dart';
 import 'package:batru_house_rental/data/models/image_house/image_house_response.dart';
+import 'package:batru_house_rental/domain/entities/article/article_entity.dart';
 import 'package:batru_house_rental/domain/entities/convenient_house/convenient_house_entity.dart';
 import 'package:batru_house_rental/domain/entities/house/house_entity.dart';
 import 'package:batru_house_rental/domain/use_case/address/post_address_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/article/post_article_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/commune/get_commune_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/convenient/get_convenient_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/convenient_house/post_convenient_house_list_use_case.dart';
@@ -35,6 +39,8 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
     this._postConvenientHouseListUseCase,
     this._postImageHouseListUseCase,
     this._postImageToStorageUseCase,
+    this._postArticleUseCase,
+    this._getCurrentUserInformationUseCase,
   ) : super(PostArticleState());
 
   final GetTypeListUseCase _getTypeListUseCase;
@@ -47,12 +53,15 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
   final PostConvenientHouseListUseCase _postConvenientHouseListUseCase;
   final PostImageHouseListUseCase _postImageHouseListUseCase;
   final PostImageToStorageUseCase _postImageToStorageUseCase;
+  final PostArticleUseCase _postArticleUseCase;
+  final GetCurrentUserInformationUseCase _getCurrentUserInformationUseCase;
   Future<void> initData() async {
     try {
       state = state.copyWith(
         status: LoadingStatus.inProgress,
       );
       await getHouseInitial();
+      await getArticleInitial();
       final provinces = await _getProvinceListUseCase.run();
       final convenients = await _getConvenientListUseCase.run();
       final types = await _getTypeListUseCase.run();
@@ -92,6 +101,21 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
     );
   }
 
+  Future<void> getArticleInitial() async {
+    state = state.copyWith(
+      article: ArticleEntity(
+        id: '',
+        title: '',
+        description: '',
+        userId: '',
+        houseId: '',
+        phoneNumber: '',
+        createdAt: DateTime.now(),
+        updatedAt: null,
+      ),
+    );
+  }
+
   // void setHouseAmount(int amount) {
   //   state = state.house.;
   // }
@@ -103,10 +127,6 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
       final houseId = DateTime.now().millisecondsSinceEpoch.toString();
       final postId = DateTime.now()
           .add(const Duration(milliseconds: 1))
-          .millisecondsSinceEpoch
-          .toString();
-      final imageId = DateTime.now()
-          .add(const Duration(milliseconds: 13))
           .millisecondsSinceEpoch
           .toString();
       await _postHouseUseCase.run(
@@ -126,6 +146,20 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
           rentalPrice: state.house!.rentalPrice,
         ),
       );
+      final currentUser = await _getCurrentUserInformationUseCase.run();
+      await _postArticleUseCase.run(
+        ArticleResponse(
+          id: postId,
+          title: state.article!.title,
+          description: state.article!.description,
+          userId: currentUser.id,
+          houseId: houseId,
+          phoneNumber: state.article!.phoneNumber,
+          createdAt: DateTime.now(),
+          updatedAt: null,
+        ),
+      );
+
       await _postAddressUseCase.run(
         AddressResponse(
           id: postId,
@@ -148,25 +182,20 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
       final screenshotUrlList =
           await _postImageToStorageUseCase.run(state.screenshotList);
       await _postImageHouseListUseCase.run(
-        screenshotUrlList
-            .map(
-              (e) => ImageHouseResponse(id: imageId, houseId: houseId, url: e),
-            )
-            .toList(),
+        screenshotUrlList.map(
+          (e) {
+            final imageId = DateTime.now()
+                .add(const Duration(milliseconds: 13))
+                .millisecondsSinceEpoch
+                .toString();
+            debugPrint('imageId: $imageId');
+            return ImageHouseResponse(id: imageId, houseId: houseId, url: e);
+          },
+        ).toList(),
       );
-      // await _postImageHouseListUseCase.run(
-      //   ImageHouseResponse(
-      //     id: viewId,
-      //     imageFile: imageFile,
-      //     houseId: houseId,
-      //   ),
-      // );
 
       state = state.copyWith(
         status: LoadingStatus.success,
-      );
-      state = state.copyWith(
-        status: LoadingStatus.initial,
       );
     } catch (e) {
       state = state.copyWith(
