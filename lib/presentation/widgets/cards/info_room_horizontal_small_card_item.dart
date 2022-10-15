@@ -35,7 +35,7 @@ class InfoRoomHorizontalCardItemItem extends StatelessWidget {
                         const SizedBox(height: 4),
                         Expanded(child: _buildInfoHouseTitle(context)),
                         _buildInfoStreet(context),
-                        _buildInfoDistrict(context),
+                        // _buildInfoDistrict(context),
                       ],
                     ),
                   ),
@@ -49,21 +49,21 @@ class InfoRoomHorizontalCardItemItem extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoDistrict(BuildContext context) {
-    return Text(
-      'Quận Cầu Giấy.',
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      style: AppTextStyles.labelSmallLight.copyWith(
-        color: context.colors.textSecondary,
-      ),
-    );
-  }
+  // Widget _buildInfoDistrict(BuildContext context) {
+  //   return Text(
+  //     'Quận Cầu Giấy.',
+  //     maxLines: 1,
+  //     overflow: TextOverflow.ellipsis,
+  //     style: AppTextStyles.labelMediumLight.copyWith(
+  //       color: context.colors.textSecondary,
+  //     ),
+  //   );
+  // }
 
   Widget _buildInfoStreet(BuildContext context) {
     return Text(
       '123 Đường Phạm Hùng, Phường Trung Hoà, Quận Cầu Giấy.',
-      maxLines: 1,
+      maxLines: 2,
       overflow: TextOverflow.ellipsis,
       style: AppTextStyles.labelSmallLight.copyWith(
         color: context.colors.textSecondary,
