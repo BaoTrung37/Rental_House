@@ -6,6 +6,7 @@ part 'district_response.g.dart';
 class DistrictResponse {
   DistrictResponse({
     required this.id,
+    required this.imageUrl,
     required this.provinceId,
     required this.province,
     required this.name,
@@ -14,6 +15,7 @@ class DistrictResponse {
       _$DistrictResponseFromJson(json);
 
   final String id;
+  final String imageUrl;
   final String provinceId;
   final String province;
   final String name;
