@@ -1,3 +1,4 @@
+import 'package:batru_house_rental/domain/entities/image_house/image_house_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'image_house_response.g.dart';
@@ -18,4 +19,10 @@ class ImageHouseResponse {
   final String url;
 
   Map<String, dynamic> toJson() => _$ImageHouseResponseToJson(this);
+
+  ImageHouseEntity toEntity() => ImageHouseEntity(
+        id: id,
+        houseId: houseId,
+        url: url,
+      );
 }

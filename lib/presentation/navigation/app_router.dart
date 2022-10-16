@@ -60,7 +60,7 @@ class AppRouter {
           builder: (context) => const HomeView(),
         );
 
-      case AppRoutes.roomDetail:
+      case AppRoutes.houseDetail:
         return MaterialPageRoute(
           settings: settings,
           builder: (context) => const RoomDetailView(),

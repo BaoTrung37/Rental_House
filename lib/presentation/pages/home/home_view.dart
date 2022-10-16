@@ -1,11 +1,11 @@
 import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
+import 'package:batru_house_rental/domain/use_case/article/get_article_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/district/get_district_list_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
 import 'package:batru_house_rental/presentation/pages/home/home_state.dart';
 import 'package:batru_house_rental/presentation/pages/home/home_view_model.dart';
 import 'package:batru_house_rental/presentation/pages/home/widgets/home_place_small_card.dart';
-import 'package:batru_house_rental/presentation/pages/home/widgets/home_search_card_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
 import 'package:batru_house_rental/presentation/widgets/app_indicator/app_loading_indicator.dart';
@@ -17,6 +17,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 final _provider = StateNotifierProvider.autoDispose<HomeViewModel, HomeState>(
   (ref) => HomeViewModel(
     injector.get<GetDistrictListUseCase>(),
+    injector.get<GetArticleListUseCase>(),
   ),
 );
 
@@ -95,7 +96,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
           sliver: SliverList(
             delegate: SliverChildListDelegate(
               [
-                const HomeSearchCardView(),
+                // const HomeSearchCardView(),
                 const SizedBox(height: 24),
                 _buildPlaceTitle(),
                 const SizedBox(height: 10),
@@ -120,22 +121,26 @@ class _HomeViewState extends ConsumerState<HomeView> {
         const SliverToBoxAdapter(
           child: SizedBox(height: 10),
         ),
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          sliver: SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) => InfoRoomHorizontalCardItemItem(
-                onTap: () {
-                  ref
-                      .read(appNavigatorProvider)
-                      .navigateTo(AppRoutes.roomDetail);
-                },
-              ),
-              childCount: 10,
-            ),
-          ),
-        ),
+        _buildHouseArticleListView(),
       ],
+    );
+  }
+
+  SliverPadding _buildHouseArticleListView() {
+    final houseArticleList = _state.houseArticleList;
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      sliver: SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) => InfoRoomHorizontalCardItemItem(
+            articleEntity: houseArticleList[index],
+            onTap: () {
+              ref.read(appNavigatorProvider).navigateTo(AppRoutes.houseDetail);
+            },
+          ),
+          childCount: houseArticleList.length,
+        ),
+      ),
     );
   }
 

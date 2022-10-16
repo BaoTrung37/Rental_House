@@ -1,14 +1,17 @@
+import 'package:batru_house_rental/domain/entities/article/article_entity.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:flutter/material.dart';
 
 class InfoRoomHorizontalCardItemItem extends StatelessWidget {
   const InfoRoomHorizontalCardItemItem({
     required this.onTap,
+    required this.articleEntity,
     Key? key,
   }) : super(key: key);
   final mockThumbnail =
       'https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/other/cat_relaxing_on_patio_other/1800x1200_cat_relaxing_on_patio_other.jpg';
   final VoidCallback onTap;
+  final ArticleEntity? articleEntity;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -22,8 +25,8 @@ class InfoRoomHorizontalCardItemItem extends StatelessWidget {
             aspectRatio: 16 / 9,
             child: Row(
               children: [
-                _buildImage(mockThumbnail),
-                const SizedBox(width: 4),
+                _buildImage(),
+                const SizedBox(width: 8),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 5),
@@ -35,7 +38,7 @@ class InfoRoomHorizontalCardItemItem extends StatelessWidget {
                         const SizedBox(height: 4),
                         Expanded(child: _buildInfoHouseTitle(context)),
                         _buildInfoStreet(context),
-                        _buildInfoDistrict(context),
+                        // _buildInfoDistrict(context),
                       ],
                     ),
                   ),
@@ -49,21 +52,21 @@ class InfoRoomHorizontalCardItemItem extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoDistrict(BuildContext context) {
-    return Text(
-      'Quận Cầu Giấy.',
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      style: AppTextStyles.labelSmallLight.copyWith(
-        color: context.colors.textSecondary,
-      ),
-    );
-  }
+  // Widget _buildInfoDistrict(BuildContext context) {
+  //   return Text(
+  //     'Quận Cầu Giấy.',
+  //     maxLines: 1,
+  //     overflow: TextOverflow.ellipsis,
+  //     style: AppTextStyles.labelMediumLight.copyWith(
+  //       color: context.colors.textSecondary,
+  //     ),
+  //   );
+  // }
 
   Widget _buildInfoStreet(BuildContext context) {
     return Text(
-      '123 Đường Phạm Hùng, Phường Trung Hoà, Quận Cầu Giấy.',
-      maxLines: 1,
+      articleEntity?.house?.address.toString() ?? '',
+      maxLines: 2,
       overflow: TextOverflow.ellipsis,
       style: AppTextStyles.labelSmallLight.copyWith(
         color: context.colors.textSecondary,
@@ -73,7 +76,7 @@ class InfoRoomHorizontalCardItemItem extends StatelessWidget {
 
   Widget _buildInfoHouseTitle(BuildContext context) {
     return Text(
-      'Phòng cho thuê Đường Phạm Hùng, Quận Cầu Giấy',
+      articleEntity?.house?.title ?? 'Chưa có tiêu đề',
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
       style: AppTextStyles.headingXXSmall.copyWith(
@@ -91,7 +94,7 @@ class InfoRoomHorizontalCardItemItem extends StatelessWidget {
           style: AppTextStyles.labelSmallLight,
         ),
         Text(
-          '5 triệu VND/phòng',
+          '${articleEntity?.house?.rentalPrice.toString()} VND/phòng',
           style: AppTextStyles.labelSmall.copyWith(
             color: context.colors.contentSpecialText,
           ),
@@ -100,13 +103,13 @@ class InfoRoomHorizontalCardItemItem extends StatelessWidget {
     );
   }
 
-  Widget _buildImage(String imageUrl) {
+  Widget _buildImage() {
     return AspectRatio(
       aspectRatio: 1.1,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
         child: Image.network(
-          imageUrl,
+          articleEntity?.imageList.first.url ?? mockThumbnail,
           fit: BoxFit.cover,
         ),
       ),

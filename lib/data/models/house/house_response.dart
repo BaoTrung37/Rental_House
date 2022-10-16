@@ -1,3 +1,4 @@
+import 'package:batru_house_rental/domain/entities/house/house_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'house_response.g.dart';
@@ -22,6 +23,7 @@ class HouseResponse {
     required this.phoneNumber,
     required this.description,
     required this.createdAt,
+    required this.address,
     this.updatedAt,
   });
   factory HouseResponse.fromJson(Map<String, dynamic> json) =>
@@ -53,6 +55,29 @@ class HouseResponse {
   final DateTime createdAt;
   @JsonKey(required: false)
   final DateTime? updatedAt;
+  final String address;
 
   Map<String, dynamic> toJson() => _$HouseResponseToJson(this);
+
+  HouseEntity toEntity() => HouseEntity(
+        id: id,
+        area: area,
+        capacity: capacity,
+        streetName: streetName,
+        houseNumber: houseNumber,
+        depositPrice: depositPrice,
+        waterPrice: waterPrice,
+        electricPrice: electricPrice,
+        internetPrice: internetPrice,
+        parkingPrice: parkingPrice,
+        isAvailableParking: isAvailableParking,
+        rentalPrice: rentalPrice,
+        userId: userId,
+        title: title,
+        phoneNumber: phoneNumber,
+        description: description,
+        createdAt: createdAt,
+        updatedAt: updatedAt,
+        address: address,
+      );
 }

@@ -397,16 +397,6 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
             _viewModel.onTypeChanged(value!);
           },
         ),
-        // const SizedBox(height: 8),
-        // InputTextField.singleLine(
-        //   labelText: 'Số lượng phòng (phòng)',
-        //   placeholder: 'Số lượng phòng bạn đang quản lý',
-        //   keyboardType: TextInputType.number,
-        //   initialText: '1',
-        //   textInputAction: TextInputAction.next,
-        //   validator: Validator().required().minLength(1).build(),
-        //   onTextChange: (value) {},
-        // ),
         const SizedBox(height: 8),
         InputTextField.singleLine(
           labelText: 'Sức chứa (người)',
