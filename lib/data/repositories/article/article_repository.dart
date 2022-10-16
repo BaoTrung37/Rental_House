@@ -10,12 +10,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class ArticleRepository {
   final _fireStore = FirebaseFirestore.instance;
 
-  final List<ArticleEntity> _items = [];
+  // final List<ArticleEntity> _items = [];
   List<TypeResponse> _types = [];
   List<ConvenientResponse> _convenients = [];
   // List<ConvenientHouseResponse> _convenientHouses = [];
-  final List<ImageHouseResponse> _imageHouses = [];
-  final List<HouseResponse> _houses = [];
+  // final List<ImageHouseResponse> _imageHouses = [];
+  // final List<HouseResponse> _houses = [];
 
   Future<void> initData() async {
     await getTypes();
