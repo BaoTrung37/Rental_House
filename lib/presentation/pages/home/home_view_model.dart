@@ -29,7 +29,7 @@ class HomeViewModel extends StateNotifier<HomeState> {
       state = state.copyWith(
         status: LoadingStatus.error,
       );
-      debugPrint(e.toString());
+      debugPrint('home view: $e');
     }
   }
 }

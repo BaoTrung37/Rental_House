@@ -13,6 +13,7 @@ import 'package:batru_house_rental/data/repositories/province/province_repositor
 import 'package:batru_house_rental/data/repositories/type/type_repository.dart';
 import 'package:batru_house_rental/domain/use_case/address/post_address_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_article_list_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/article/get_initial_article_data_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/google_login_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/logout_use_case.dart';
@@ -150,5 +151,9 @@ class AppModules {
     /// post house type use case
     injector.registerLazySingleton<PostHouseTypeUseCase>(
         () => PostHouseTypeUseCase());
+
+    /// get initail data use case
+    injector.registerLazySingleton<GetInitialArticleDataUseCase>(
+        () => GetInitialArticleDataUseCase());
   }
 }

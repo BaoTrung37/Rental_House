@@ -60,7 +60,6 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
         status: LoadingStatus.inProgress,
       );
       await getHouseInitial();
-      // await getArticleInitial();
       final provinces = await _getProvinceListUseCase.run();
       final convenients = await _getConvenientListUseCase.run();
       final types = await _getTypeListUseCase.run();
@@ -99,6 +98,8 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
         title: '',
         description: '',
         userId: '',
+        isAvailableParking: false,
+        address: '',
         phoneNumber: '',
         createdAt: DateTime.now(),
         updatedAt: null,
@@ -124,6 +125,16 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
   // void setHouseAmount(int amount) {
   //   state = state.house.;
   // }
+  String _getAddress() {
+    final houseNumber = '${state.house?.houseNumber}, ';
+    final streetName = '${state.house?.streetName}, ';
+    final communeName = '${state.currentCommune!.name}, ';
+    final districtName = '${state.currentDistrict!.name}, ';
+    final provinceName = state.currentProvince!.name;
+
+    return houseNumber + streetName + communeName + districtName + provinceName;
+  }
+
   Future<void> postArticle() async {
     try {
       state = state.copyWith(
@@ -158,6 +169,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
           userId: currentUser.id,
           phoneNumber: state.house?.phoneNumber ?? '',
           updatedAt: state.house?.updatedAt,
+          address: _getAddress(),
         ),
       );
 
