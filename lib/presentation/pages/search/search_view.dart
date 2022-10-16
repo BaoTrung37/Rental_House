@@ -65,10 +65,11 @@ class _SearchViewState extends ConsumerState<SearchView> {
                 child: ListView.builder(
                   itemBuilder: (context, index) =>
                       InfoRoomHorizontalCardItemItem(
+                        articleEntity: null,
                     onTap: () {
                       ref
                           .read(appNavigatorProvider)
-                          .navigateTo(AppRoutes.roomDetail);
+                          .navigateTo(AppRoutes.houseDetail);
                     },
                   ),
                   itemCount: 10,

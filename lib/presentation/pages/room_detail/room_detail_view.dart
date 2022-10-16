@@ -333,7 +333,7 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
                       debugPrint('ontap');
                       ref
                           .read(appNavigatorProvider)
-                          .navigateTo(AppRoutes.roomDetail);
+                          .navigateTo(AppRoutes.houseDetail);
                     },
                   ),
                   shrinkWrap: true,

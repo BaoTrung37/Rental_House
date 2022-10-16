@@ -20,9 +20,9 @@ class HomeViewModel extends StateNotifier<HomeState> {
       );
       final districts = await _getDistrictListUseCase.run('01');
       final articles = await _getArticleListUseCase.run(10);
-      // debugPrint('districts: $districts.length');
       state = state.copyWith(
         famousDistrictList: districts.take(6).toList(),
+        houseArticleList: articles,
         status: LoadingStatus.success,
       );
     } catch (e) {

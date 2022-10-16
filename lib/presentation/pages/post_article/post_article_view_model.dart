@@ -126,11 +126,11 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
   //   state = state.house.;
   // }
   String _getAddress() {
-    final houseNumber = '${state.house?.houseNumber}, ';
-    final streetName = '${state.house?.streetName}, ';
+    final houseNumber = '${state.house!.houseNumber}, ';
+    final streetName = '${state.house!.streetName}, ';
     final communeName = '${state.currentCommune!.name}, ';
     final districtName = '${state.currentDistrict!.name}, ';
-    final provinceName = state.currentProvince!.name;
+    const provinceName = 'Hà Nội';
 
     return houseNumber + streetName + communeName + districtName + provinceName;
   }
