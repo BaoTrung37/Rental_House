@@ -1,11 +1,13 @@
 import 'dart:ui';
 
 import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
+import 'package:batru_house_rental/domain/use_case/article/get_article_use_case.dart';
+import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
-import 'package:batru_house_rental/presentation/pages/room_detail/room_detail_state.dart';
-import 'package:batru_house_rental/presentation/pages/room_detail/room_detail_view_model.dart';
-import 'package:batru_house_rental/presentation/pages/room_detail/widgets/convenient_item.dart';
-import 'package:batru_house_rental/presentation/pages/room_detail/widgets/relative_room_item_view.dart';
+import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_state.dart';
+import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_view_model.dart';
+import 'package:batru_house_rental/presentation/pages/house_detail/widgets/convenient_item.dart';
+import 'package:batru_house_rental/presentation/pages/house_detail/widgets/relative_house_item_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/widgets/app_divider/app_divider.dart';
 import 'package:batru_house_rental/presentation/widgets/base_app_bar/base_app_bar.dart';
@@ -13,24 +15,41 @@ import 'package:batru_house_rental/presentation/widgets/buttons/app_button.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final _provider = StateNotifierProvider<RoomDetailViewModel, RoomDetailState>(
-  (ref) => RoomDetailViewModel(),
+final _provider =
+    StateNotifierProvider.autoDispose<HouseDetailViewModel, HouseDetailState>(
+  (ref) => HouseDetailViewModel(
+    injector.get<GetArticleUseCase>(),
+  ),
 );
 
-class RoomDetailView extends ConsumerStatefulWidget {
-  const RoomDetailView({Key? key}) : super(key: key);
-
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _RoomDetailViewState();
+class HouseDetailArguments {
+  HouseDetailArguments({
+    required this.houseId,
+  });
+  final String houseId;
 }
 
-class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
-  RoomDetailViewModel get _viewModel => ref.read(_provider.notifier);
+class HouseDetailView extends ConsumerStatefulWidget {
+  const HouseDetailView({
+    required this.houseId,
+    Key? key,
+  }) : super(key: key);
 
+  final String houseId;
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _HouseDetailViewState();
+}
+
+class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
+  HouseDetailViewModel get _viewModel => ref.read(_provider.notifier);
+  HouseDetailState get _state => ref.watch(_provider);
   @override
   void initState() {
     // TODO: implement initState
-    _viewModel.init();
+    Future.delayed(Duration.zero, () async {
+      await _viewModel.init(widget.houseId);
+    });
     super.initState();
   }
 
@@ -105,7 +124,7 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.4,
                 child: Image.network(
-                  mockThumbnail,
+                  _state.article?.imageList.first.url ?? mockThumbnail,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -328,7 +347,7 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
                   ),
-                  itemBuilder: (context, index) => RelativeRoomItemView(
+                  itemBuilder: (context, index) => RelativeHouseItemView(
                     onTap: () {
                       debugPrint('ontap');
                       ref
