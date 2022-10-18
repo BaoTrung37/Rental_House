@@ -57,6 +57,61 @@ class ArticleRepository {
   //       .toList();
   // }
 
+  Future<ArticleEntity> getArticeById(String houseId) async {
+    final houseSnapshot =
+        await _fireStore.collection('house').doc(houseId).get();
+
+    final imageHouseSnapshot = await _fireStore
+        .collection('imageHouse')
+        .where('houseId', isEqualTo: houseId)
+        .get();
+    final convenientHouseSnapshot = await _fireStore
+        .collection('convenientHouse')
+        .where('houseId', isEqualTo: houseId)
+        .get();
+    final houseTypeSnapshot = await _fireStore
+        .collection('houseType')
+        .where('houseId', isEqualTo: houseId)
+        .limit(1)
+        .get();
+    final houseEntity =
+        HouseResponse.fromJson(houseSnapshot.data()!).toEntity();
+    final houseTypeResponse = houseTypeSnapshot.docs.map((e) {
+      return HouseTypeResponse.fromJson(e.data());
+    });
+
+    final type = _types
+        .firstWhere((element) => element.id == houseTypeResponse.first.typeId)
+        .toEntity();
+
+    final imageList = imageHouseSnapshot.docs
+        .map(
+          (e) => ImageHouseResponse.fromJson(e.data()).toEntity(),
+        )
+        .toList();
+    //
+    final convenienHouseResponse = convenientHouseSnapshot.docs
+        .map(
+          (e) => ConvenientHouseResponse.fromJson(e.data()),
+        )
+        .toList();
+
+    final convenientList = convenienHouseResponse
+        .map(
+          (e) => _convenients
+              .firstWhere((element) => element.id == e.convenientId)
+              .toEntity(),
+        )
+        .toList();
+    return ArticleEntity(
+      id: houseEntity.id,
+      house: houseEntity,
+      imageList: imageList,
+      convenientList: convenientList,
+      type: type,
+    );
+  }
+
   Future<List<ArticleEntity>> getArticles(int limit) async {
     final houseSnapshot =
         await _fireStore.collection('house').limit(limit).get();
@@ -76,17 +131,14 @@ class ArticleRepository {
           .where('houseId', isEqualTo: house.id)
           .limit(1)
           .get();
-      // debugPrint('${houseTypeSnapshot.docs.length}ahha22haahha');
       final houseEntity = HouseResponse.fromJson(house.data()).toEntity();
       final houseTypeResponse = houseTypeSnapshot.docs.map((e) {
         return HouseTypeResponse.fromJson(e.data());
       });
-      // debugPrint('${houseTypeResponse.length}ahha22haahha');
 
       final type = _types
           .firstWhere((element) => element.id == houseTypeResponse.first.typeId)
           .toEntity();
-      // debugPrint('${type.name}ahha22haahha');
 
       final imageList = imageHouseSnapshot.docs
           .map(
@@ -107,9 +159,9 @@ class ArticleRepository {
                 .toEntity(),
           )
           .toList();
-      // debugPrint('${convenientList.length}hahaha');
 
       articles.add(ArticleEntity(
+        id: houseEntity.id,
         house: houseEntity,
         imageList: imageList,
         convenientList: convenientList,

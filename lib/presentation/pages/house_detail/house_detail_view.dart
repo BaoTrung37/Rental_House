@@ -1,36 +1,58 @@
 import 'dart:ui';
 
 import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
+import 'package:batru_house_rental/domain/use_case/article/get_article_use_case.dart';
+import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
-import 'package:batru_house_rental/presentation/pages/room_detail/room_detail_state.dart';
-import 'package:batru_house_rental/presentation/pages/room_detail/room_detail_view_model.dart';
-import 'package:batru_house_rental/presentation/pages/room_detail/widgets/convenient_item.dart';
-import 'package:batru_house_rental/presentation/pages/room_detail/widgets/relative_room_item_view.dart';
+import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_state.dart';
+import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_view_model.dart';
+import 'package:batru_house_rental/presentation/pages/house_detail/widgets/convenient_item.dart';
+import 'package:batru_house_rental/presentation/pages/house_detail/widgets/relative_house_item_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
+import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
 import 'package:batru_house_rental/presentation/widgets/app_divider/app_divider.dart';
+import 'package:batru_house_rental/presentation/widgets/app_indicator/app_loading_indicator.dart';
 import 'package:batru_house_rental/presentation/widgets/base_app_bar/base_app_bar.dart';
 import 'package:batru_house_rental/presentation/widgets/buttons/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final _provider = StateNotifierProvider<RoomDetailViewModel, RoomDetailState>(
-  (ref) => RoomDetailViewModel(),
+final _provider =
+    StateNotifierProvider.autoDispose<HouseDetailViewModel, HouseDetailState>(
+  (ref) => HouseDetailViewModel(
+    injector.get<GetArticleUseCase>(),
+  ),
 );
 
-class RoomDetailView extends ConsumerStatefulWidget {
-  const RoomDetailView({Key? key}) : super(key: key);
-
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _RoomDetailViewState();
+class HouseDetailArguments {
+  HouseDetailArguments({
+    required this.houseId,
+  });
+  final String houseId;
 }
 
-class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
-  RoomDetailViewModel get _viewModel => ref.read(_provider.notifier);
+class HouseDetailView extends ConsumerStatefulWidget {
+  const HouseDetailView({
+    required this.houseId,
+    Key? key,
+  }) : super(key: key);
+
+  final String houseId;
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _HouseDetailViewState();
+}
+
+class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
+  HouseDetailViewModel get _viewModel => ref.read(_provider.notifier);
+  HouseDetailState get _state => ref.watch(_provider);
 
   @override
   void initState() {
     // TODO: implement initState
-    _viewModel.init();
+    Future.delayed(Duration.zero, () async {
+      await _viewModel.init(widget.houseId);
+    });
     super.initState();
   }
 
@@ -49,14 +71,20 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
         title: 'Chi tiết phòng',
         shouldShowBottomDivider: true,
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: _buildBodyView(context),
-          ),
-          _buildBottomApp(context)
-        ],
-      ),
+      body: _state.status == LoadingStatus.initial
+          ? const AppLoadingIndicator()
+          : _buildBodyContent(context),
+    );
+  }
+
+  Column _buildBodyContent(BuildContext context) {
+    return Column(
+      children: [
+        Expanded(
+          child: _buildBodyView(context),
+        ),
+        _buildBottomApp(context)
+      ],
     );
   }
 
@@ -105,7 +133,7 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.4,
                 child: Image.network(
-                  mockThumbnail,
+                  _state.article?.imageList.first.url ?? mockThumbnail,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -138,9 +166,9 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: const [
-                    ConvenientItem(),
-                    ConvenientItem(),
-                    ConvenientItem(),
+                    // ConvenientItem(iconUrl: sta),
+                    // ConvenientItem(),
+                    // ConvenientItem(),
                   ],
                 ),
               ],
@@ -227,17 +255,9 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
             ),
           ),
         ),
-        SliverGrid(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 4,
-            mainAxisSpacing: 10,
-            crossAxisSpacing: 10,
-            childAspectRatio: 1.5,
-          ),
-          delegate: SliverChildBuilderDelegate(
-            (context, index) => const ConvenientItem(),
-            childCount: 10,
-          ),
+        _buildConvenientItemList(),
+        const SliverToBoxAdapter(
+          child: SizedBox(height: 10),
         ),
         SliverToBoxAdapter(
           child: _buildBigDivider(),
@@ -328,7 +348,7 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
                     crossAxisSpacing: 10,
                     mainAxisSpacing: 10,
                   ),
-                  itemBuilder: (context, index) => RelativeRoomItemView(
+                  itemBuilder: (context, index) => RelativeHouseItemView(
                     onTap: () {
                       debugPrint('ontap');
                       ref
@@ -344,6 +364,24 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
           ),
         ),
       ],
+    );
+  }
+
+  SliverGrid _buildConvenientItemList() {
+    final convenientList = ref.watch(_provider).article!.convenientList;
+    return SliverGrid(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 4,
+        mainAxisSpacing: 10,
+        crossAxisSpacing: 10,
+        childAspectRatio: 1.5,
+      ),
+      delegate: SliverChildBuilderDelegate(
+        (context, index) => ConvenientItem(
+          convenientEntity: convenientList[index],
+        ),
+        childCount: convenientList.length,
+      ),
     );
   }
 
@@ -375,6 +413,7 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
       const Text('Tiện ích', style: AppTextStyles.headingXSmall);
 
   Row _buildSpecificPhoneNumberView(BuildContext context) {
+    final phoneNumber = ref.watch(_provider).article!.house!.phoneNumber;
     return Row(
       children: [
         const Icon(
@@ -383,7 +422,7 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
         const SizedBox(width: 10),
         Expanded(
           child: Text(
-            'Số điện thoại: 0966222333',
+            'Số điện thoại: $phoneNumber',
             style: AppTextStyles.textMedium.copyWith(
               color: context.colors.textPrimary,
             ),
@@ -426,11 +465,12 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
     );
   }
 
-  SizedBox _buildDetailText(BuildContext context) {
+  Widget _buildDetailText(BuildContext context) {
+    final article = ref.watch(_provider).article!;
     return SizedBox(
       height: 70,
       child: Text(
-        'hahahhahahhahahhahahhahahh,ahahhahahhahahhahahhahahhah,ahhahahhahahhahahhahahhahahhaha,hhahahhahahhahahhahahh,ahahhahahhahahhahahha,hahhahah,,hahahhahahhahahhahahh,ahahhahahhahahhahahhahahhahahhah,ahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahah',
+        article.house!.description,
         overflow: TextOverflow.ellipsis,
         maxLines: 3,
         style: AppTextStyles.textMedium.copyWith(
@@ -461,9 +501,9 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
     );
   }
 
-  Text _buildTitle(BuildContext context) {
+  Widget _buildTitle(BuildContext context) {
     return Text(
-      'Phòng cho thuê ở Hà Nội, OK,Phòng cho thuê ở Hà Nội, OK',
+      _state.article!.house!.title,
       style: AppTextStyles.headingSmall.copyWith(
         color: context.colors.textPrimary,
       ),
@@ -512,7 +552,7 @@ class _RoomDetailViewState extends ConsumerState<RoomDetailView> {
           child: Wrap(
             children: [
               Text(
-                '20m',
+                '${_state.article!.house!.area}m',
                 style: TextStyle(
                   color: context.colors.contentSpecialText,
                 ),

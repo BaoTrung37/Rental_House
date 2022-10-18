@@ -1,8 +1,8 @@
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:flutter/material.dart';
 
-class RelativeRoomItemView extends StatelessWidget {
-  const RelativeRoomItemView({
+class RelativeHouseItemView extends StatelessWidget {
+  const RelativeHouseItemView({
     required this.onTap,
     Key? key,
   }) : super(key: key);

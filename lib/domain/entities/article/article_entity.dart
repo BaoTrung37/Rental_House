@@ -11,6 +11,7 @@ part 'article_entity.freezed.dart';
 @freezed
 class ArticleEntity with _$ArticleEntity {
   const factory ArticleEntity({
+    @Default('') String id,
     @Default([]) List<ImageHouseEntity> imageList,
     @Default([]) List<ConvenientEntity> convenientList,
     TypeEntity? type,
