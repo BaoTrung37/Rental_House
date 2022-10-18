@@ -9,5 +9,6 @@ class HouseDetailState with _$HouseDetailState {
   const factory HouseDetailState({
     @Default(LoadingStatus.initial) LoadingStatus status,
     ArticleEntity? article,
+    
   }) = _HouseDetailState;
 }

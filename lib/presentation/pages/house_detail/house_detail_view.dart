@@ -9,7 +9,9 @@ import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_
 import 'package:batru_house_rental/presentation/pages/house_detail/widgets/convenient_item.dart';
 import 'package:batru_house_rental/presentation/pages/house_detail/widgets/relative_house_item_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
+import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
 import 'package:batru_house_rental/presentation/widgets/app_divider/app_divider.dart';
+import 'package:batru_house_rental/presentation/widgets/app_indicator/app_loading_indicator.dart';
 import 'package:batru_house_rental/presentation/widgets/base_app_bar/base_app_bar.dart';
 import 'package:batru_house_rental/presentation/widgets/buttons/app_button.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +46,7 @@ class HouseDetailView extends ConsumerStatefulWidget {
 class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
   HouseDetailViewModel get _viewModel => ref.read(_provider.notifier);
   HouseDetailState get _state => ref.watch(_provider);
+
   @override
   void initState() {
     // TODO: implement initState
@@ -68,14 +71,20 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
         title: 'Chi tiết phòng',
         shouldShowBottomDivider: true,
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: _buildBodyView(context),
-          ),
-          _buildBottomApp(context)
-        ],
-      ),
+      body: _state.status == LoadingStatus.initial
+          ? const AppLoadingIndicator()
+          : _buildBodyContent(context),
+    );
+  }
+
+  Column _buildBodyContent(BuildContext context) {
+    return Column(
+      children: [
+        Expanded(
+          child: _buildBodyView(context),
+        ),
+        _buildBottomApp(context)
+      ],
     );
   }
 
@@ -157,9 +166,9 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: const [
-                    ConvenientItem(),
-                    ConvenientItem(),
-                    ConvenientItem(),
+                    // ConvenientItem(iconUrl: sta),
+                    // ConvenientItem(),
+                    // ConvenientItem(),
                   ],
                 ),
               ],
@@ -246,17 +255,9 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
             ),
           ),
         ),
-        SliverGrid(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 4,
-            mainAxisSpacing: 10,
-            crossAxisSpacing: 10,
-            childAspectRatio: 1.5,
-          ),
-          delegate: SliverChildBuilderDelegate(
-            (context, index) => const ConvenientItem(),
-            childCount: 10,
-          ),
+        _buildConvenientItemList(),
+        const SliverToBoxAdapter(
+          child: SizedBox(height: 10),
         ),
         SliverToBoxAdapter(
           child: _buildBigDivider(),
@@ -366,6 +367,24 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
     );
   }
 
+  SliverGrid _buildConvenientItemList() {
+    final convenientList = ref.watch(_provider).article!.convenientList;
+    return SliverGrid(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 4,
+        mainAxisSpacing: 10,
+        crossAxisSpacing: 10,
+        childAspectRatio: 1.5,
+      ),
+      delegate: SliverChildBuilderDelegate(
+        (context, index) => ConvenientItem(
+          convenientEntity: convenientList[index],
+        ),
+        childCount: convenientList.length,
+      ),
+    );
+  }
+
   Row _buildPostDateView(BuildContext context) {
     return Row(
       children: [
@@ -394,6 +413,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
       const Text('Tiện ích', style: AppTextStyles.headingXSmall);
 
   Row _buildSpecificPhoneNumberView(BuildContext context) {
+    final phoneNumber = ref.watch(_provider).article!.house!.phoneNumber;
     return Row(
       children: [
         const Icon(
@@ -402,7 +422,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
         const SizedBox(width: 10),
         Expanded(
           child: Text(
-            'Số điện thoại: 0966222333',
+            'Số điện thoại: $phoneNumber',
             style: AppTextStyles.textMedium.copyWith(
               color: context.colors.textPrimary,
             ),
@@ -445,11 +465,12 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
     );
   }
 
-  SizedBox _buildDetailText(BuildContext context) {
+  Widget _buildDetailText(BuildContext context) {
+    final article = ref.watch(_provider).article!;
     return SizedBox(
       height: 70,
       child: Text(
-        'hahahhahahhahahhahahhahahh,ahahhahahhahahhahahhahahhah,ahhahahhahahhahahhahahhahahhaha,hhahahhahahhahahhahahh,ahahhahahhahahhahahha,hahhahah,,hahahhahahhahahhahahh,ahahhahahhahahhahahhahahhahahhah,ahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahahhahah',
+        article.house!.description,
         overflow: TextOverflow.ellipsis,
         maxLines: 3,
         style: AppTextStyles.textMedium.copyWith(
@@ -480,9 +501,9 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
     );
   }
 
-  Text _buildTitle(BuildContext context) {
+  Widget _buildTitle(BuildContext context) {
     return Text(
-      'Phòng cho thuê ở Hà Nội, OK,Phòng cho thuê ở Hà Nội, OK',
+      _state.article!.house!.title,
       style: AppTextStyles.headingSmall.copyWith(
         color: context.colors.textPrimary,
       ),
@@ -531,7 +552,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
           child: Wrap(
             children: [
               Text(
-                '20m',
+                '${_state.article!.house!.area}m',
                 style: TextStyle(
                   color: context.colors.contentSpecialText,
                 ),

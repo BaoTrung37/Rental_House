@@ -1,10 +1,14 @@
+import 'package:batru_house_rental/domain/entities/convenient/convenient_entity.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:flutter/material.dart';
 
 class ConvenientItem extends StatelessWidget {
   const ConvenientItem({
+    required this.convenientEntity,
     Key? key,
   }) : super(key: key);
+
+  final ConvenientEntity convenientEntity;
 
   @override
   Widget build(BuildContext context) {
@@ -16,14 +20,17 @@ class ConvenientItem extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
           ),
-          child: const Image(
-            image: AssetImage(
-              AppImages.tv,
+          child: Image(
+            image: NetworkImage(
+              convenientEntity.iconUrl,
             ),
+            fit: BoxFit.contain,
+            color: context.colors.iconPrimary,
           ),
         ),
         Text(
-          'TV',
+          convenientEntity.name,
+          textAlign: TextAlign.center,
           style: AppTextStyles.textSmall.copyWith(
             color: context.colors.textPrimary,
           ),
