@@ -1,3 +1,4 @@
+import 'package:batru_house_rental/domain/entities/user/user_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'user_response.g.dart';
@@ -20,4 +21,11 @@ class UserResponse {
   final String? phoneNumber;
 
   Map<String, dynamic> toJson() => _$UserResponseToJson(this);
+
+  UserEntity toEntity() => UserEntity(
+        id: id,
+        name: name,
+        avatar: avatar,
+        phoneNumber: phoneNumber,
+      );
 }

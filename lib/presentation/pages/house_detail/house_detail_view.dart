@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_article_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/auth/get_user_by_id_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
 import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_state.dart';
@@ -21,6 +22,7 @@ final _familyProvider = StateNotifierProvider.autoDispose
     .family<HouseDetailViewModel, HouseDetailState, String>(
   (ref, argument) => HouseDetailViewModel(
     injector.get<GetArticleUseCase>(),
+    injector.get<GetUserByIdUseCase>(),
   ),
 );
 
@@ -302,8 +304,8 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
-                        'Nguyễn Văn A',
+                      Text(
+                        _state.onwerHouse?.name ?? '',
                         style: AppTextStyles.textMedium,
                       ),
                       Text(

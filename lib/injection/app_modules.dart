@@ -16,6 +16,7 @@ import 'package:batru_house_rental/domain/use_case/article/get_article_list_use_
 import 'package:batru_house_rental/domain/use_case/article/get_article_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_initial_article_data_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/auth/get_user_by_id_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/google_login_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/logout_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/get_chat_use_case.dart';
@@ -107,6 +108,10 @@ class AppModules {
 
     /// house use case
     injector.registerLazySingleton<GetHouseUseCase>(() => GetHouseUseCase());
+
+    /// get user by house id use case
+    injector
+        .registerLazySingleton<GetUserByIdUseCase>(() => GetUserByIdUseCase());
 
     /// post house use case
     injector.registerLazySingleton<PostHouseUseCase>(() => PostHouseUseCase());
