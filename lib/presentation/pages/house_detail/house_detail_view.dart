@@ -9,17 +9,16 @@ import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_
 import 'package:batru_house_rental/presentation/pages/house_detail/widgets/convenient_item.dart';
 import 'package:batru_house_rental/presentation/pages/house_detail/widgets/relative_house_item_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
-import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
+import 'package:batru_house_rental/presentation/utilities/helper/date_format_helper.dart';
 import 'package:batru_house_rental/presentation/widgets/app_divider/app_divider.dart';
-import 'package:batru_house_rental/presentation/widgets/app_indicator/app_loading_indicator.dart';
 import 'package:batru_house_rental/presentation/widgets/base_app_bar/base_app_bar.dart';
 import 'package:batru_house_rental/presentation/widgets/buttons/app_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final _provider =
-    StateNotifierProvider.autoDispose<HouseDetailViewModel, HouseDetailState>(
-  (ref) => HouseDetailViewModel(
+final _familyProvider = StateNotifierProvider.autoDispose
+    .family<HouseDetailViewModel, HouseDetailState, String>(
+  (ref, argument) => HouseDetailViewModel(
     injector.get<GetArticleUseCase>(),
   ),
 );
@@ -38,6 +37,7 @@ class HouseDetailView extends ConsumerStatefulWidget {
   }) : super(key: key);
 
   final String houseId;
+
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
       _HouseDetailViewState();
@@ -45,13 +45,16 @@ class HouseDetailView extends ConsumerStatefulWidget {
 
 class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
   HouseDetailViewModel get _viewModel => ref.read(_provider.notifier);
+
+  late final _provider = _familyProvider(widget.houseId);
+
   HouseDetailState get _state => ref.watch(_provider);
 
   @override
   void initState() {
     // TODO: implement initState
-    Future.delayed(Duration.zero, () async {
-      await _viewModel.init(widget.houseId);
+    Future.delayed(Duration.zero, () {
+      _viewModel.init(widget.houseId);
     });
     super.initState();
   }
@@ -66,18 +69,33 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
       'https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/other/cat_relaxing_on_patio_other/1800x1200_cat_relaxing_on_patio_other.jpg';
   @override
   Widget build(BuildContext context) {
+    ref.listen<HouseDetailState>(
+      _provider,
+      (previous, next) {
+        // if (next.getDetailLoadingStatus == LoadingStatus.error ||
+        //     next.postCommentStatus == LoadingStatus.error) {
+        //   showErrorSnackBar(
+        //     context: context,
+        //     errorMessage: next.errorMessage,
+        //   );
+        // }
+      },
+    );
+
     return Scaffold(
       appBar: const BaseAppBar.titleAndBackButton(
         title: 'Chi tiết phòng',
         shouldShowBottomDivider: true,
       ),
-      body: _state.status == LoadingStatus.initial
-          ? const AppLoadingIndicator()
-          : _buildBodyContent(context),
+      body:
+          // _state.status == LoadingStatus.initial
+          //     ? const AppLoadingIndicator()
+          //     :
+          _buildBodyContent(context),
     );
   }
 
-  Column _buildBodyContent(BuildContext context) {
+  Widget _buildBodyContent(BuildContext context) {
     return Column(
       children: [
         Expanded(
@@ -350,7 +368,6 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
                   ),
                   itemBuilder: (context, index) => RelativeHouseItemView(
                     onTap: () {
-                      debugPrint('ontap');
                       ref
                           .read(appNavigatorProvider)
                           .navigateTo(AppRoutes.houseDetail);
@@ -368,7 +385,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
   }
 
   SliverGrid _buildConvenientItemList() {
-    final convenientList = ref.watch(_provider).article!.convenientList;
+    final convenientList = ref.watch(_provider).article?.convenientList ?? [];
     return SliverGrid(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 4,
@@ -385,7 +402,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
     );
   }
 
-  Row _buildPostDateView(BuildContext context) {
+  Widget _buildPostDateView(BuildContext context) {
     return Row(
       children: [
         const Icon(
@@ -395,7 +412,8 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
         const SizedBox(width: 10),
         Expanded(
           child: Text(
-            '21 ngày trước - 30/9/2022',
+            _state.article?.house?.createdAt.getPublishDatePastFormatString ??
+                '',
             style: AppTextStyles.textMedium.copyWith(
               color: context.colors.textPrimary,
             ),
@@ -413,7 +431,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
       const Text('Tiện ích', style: AppTextStyles.headingXSmall);
 
   Row _buildSpecificPhoneNumberView(BuildContext context) {
-    final phoneNumber = ref.watch(_provider).article!.house!.phoneNumber;
+    final phoneNumber = ref.watch(_provider).article?.house?.phoneNumber;
     return Row(
       children: [
         const Icon(
@@ -441,7 +459,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
         const SizedBox(width: 10),
         Expanded(
           child: Text(
-            'Ngõ 1, Nguyễn Khuyến, Hà Đông, Hà Nội',
+            _state.article?.house?.address ?? '',
             style: AppTextStyles.textMedium.copyWith(
               color: context.colors.textPrimary,
             ),
@@ -466,11 +484,11 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
   }
 
   Widget _buildDetailText(BuildContext context) {
-    final article = ref.watch(_provider).article!;
+    final article = ref.watch(_provider).article;
     return SizedBox(
       height: 70,
       child: Text(
-        article.house!.description,
+        article?.house?.description ?? '',
         overflow: TextOverflow.ellipsis,
         maxLines: 3,
         style: AppTextStyles.textMedium.copyWith(
@@ -503,7 +521,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
 
   Widget _buildTitle(BuildContext context) {
     return Text(
-      _state.article!.house!.title,
+      _state.article?.house?.title ?? '',
       style: AppTextStyles.headingSmall.copyWith(
         color: context.colors.textPrimary,
       ),
@@ -552,7 +570,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
           child: Wrap(
             children: [
               Text(
-                '${_state.article!.house!.area}m',
+                '${_state.article?.house?.area}m',
                 style: TextStyle(
                   color: context.colors.contentSpecialText,
                 ),

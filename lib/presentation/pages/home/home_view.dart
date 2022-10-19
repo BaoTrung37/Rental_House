@@ -135,8 +135,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
         delegate: SliverChildBuilderDelegate(
           (context, index) => InfoRoomHorizontalCardItemItem(
             articleEntity: houseArticleList[index],
-            onTap: () {
-              ref.read(appNavigatorProvider).navigateTo(
+            onTap: () async {
+              await ref.read(appNavigatorProvider).navigateTo(
                     AppRoutes.houseDetail,
                     arguments: HouseDetailArguments(
                       houseId: houseArticleList[index].id,
