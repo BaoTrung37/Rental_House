@@ -10,6 +10,7 @@ import 'package:batru_house_rental/presentation/pages/house_detail/widgets/conve
 import 'package:batru_house_rental/presentation/pages/house_detail/widgets/relative_house_item_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/utilities/helper/date_format_helper.dart';
+import 'package:batru_house_rental/presentation/utilities/helper/number_format_helper.dart';
 import 'package:batru_house_rental/presentation/widgets/app_divider/app_divider.dart';
 import 'package:batru_house_rental/presentation/widgets/base_app_bar/base_app_bar.dart';
 import 'package:batru_house_rental/presentation/widgets/buttons/app_button.dart';
@@ -202,7 +203,11 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
             delegate: SliverChildListDelegate(
               [
                 _buildNoteTitle(),
-
+                const SizedBox(height: 10),
+                const Text(
+                  'Sức chứa',
+                  style: AppTextStyles.labelMediumLight,
+                )
                 // Add luu y
               ],
             ),
@@ -511,7 +516,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
   Center _buildRoomPrice(BuildContext context) {
     return Center(
       child: Text(
-        'Giá phòng: xxx triệu VND/phòng',
+        'Giá phòng: ${NumberFormatHelper.formatPrice(_state.article?.house?.rentalPrice ?? 0)}/phòng',
         style: AppTextStyles.textLarge.copyWith(
           color: context.colors.contentSpecialMain,
         ),
