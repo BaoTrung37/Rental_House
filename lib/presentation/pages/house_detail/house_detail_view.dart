@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
+import 'package:batru_house_rental/domain/use_case/article/get_article_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_article_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_user_by_id_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
@@ -11,9 +12,11 @@ import 'package:batru_house_rental/presentation/pages/house_detail/widgets/conve
 import 'package:batru_house_rental/presentation/pages/house_detail/widgets/convenient_list_item.dart';
 import 'package:batru_house_rental/presentation/pages/house_detail/widgets/relative_house_item_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
+import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
 import 'package:batru_house_rental/presentation/utilities/helper/date_format_helper.dart';
 import 'package:batru_house_rental/presentation/utilities/helper/number_format_helper.dart';
 import 'package:batru_house_rental/presentation/widgets/app_divider/app_divider.dart';
+import 'package:batru_house_rental/presentation/widgets/app_indicator/app_loading_indicator.dart';
 import 'package:batru_house_rental/presentation/widgets/base_app_bar/base_app_bar.dart';
 import 'package:batru_house_rental/presentation/widgets/buttons/app_button.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +27,7 @@ final _familyProvider = StateNotifierProvider.autoDispose
   (ref, argument) => HouseDetailViewModel(
     injector.get<GetArticleUseCase>(),
     injector.get<GetUserByIdUseCase>(),
+    injector.get<GetArticleListUseCase>(),
   ),
 );
 
@@ -73,29 +77,27 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
       'https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/other/cat_relaxing_on_patio_other/1800x1200_cat_relaxing_on_patio_other.jpg';
   @override
   Widget build(BuildContext context) {
-    ref.listen<HouseDetailState>(
-      _provider,
-      (previous, next) {
-        // if (next.getDetailLoadingStatus == LoadingStatus.error ||
-        //     next.postCommentStatus == LoadingStatus.error) {
-        //   showErrorSnackBar(
-        //     context: context,
-        //     errorMessage: next.errorMessage,
-        //   );
-        // }
-      },
-    );
+    // ref.listen<HouseDetailState>(
+    //   _provider,
+    //   (previous, next) {
+    //     if (next.getDetailLoadingStatus == LoadingStatus.error ||
+    //         next.postCommentStatus == LoadingStatus.error) {
+    //       showErrorSnackBar(
+    //         context: context,
+    //         errorMessage: next.errorMessage,
+    //       );
+    //     }
+    //   },
+    // );
 
     return Scaffold(
       appBar: const BaseAppBar.titleAndBackButton(
         title: 'Chi tiết phòng',
         shouldShowBottomDivider: true,
       ),
-      body:
-          // _state.status == LoadingStatus.initial
-          //     ? const AppLoadingIndicator()
-          //     :
-          _buildBodyContent(context),
+      body: _state.status == LoadingStatus.initial
+          ? const AppLoadingIndicator()
+          : _buildBodyContent(context),
     );
   }
 
@@ -359,39 +361,48 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
         SliverToBoxAdapter(
           child: _buildBigDivider(),
         ),
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-          sliver: SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                const Text(
-                  'Bài đăng liên quan',
-                  style: AppTextStyles.headingXSmall,
-                ),
-                const SizedBox(height: 10),
-                GridView.builder(
-                  itemCount: 10,
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 220,
-                    childAspectRatio: 0.75,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                  ),
-                  itemBuilder: (context, index) => RelativeHouseItemView(
-                    onTap: () {
-                      ref
-                          .read(appNavigatorProvider)
-                          .navigateTo(AppRoutes.houseDetail);
-                    },
-                  ),
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                ),
-              ],
-            ),
-          ),
-        ),
+        _buildHouseArticleRelativeList(),
       ],
+    );
+  }
+
+  SliverPadding _buildHouseArticleRelativeList() {
+    final houseArticleList = _state.houseArticleRelativeList;
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+      sliver: SliverList(
+        delegate: SliverChildListDelegate(
+          [
+            const Text(
+              'Bài đăng liên quan',
+              style: AppTextStyles.headingXSmall,
+            ),
+            const SizedBox(height: 10),
+            GridView.builder(
+              itemCount: houseArticleList.length,
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 220,
+                childAspectRatio: 0.80,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
+              itemBuilder: (context, index) => RelativeHouseItemView(
+                articleEntity: houseArticleList[index],
+                onTap: () {
+                  ref.read(appNavigatorProvider).navigateTo(
+                        AppRoutes.houseDetail,
+                        arguments: HouseDetailArguments(
+                          houseId: houseArticleList[index].id,
+                        ),
+                      );
+                },
+              ),
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
