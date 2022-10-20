@@ -8,6 +8,7 @@ import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
 import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_state.dart';
 import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_view_model.dart';
 import 'package:batru_house_rental/presentation/pages/house_detail/widgets/convenient_item.dart';
+import 'package:batru_house_rental/presentation/pages/house_detail/widgets/convenient_list_item.dart';
 import 'package:batru_house_rental/presentation/pages/house_detail/widgets/relative_house_item_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/utilities/helper/date_format_helper.dart';
@@ -188,7 +189,10 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: const [
                     // ConvenientItem(iconUrl: sta),
-                    // ConvenientItem(),
+                    ConvenientItem(
+                      type: ConvenientType.water,
+                      price: 0,
+                    ),
                     // ConvenientItem(),
                   ],
                 ),
@@ -292,10 +296,10 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
           sliver: SliverToBoxAdapter(
             child: Row(
               children: [
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 20,
                   backgroundImage: NetworkImage(
-                    'https://picsum.photos/200',
+                    _state.onwerHouse?.avatar ?? 'https://picsum.photos/200',
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -401,7 +405,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
         childAspectRatio: 1.5,
       ),
       delegate: SliverChildBuilderDelegate(
-        (context, index) => ConvenientItem(
+        (context, index) => ConvenientListItem(
           convenientEntity: convenientList[index],
         ),
         childCount: convenientList.length,
