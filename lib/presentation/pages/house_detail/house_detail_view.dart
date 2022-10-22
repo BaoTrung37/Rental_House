@@ -19,6 +19,7 @@ import 'package:batru_house_rental/presentation/widgets/app_divider/app_divider.
 import 'package:batru_house_rental/presentation/widgets/app_indicator/app_loading_indicator.dart';
 import 'package:batru_house_rental/presentation/widgets/base_app_bar/base_app_bar.dart';
 import 'package:batru_house_rental/presentation/widgets/buttons/app_button.dart';
+import 'package:batru_house_rental/presentation/widgets/image/image_with_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -148,22 +149,45 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
   }
 
   Widget _buildBodyView(BuildContext context) {
+    final imageList = state.article?.imageList ?? [];
     return CustomScrollView(
       shrinkWrap: true,
       slivers: [
         SliverToBoxAdapter(
-          child: Column(
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.4,
-                child: Image.network(
-                  state.article?.imageList.first.url ?? mockThumbnail,
-                  fit: BoxFit.cover,
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.30,
+            child: Row(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: imageList.length,
+                    itemBuilder: (context, index) {
+                      return ImageWithBorder(
+                        url: imageList[index].url,
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
+        // SliverGrid(
+        //   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        //     crossAxisCount: 1,
+        //     mainAxisSpacing: 10,
+        //     crossAxisSpacing: 10,
+        //     childAspectRatio: 1.5,
+        //   ),
+        //   delegate: SliverChildBuilderDelegate(
+        //     (context, index) => Container(
+        //       color: Colors.black,
+        //     ),
+        //     childCount: 3,
+        //   ),
+        // ),
         SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
           sliver: SliverList(
