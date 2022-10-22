@@ -57,7 +57,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
   Future<void> initData() async {
     try {
       state = state.copyWith(
-        status: LoadingStatus.inProgress,
+        status: LoadingStatus.initial,
       );
       await getHouseInitial();
       final provinces = await _getProvinceListUseCase.run();

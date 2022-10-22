@@ -1,26 +1,34 @@
 import 'dart:ui';
 
 import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
+import 'package:batru_house_rental/domain/use_case/article/get_article_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_article_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/auth/get_user_by_id_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
 import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_state.dart';
 import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_view_model.dart';
 import 'package:batru_house_rental/presentation/pages/house_detail/widgets/convenient_item.dart';
+import 'package:batru_house_rental/presentation/pages/house_detail/widgets/convenient_list_item.dart';
 import 'package:batru_house_rental/presentation/pages/house_detail/widgets/relative_house_item_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
+import 'package:batru_house_rental/presentation/utilities/helper/date_format_helper.dart';
+import 'package:batru_house_rental/presentation/utilities/helper/number_format_helper.dart';
 import 'package:batru_house_rental/presentation/widgets/app_divider/app_divider.dart';
 import 'package:batru_house_rental/presentation/widgets/app_indicator/app_loading_indicator.dart';
 import 'package:batru_house_rental/presentation/widgets/base_app_bar/base_app_bar.dart';
 import 'package:batru_house_rental/presentation/widgets/buttons/app_button.dart';
+import 'package:batru_house_rental/presentation/widgets/image/image_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final _provider =
-    StateNotifierProvider.autoDispose<HouseDetailViewModel, HouseDetailState>(
-  (ref) => HouseDetailViewModel(
+final _familyProvider = StateNotifierProvider.autoDispose
+    .family<HouseDetailViewModel, HouseDetailState, String>(
+  (ref, argument) => HouseDetailViewModel(
     injector.get<GetArticleUseCase>(),
+    injector.get<GetUserByIdUseCase>(),
+    injector.get<GetArticleListUseCase>(),
   ),
 );
 
@@ -38,6 +46,7 @@ class HouseDetailView extends ConsumerStatefulWidget {
   }) : super(key: key);
 
   final String houseId;
+
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
       _HouseDetailViewState();
@@ -45,13 +54,16 @@ class HouseDetailView extends ConsumerStatefulWidget {
 
 class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
   HouseDetailViewModel get _viewModel => ref.read(_provider.notifier);
-  HouseDetailState get _state => ref.watch(_provider);
+
+  late final _provider = _familyProvider(widget.houseId);
+
+  HouseDetailState get state => ref.watch(_provider);
 
   @override
   void initState() {
     // TODO: implement initState
-    Future.delayed(Duration.zero, () async {
-      await _viewModel.init(widget.houseId);
+    Future.delayed(Duration.zero, () {
+      _viewModel.init(widget.houseId);
     });
     super.initState();
   }
@@ -66,18 +78,31 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
       'https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/other/cat_relaxing_on_patio_other/1800x1200_cat_relaxing_on_patio_other.jpg';
   @override
   Widget build(BuildContext context) {
+    // ref.listen<HouseDetailState>(
+    //   _provider,
+    //   (previous, next) {
+    //     if (next.getDetailLoadingStatus == LoadingStatus.error ||
+    //         next.postCommentStatus == LoadingStatus.error) {
+    //       showErrorSnackBar(
+    //         context: context,
+    //         errorMessage: next.errorMessage,
+    //       );
+    //     }
+    //   },
+    // );
+
     return Scaffold(
       appBar: const BaseAppBar.titleAndBackButton(
         title: 'Chi tiết phòng',
         shouldShowBottomDivider: true,
       ),
-      body: _state.status == LoadingStatus.initial
+      body: state.status == LoadingStatus.initial
           ? const AppLoadingIndicator()
           : _buildBodyContent(context),
     );
   }
 
-  Column _buildBodyContent(BuildContext context) {
+  Widget _buildBodyContent(BuildContext context) {
     return Column(
       children: [
         Expanded(
@@ -124,20 +149,31 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
   }
 
   Widget _buildBodyView(BuildContext context) {
+    final imageList = state.article?.imageList ?? [];
     return CustomScrollView(
-      shrinkWrap: true,
       slivers: [
         SliverToBoxAdapter(
-          child: Column(
-            children: [
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.4,
-                child: Image.network(
-                  _state.article?.imageList.first.url ?? mockThumbnail,
-                  fit: BoxFit.cover,
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.30,
+            child: Row(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemExtent: MediaQuery.of(context).size.width,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: imageList.length,
+                    itemBuilder: (context, index) {
+                      return ImageBorder(
+                        child: Image.network(
+                          imageList[index].url,
+                          fit: BoxFit.cover,
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         SliverPadding(
@@ -163,14 +199,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
                   padding: EdgeInsets.symmetric(vertical: 16),
                   child: AppDivider(height: 1),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: const [
-                    // ConvenientItem(iconUrl: sta),
-                    // ConvenientItem(),
-                    // ConvenientItem(),
-                  ],
-                ),
+                _buildConvenientNeed(),
               ],
             ),
           ),
@@ -184,7 +213,11 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
             delegate: SliverChildListDelegate(
               [
                 _buildNoteTitle(),
-
+                const SizedBox(height: 10),
+                const Text(
+                  'Sức chứa',
+                  style: AppTextStyles.labelMediumLight,
+                )
                 // Add luu y
               ],
             ),
@@ -267,10 +300,10 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
           sliver: SliverToBoxAdapter(
             child: Row(
               children: [
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 20,
                   backgroundImage: NetworkImage(
-                    'https://picsum.photos/200',
+                    state.onwerHouse?.avatar ?? 'https://picsum.photos/200',
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -279,8 +312,8 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
-                        'Nguyễn Văn A',
+                      Text(
+                        state.onwerHouse?.name ?? '',
                         style: AppTextStyles.textMedium,
                       ),
                       Text(
@@ -330,45 +363,88 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
         SliverToBoxAdapter(
           child: _buildBigDivider(),
         ),
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-          sliver: SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                const Text(
-                  'Bài đăng liên quan',
-                  style: AppTextStyles.headingXSmall,
-                ),
-                const SizedBox(height: 10),
-                GridView.builder(
-                  itemCount: 10,
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 220,
-                    childAspectRatio: 0.75,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                  ),
-                  itemBuilder: (context, index) => RelativeHouseItemView(
-                    onTap: () {
-                      debugPrint('ontap');
-                      ref
-                          .read(appNavigatorProvider)
-                          .navigateTo(AppRoutes.houseDetail);
-                    },
-                  ),
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                ),
-              ],
-            ),
-          ),
-        ),
+        _buildHouseArticleRelativeList(),
       ],
     );
   }
 
+  Widget _buildConvenientNeed() {
+    final internetPrice = state.article?.house?.internetPrice;
+    final electricPrice = state.article?.house?.electricPrice;
+    final waterPrice = state.article?.house?.waterPrice;
+    final isAvailableParking =
+        state.article?.house?.isAvailableParking ?? false;
+    final parkingPrice = state.article?.house?.parkingPrice;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        if (electricPrice != null && electricPrice > 0)
+          ConvenientItem(
+            type: ConvenientType.electricity,
+            price: electricPrice,
+          ),
+        if (waterPrice != null && waterPrice > 0)
+          ConvenientItem(
+            type: ConvenientType.water,
+            price: waterPrice,
+          ),
+        if (internetPrice != null && internetPrice > 0)
+          ConvenientItem(
+            type: ConvenientType.wifi,
+            price: internetPrice,
+          ),
+        if (isAvailableParking)
+          ConvenientItem(
+            type: ConvenientType.parking,
+            price: parkingPrice ?? 0,
+          ),
+      ],
+    );
+  }
+
+  SliverPadding _buildHouseArticleRelativeList() {
+    final houseArticleList = state.houseArticleRelativeList;
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+      sliver: SliverList(
+        delegate: SliverChildListDelegate(
+          [
+            const Text(
+              'Bài đăng liên quan',
+              style: AppTextStyles.headingXSmall,
+            ),
+            const SizedBox(height: 10),
+            GridView.builder(
+              itemCount: houseArticleList.length,
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 220,
+                childAspectRatio: 0.80,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
+              itemBuilder: (context, index) => RelativeHouseItemView(
+                articleEntity: houseArticleList[index],
+                onTap: () {
+                  ref.read(appNavigatorProvider).navigateTo(
+                        AppRoutes.houseDetail,
+                        arguments: HouseDetailArguments(
+                          houseId: houseArticleList[index].id,
+                        ),
+                      );
+                },
+              ),
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   SliverGrid _buildConvenientItemList() {
-    final convenientList = ref.watch(_provider).article!.convenientList;
+    final convenientList = ref.watch(_provider).article?.convenientList ?? [];
     return SliverGrid(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 4,
@@ -377,7 +453,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
         childAspectRatio: 1.5,
       ),
       delegate: SliverChildBuilderDelegate(
-        (context, index) => ConvenientItem(
+        (context, index) => ConvenientListItem(
           convenientEntity: convenientList[index],
         ),
         childCount: convenientList.length,
@@ -385,7 +461,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
     );
   }
 
-  Row _buildPostDateView(BuildContext context) {
+  Widget _buildPostDateView(BuildContext context) {
     return Row(
       children: [
         const Icon(
@@ -395,7 +471,8 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
         const SizedBox(width: 10),
         Expanded(
           child: Text(
-            '21 ngày trước - 30/9/2022',
+            state.article?.house?.createdAt.getPublishDatePastFormatString ??
+                '',
             style: AppTextStyles.textMedium.copyWith(
               color: context.colors.textPrimary,
             ),
@@ -413,7 +490,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
       const Text('Tiện ích', style: AppTextStyles.headingXSmall);
 
   Row _buildSpecificPhoneNumberView(BuildContext context) {
-    final phoneNumber = ref.watch(_provider).article!.house!.phoneNumber;
+    final phoneNumber = ref.watch(_provider).article?.house?.phoneNumber;
     return Row(
       children: [
         const Icon(
@@ -441,7 +518,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
         const SizedBox(width: 10),
         Expanded(
           child: Text(
-            'Ngõ 1, Nguyễn Khuyến, Hà Đông, Hà Nội',
+            state.article?.house?.address ?? '',
             style: AppTextStyles.textMedium.copyWith(
               color: context.colors.textPrimary,
             ),
@@ -466,11 +543,11 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
   }
 
   Widget _buildDetailText(BuildContext context) {
-    final article = ref.watch(_provider).article!;
+    final article = ref.watch(_provider).article;
     return SizedBox(
       height: 70,
       child: Text(
-        article.house!.description,
+        article?.house?.description ?? '',
         overflow: TextOverflow.ellipsis,
         maxLines: 3,
         style: AppTextStyles.textMedium.copyWith(
@@ -493,7 +570,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
   Center _buildRoomPrice(BuildContext context) {
     return Center(
       child: Text(
-        'Giá phòng: xxx triệu VND/phòng',
+        'Giá phòng: ${NumberFormatHelper.formatPrice(state.article?.house?.rentalPrice ?? 0)}/phòng',
         style: AppTextStyles.textLarge.copyWith(
           color: context.colors.contentSpecialMain,
         ),
@@ -503,7 +580,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
 
   Widget _buildTitle(BuildContext context) {
     return Text(
-      _state.article!.house!.title,
+      state.article?.house?.title ?? '',
       style: AppTextStyles.headingSmall.copyWith(
         color: context.colors.textPrimary,
       ),
@@ -552,7 +629,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
           child: Wrap(
             children: [
               Text(
-                '${_state.article!.house!.area}m',
+                '${state.article?.house?.area}m',
                 style: TextStyle(
                   color: context.colors.contentSpecialText,
                 ),
