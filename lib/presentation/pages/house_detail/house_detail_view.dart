@@ -19,7 +19,7 @@ import 'package:batru_house_rental/presentation/widgets/app_divider/app_divider.
 import 'package:batru_house_rental/presentation/widgets/app_indicator/app_loading_indicator.dart';
 import 'package:batru_house_rental/presentation/widgets/base_app_bar/base_app_bar.dart';
 import 'package:batru_house_rental/presentation/widgets/buttons/app_button.dart';
-import 'package:batru_house_rental/presentation/widgets/image/image_with_border.dart';
+import 'package:batru_house_rental/presentation/widgets/image/image_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -151,7 +151,6 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
   Widget _buildBodyView(BuildContext context) {
     final imageList = state.article?.imageList ?? [];
     return CustomScrollView(
-      shrinkWrap: true,
       slivers: [
         SliverToBoxAdapter(
           child: SizedBox(
@@ -160,12 +159,15 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
               children: [
                 Expanded(
                   child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
+                    itemExtent: MediaQuery.of(context).size.width,
+                    scrollDirection: Axis.horizontal,
                     itemCount: imageList.length,
                     itemBuilder: (context, index) {
-                      return ImageWithBorder(
-                        url: imageList[index].url,
+                      return ImageBorder(
+                        child: Image.network(
+                          imageList[index].url,
+                          fit: BoxFit.cover,
+                        ),
                       );
                     },
                   ),
