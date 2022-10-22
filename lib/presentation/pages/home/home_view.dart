@@ -157,10 +157,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
       decoration: BoxDecoration(
         color: context.colors.backgroundSecondary,
       ),
-      child: Image.network(
-        mockThumbnail,
-        fit: BoxFit.cover,
-      ),
+      child: _buildImage(),
     );
   }
 

@@ -32,11 +32,17 @@ class InfoRoomHorizontalCardItemItem extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 5),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         _buildTypeLabel(context),
                         const SizedBox(height: 4),
-                        Expanded(child: _buildInfoHouseTitle(context)),
+                        Expanded(
+                          child: Row(
+                            children: [
+                              _buildInfoHouseTitle(context),
+                            ],
+                          ),
+                        ),
                         _buildInfoStreet(context),
                         // _buildInfoDistrict(context),
                       ],

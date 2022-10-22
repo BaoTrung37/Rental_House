@@ -1,4 +1,5 @@
 import 'package:batru_house_rental/presentation/resources/resources.dart';
+import 'package:batru_house_rental/presentation/utilities/helper/number_format_helper.dart';
 import 'package:flutter/material.dart';
 
 enum ConvenientType {
@@ -64,7 +65,7 @@ class ConvenientItem extends StatelessWidget {
           ),
         ),
         Text(
-          price.toString(),
+          NumberFormatHelper.formatPrice(price),
           textAlign: TextAlign.center,
           style: AppTextStyles.textSmall.copyWith(
             color: context.colors.textPrimary,

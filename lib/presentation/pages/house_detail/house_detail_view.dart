@@ -56,7 +56,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
 
   late final _provider = _familyProvider(widget.houseId);
 
-  HouseDetailState get _state => ref.watch(_provider);
+  HouseDetailState get state => ref.watch(_provider);
 
   @override
   void initState() {
@@ -95,7 +95,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
         title: 'Chi tiết phòng',
         shouldShowBottomDivider: true,
       ),
-      body: _state.status == LoadingStatus.initial
+      body: state.status == LoadingStatus.initial
           ? const AppLoadingIndicator()
           : _buildBodyContent(context),
     );
@@ -157,7 +157,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.4,
                 child: Image.network(
-                  _state.article?.imageList.first.url ?? mockThumbnail,
+                  state.article?.imageList.first.url ?? mockThumbnail,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -187,17 +187,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
                   padding: EdgeInsets.symmetric(vertical: 16),
                   child: AppDivider(height: 1),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: const [
-                    // ConvenientItem(iconUrl: sta),
-                    ConvenientItem(
-                      type: ConvenientType.water,
-                      price: 0,
-                    ),
-                    // ConvenientItem(),
-                  ],
-                ),
+                _buildConvenientNeed(),
               ],
             ),
           ),
@@ -301,7 +291,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
                 CircleAvatar(
                   radius: 20,
                   backgroundImage: NetworkImage(
-                    _state.onwerHouse?.avatar ?? 'https://picsum.photos/200',
+                    state.onwerHouse?.avatar ?? 'https://picsum.photos/200',
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -311,7 +301,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        _state.onwerHouse?.name ?? '',
+                        state.onwerHouse?.name ?? '',
                         style: AppTextStyles.textMedium,
                       ),
                       Text(
@@ -366,8 +356,43 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
     );
   }
 
+  Widget _buildConvenientNeed() {
+    final internetPrice = state.article?.house?.internetPrice;
+    final electricPrice = state.article?.house?.electricPrice;
+    final waterPrice = state.article?.house?.waterPrice;
+    final isAvailableParking =
+        state.article?.house?.isAvailableParking ?? false;
+    final parkingPrice = state.article?.house?.parkingPrice;
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        if (electricPrice != null && electricPrice > 0)
+          ConvenientItem(
+            type: ConvenientType.electricity,
+            price: electricPrice,
+          ),
+        if (waterPrice != null && waterPrice > 0)
+          ConvenientItem(
+            type: ConvenientType.water,
+            price: waterPrice,
+          ),
+        if (internetPrice != null && internetPrice > 0)
+          ConvenientItem(
+            type: ConvenientType.wifi,
+            price: internetPrice,
+          ),
+        if (isAvailableParking)
+          ConvenientItem(
+            type: ConvenientType.parking,
+            price: parkingPrice ?? 0,
+          ),
+      ],
+    );
+  }
+
   SliverPadding _buildHouseArticleRelativeList() {
-    final houseArticleList = _state.houseArticleRelativeList;
+    final houseArticleList = state.houseArticleRelativeList;
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
       sliver: SliverList(
@@ -434,7 +459,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
         const SizedBox(width: 10),
         Expanded(
           child: Text(
-            _state.article?.house?.createdAt.getPublishDatePastFormatString ??
+            state.article?.house?.createdAt.getPublishDatePastFormatString ??
                 '',
             style: AppTextStyles.textMedium.copyWith(
               color: context.colors.textPrimary,
@@ -481,7 +506,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
         const SizedBox(width: 10),
         Expanded(
           child: Text(
-            _state.article?.house?.address ?? '',
+            state.article?.house?.address ?? '',
             style: AppTextStyles.textMedium.copyWith(
               color: context.colors.textPrimary,
             ),
@@ -533,7 +558,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
   Center _buildRoomPrice(BuildContext context) {
     return Center(
       child: Text(
-        'Giá phòng: ${NumberFormatHelper.formatPrice(_state.article?.house?.rentalPrice ?? 0)}/phòng',
+        'Giá phòng: ${NumberFormatHelper.formatPrice(state.article?.house?.rentalPrice ?? 0)}/phòng',
         style: AppTextStyles.textLarge.copyWith(
           color: context.colors.contentSpecialMain,
         ),
@@ -543,7 +568,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
 
   Widget _buildTitle(BuildContext context) {
     return Text(
-      _state.article?.house?.title ?? '',
+      state.article?.house?.title ?? '',
       style: AppTextStyles.headingSmall.copyWith(
         color: context.colors.textPrimary,
       ),
@@ -592,7 +617,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
           child: Wrap(
             children: [
               Text(
-                '${_state.article?.house?.area}m',
+                '${state.article?.house?.area}m',
                 style: TextStyle(
                   color: context.colors.contentSpecialText,
                 ),
