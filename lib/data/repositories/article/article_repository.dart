@@ -113,8 +113,11 @@ class ArticleRepository {
   }
 
   Future<List<ArticleEntity>> getArticles(int limit) async {
-    final houseSnapshot =
-        await _fireStore.collection('house').limit(limit).get();
+    final houseSnapshot = await _fireStore
+        .collection('house')
+        .orderBy('createdAt', descending: true)
+        .limit(limit)
+        .get();
 
     final articles = <ArticleEntity>[];
     for (final house in houseSnapshot.docs) {
