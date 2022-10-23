@@ -3,6 +3,7 @@ import 'package:batru_house_rental/presentation/pages/search/search_view.dart';
 import 'package:batru_house_rental/presentation/pages/search/search_view_model.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/widgets/app_divider/app_divider.dart';
+import 'package:batru_house_rental/presentation/widgets/buttons/app_button.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,10 +11,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class FilterDrawerView extends ConsumerStatefulWidget {
   const FilterDrawerView({
     required this.scaffoldKey,
+    required this.onApplyFilter,
     Key? key,
   }) : super(key: key);
 
   final GlobalKey<ScaffoldState> scaffoldKey;
+  final VoidCallback onApplyFilter;
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
       _FilterDrawerViewState();
@@ -90,22 +93,22 @@ class _FilterDrawerViewState extends ConsumerState<FilterDrawerView> {
               ],
             ),
           ),
-          // _buildConfirmButton(),
+          _buildConfirmButton(),
         ],
       ),
     );
   }
 
-  // Widget _buildConfirmButton() {
-  //   return Padding(
-  //     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-  //     child: AppButton(
-  //       isExpanded: true,
-  //       title: 'Xác nhận',
-  //       onButtonTap: onConfirmButton,
-  //     ),
-  //   );
-  // }
+  Widget _buildConfirmButton() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      child: AppButton(
+        isExpanded: true,
+        title: 'Xác nhận',
+        onButtonTap: widget.onApplyFilter,
+      ),
+    );
+  }
 
   // SliverPadding _buildConvenientSelectView() {
   //   return SliverPadding(

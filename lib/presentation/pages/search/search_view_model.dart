@@ -47,6 +47,22 @@ class SearchViewModel extends StateNotifier<SearchState> {
     }
   }
 
+  Future<void> getArticleFilterList(String districtId) async {
+    try {
+      state = state.copyWith(status: LoadingStatus.initial);
+      // final articles = await _getArticleFilterListUseCase.run(districtId);
+      state = state.copyWith(
+        // articles: articles,
+        status: LoadingStatus.success,
+      );
+    } catch (e) {
+      debugPrint('Search view: $e');
+      state = state.copyWith(
+        status: LoadingStatus.error,
+      );
+    }
+  }
+
   Future<void> _getDistrictInitial(String districtId) async {
     final districts = await _getDistrictListUseCase.run('01');
     state = state.copyWith(
