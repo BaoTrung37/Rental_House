@@ -390,6 +390,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
       currentDistrict: state.districts.firstWhere(
         (e) => e.name == districtName,
       ),
+      currentCommune: null,
     );
     final communes =
         await _getCommuneListUseCase.run(state.currentDistrict!.id);

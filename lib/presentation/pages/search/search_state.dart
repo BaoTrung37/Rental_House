@@ -1,4 +1,8 @@
-import 'package:batru_house_rental/data/models/room/room_dto.dart';
+import 'package:batru_house_rental/domain/entities/article/article_entity.dart';
+import 'package:batru_house_rental/domain/entities/commune/commune_entity.dart';
+import 'package:batru_house_rental/domain/entities/district/district_entity.dart';
+import 'package:batru_house_rental/domain/entities/province/province_entity.dart';
+import 'package:batru_house_rental/domain/entities/type/type_entity.dart';
 import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -8,6 +12,14 @@ part 'search_state.freezed.dart';
 class SearchState with _$SearchState {
   const factory SearchState({
     @Default(LoadingStatus.initial) LoadingStatus status,
-    @Default(RoomType.rentalRoom) RoomType roomType,
+    @Default([]) List<TypeEntity> types,
+    @Default([]) List<ProvinceEntity> provinces,
+    @Default([]) List<DistrictEntity> districts,
+    @Default([]) List<CommuneEntity> communes,
+    @Default([]) List<ArticleEntity> articles,
+    TypeEntity? currentType,
+    ProvinceEntity? currentProvince,
+    DistrictEntity? currentDistrict,
+    CommuneEntity? currentCommune,
   }) = _SearchState;
 }

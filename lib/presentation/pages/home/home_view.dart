@@ -7,6 +7,7 @@ import 'package:batru_house_rental/presentation/pages/home/home_state.dart';
 import 'package:batru_house_rental/presentation/pages/home/home_view_model.dart';
 import 'package:batru_house_rental/presentation/pages/home/widgets/home_place_small_card.dart';
 import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_view.dart';
+import 'package:batru_house_rental/presentation/pages/search/search_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
 import 'package:batru_house_rental/presentation/widgets/app_indicator/app_loading_indicator.dart';
@@ -185,7 +186,12 @@ class _HomeViewState extends ConsumerState<HomeView> {
       itemBuilder: (context, index) => HomePlaceSmallCard(
         district: famousDistrictList[index],
         onTap: () {
-          ref.read(appNavigatorProvider).navigateTo(AppRoutes.search);
+          ref.read(appNavigatorProvider).navigateTo(
+                AppRoutes.search,
+                arguments: SearchArguments(
+                  districtId: famousDistrictList[index].id,
+                ),
+              );
         },
       ),
     );
