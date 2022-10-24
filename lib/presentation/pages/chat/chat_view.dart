@@ -27,16 +27,15 @@ class _ChatViewState extends ConsumerState<ChatView> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    _viewModel.initData();
+    Future.delayed(Duration.zero, () async {
+      await _viewModel.initData();
+    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(_provider);
-    late final textEditingController = TextEditingController();
-    // late final focusNode = FocusNode();
 
     return Scaffold(
       appBar: const BaseAppBar.titleAndBackButton(
@@ -56,7 +55,6 @@ class _ChatViewState extends ConsumerState<ChatView> {
           ),
           const AppDivider(),
           ChatInputView(
-            controller: textEditingController,
             onSendButtonTapped: (value) {
               print('text: $value');
             },
