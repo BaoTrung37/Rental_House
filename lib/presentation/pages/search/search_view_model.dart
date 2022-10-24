@@ -54,12 +54,14 @@ class SearchViewModel extends StateNotifier<SearchState> {
     }
   }
 
-  Future<void> getArticleFilterList(String districtId) async {
+  Future<void> getArticleFilterList() async {
     try {
       state = state.copyWith(status: LoadingStatus.inProgress);
       final articles = await _getArticleFilterListUseCase.run(
         ArticleFilterInput(
-          districtId: districtId,
+          districtId: state.currentDistrict?.id,
+          communeId: state.currentCommune?.id,
+          typeId: state.currentType?.id,
         ),
       );
       state = state.copyWith(
