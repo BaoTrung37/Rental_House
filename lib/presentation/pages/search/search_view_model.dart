@@ -25,17 +25,24 @@ class SearchViewModel extends StateNotifier<SearchState> {
 
   Future<void> initData(String districtId) async {
     try {
-      state = state.copyWith(status: LoadingStatus.initial);
+      state = state.copyWith(status: LoadingStatus.inProgress);
       final provinces = await _getProvinceListUseCase.run();
       final types = await _getTypeListUseCase.run();
       final districts = await _getDistrictListUseCase.run('01');
       final communes = await _getCommuneListUseCase.run(districtId);
+
       await _getDistrictInitial(districtId);
+      final articles = await _getArticleFilterListUseCase.run(
+        ArticleFilterInput(
+          districtId: districtId,
+        ),
+      );
 
       state = state.copyWith(
         provinces: provinces,
         districts: districts,
         types: types,
+        articles: articles,
         communes: communes,
         status: LoadingStatus.success,
       );
@@ -49,10 +56,14 @@ class SearchViewModel extends StateNotifier<SearchState> {
 
   Future<void> getArticleFilterList(String districtId) async {
     try {
-      state = state.copyWith(status: LoadingStatus.initial);
-      // final articles = await _getArticleFilterListUseCase.run(districtId);
+      state = state.copyWith(status: LoadingStatus.inProgress);
+      final articles = await _getArticleFilterListUseCase.run(
+        ArticleFilterInput(
+          districtId: districtId,
+        ),
+      );
       state = state.copyWith(
-        // articles: articles,
+        articles: articles,
         status: LoadingStatus.success,
       );
     } catch (e) {

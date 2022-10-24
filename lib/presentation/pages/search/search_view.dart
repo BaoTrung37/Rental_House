@@ -6,12 +6,12 @@ import 'package:batru_house_rental/domain/use_case/province/get_province_list_us
 import 'package:batru_house_rental/domain/use_case/type/get_type_list_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
+import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_view.dart';
 import 'package:batru_house_rental/presentation/pages/search/filter_drawer/filter_drawer_view.dart';
 import 'package:batru_house_rental/presentation/pages/search/search_state.dart';
 import 'package:batru_house_rental/presentation/pages/search/search_view_model.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
-import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
-import 'package:batru_house_rental/presentation/widgets/app_indicator/app_loading_indicator.dart';
+import 'package:batru_house_rental/presentation/widgets/app_indicator/loading_view.dart';
 import 'package:batru_house_rental/presentation/widgets/base_app_bar/base_app_bar.dart';
 import 'package:batru_house_rental/presentation/widgets/cards/info_room_horizontal_small_card_item.dart';
 import 'package:flutter/material.dart';
@@ -64,12 +64,16 @@ class _SearchViewState extends ConsumerState<SearchView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const BaseAppBar(
-        title: Text('Tìm phòng'),
+        title: Text(
+          'Tìm phòng',
+          style: AppTextStyles.headingXSmall,
+        ),
         widgets: [],
       ),
-      body: _state.status == LoadingStatus.initial
-          ? const AppLoadingIndicator()
-          : _buildBody(),
+      body: LoadingView(
+        status: _state.status,
+        child: _buildBody(),
+      ),
     );
   }
 
@@ -86,9 +90,9 @@ class _SearchViewState extends ConsumerState<SearchView> {
           children: [
             Row(
               children: [
-                const Expanded(
+                Expanded(
                   child: Text(
-                    '30 Kết quả phù hợp',
+                    '${_state.articles.length} Kết quả phù hợp',
                     style: AppTextStyles.headingSmall,
                   ),
                 ),
@@ -101,21 +105,29 @@ class _SearchViewState extends ConsumerState<SearchView> {
               ],
             ),
             Expanded(
-              child: ListView.builder(
-                itemBuilder: (context, index) => InfoRoomHorizontalCardItemItem(
-                  articleEntity: null,
-                  onTap: () {
-                    ref
-                        .read(appNavigatorProvider)
-                        .navigateTo(AppRoutes.houseDetail);
-                  },
-                ),
-                itemCount: 10,
-              ),
+              child: _buildArticleList(),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildArticleList() {
+    final articles = _state.articles;
+    return ListView.builder(
+      itemBuilder: (context, index) => InfoRoomHorizontalCardItemItem(
+        articleEntity: articles[index],
+        onTap: () {
+          ref.read(appNavigatorProvider).navigateTo(
+                AppRoutes.houseDetail,
+                arguments: HouseDetailArguments(
+                  houseId: articles[index].house!.id,
+                ),
+              );
+        },
+      ),
+      itemCount: articles.length,
     );
   }
 }

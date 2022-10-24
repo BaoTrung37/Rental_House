@@ -135,7 +135,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
     return houseNumber + streetName + communeName + districtName + provinceName;
   }
 
-  Future<void> postArticle() async {
+  Future<String?> postArticle() async {
     try {
       state = state.copyWith(
         status: LoadingStatus.inProgress,
@@ -212,7 +212,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
                 .add(const Duration(milliseconds: 13))
                 .millisecondsSinceEpoch
                 .toString();
-            debugPrint('imageId: $imageId');
+            // debugPrint('imageId: $imageId');
             return ImageHouseResponse(id: imageId, houseId: houseId, url: e);
           },
         ).toList(),
@@ -221,12 +221,14 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
       state = state.copyWith(
         status: LoadingStatus.success,
       );
+      return houseId;
     } catch (e) {
       state = state.copyWith(
         status: LoadingStatus.error,
       );
       debugPrint(e.toString());
     }
+    return null;
   }
 
   void setHouseCapacity(String capacity) {
