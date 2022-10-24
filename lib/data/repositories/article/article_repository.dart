@@ -1,3 +1,4 @@
+import 'package:batru_house_rental/data/models/address/address_reponse.dart';
 import 'package:batru_house_rental/data/models/convenient/convenient_response.dart';
 import 'package:batru_house_rental/data/models/convenient_house/convenient_house_reponse.dart';
 import 'package:batru_house_rental/data/models/house/house_response.dart';
@@ -5,6 +6,7 @@ import 'package:batru_house_rental/data/models/house_type/house_type_response.da
 import 'package:batru_house_rental/data/models/image_house/image_house_response.dart';
 import 'package:batru_house_rental/data/models/type/type_response.dart';
 import 'package:batru_house_rental/domain/entities/article/article_entity.dart';
+import 'package:batru_house_rental/domain/use_case/article/get_article_filter_list_use_case.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ArticleRepository {
@@ -113,8 +115,11 @@ class ArticleRepository {
   }
 
   Future<List<ArticleEntity>> getArticles(int limit) async {
-    final houseSnapshot =
-        await _fireStore.collection('house').limit(limit).get();
+    final houseSnapshot = await _fireStore
+        .collection('house')
+        .orderBy('createdAt', descending: true)
+        .limit(limit)
+        .get();
 
     final articles = <ArticleEntity>[];
     for (final house in houseSnapshot.docs) {
@@ -169,6 +174,24 @@ class ArticleRepository {
       ));
     }
 
+    return articles;
+  }
+
+  Future<List<ArticleEntity>> getArticlesByFiled(
+      ArticleFilterInput input) async {
+    final addressSnapshot = await _fireStore
+        .collection('address')
+        .where('districtId', isEqualTo: input.districtId)
+        .where('communeId', isEqualTo: input.communeId)
+        .get();
+    final addressResponse = addressSnapshot.docs.map((e) {
+      return AddressResponse.fromJson(e.data());
+    });
+    final articles = <ArticleEntity>[];
+    for (final address in addressResponse) {
+      final house = await getArticeById(address.houseId);
+      articles.add(house);
+    }
     return articles;
   }
 }

@@ -1,3 +1,4 @@
+import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
 import 'package:batru_house_rental/domain/use_case/address/post_address_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/commune/get_commune_list_use_case.dart';
@@ -11,6 +12,8 @@ import 'package:batru_house_rental/domain/use_case/image_house/post_image_to_sto
 import 'package:batru_house_rental/domain/use_case/province/get_province_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/type/get_type_list_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
+import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
+import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_view.dart';
 import 'package:batru_house_rental/presentation/pages/post_article/post_article_state.dart';
 import 'package:batru_house_rental/presentation/pages/post_article/post_article_view_model.dart';
 import 'package:batru_house_rental/presentation/pages/post_article/widgets/convenient_item.dart';
@@ -65,6 +68,18 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
       await _viewModel.initData();
     });
     super.initState();
+  }
+
+  Future<void> _onPostArticleButton() async {
+    final houseId = await _viewModel.postArticle();
+    
+    if (houseId != null) {
+      ref.read(appNavigatorProvider).goBack();
+      await ref.read(appNavigatorProvider).navigateTo(
+            AppRoutes.houseDetail,
+            arguments: HouseDetailArguments(houseId: houseId),
+          );
+    }
   }
 
   @override
@@ -154,9 +169,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
                   ? details.onStepContinue
                   : () {
                       validate(
-                        onSuccess: () {
-                          _viewModel.postArticle();
-                        },
+                        onSuccess: _onPostArticleButton,
                       );
                     },
             ),
