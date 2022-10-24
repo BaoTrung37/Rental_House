@@ -16,6 +16,12 @@ class AuthRepository {
     return userResponse;
   }
 
+  Future<UserResponse> getUserById(String userId) async {
+    final userDocument = await firestore.collection('user').doc(userId).get();
+    final userResponse = UserResponse.fromJson(userDocument.data()!);
+    return userResponse;
+  }
+
   Future<bool> signInWithGoogle() async {
     final googleUser = await googleSignIn.signIn();
     if (googleUser != null) {

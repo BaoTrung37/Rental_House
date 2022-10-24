@@ -1,4 +1,4 @@
-import 'package:batru_house_rental/presentation/utilities/utilities.dart';
+import 'package:batru_house_rental/presentation/utilities/utilites.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
@@ -73,7 +73,7 @@ mixin BaseFormMixin<T extends StatefulWidget> on State<T> {
           if (_formKey.currentState?.validate() == true) {
             onSuccess();
           } else {
-            scrollToInvalidField();
+            // scrollToInvalidField();
             onFailure?.call();
           }
         });

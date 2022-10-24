@@ -88,7 +88,7 @@ class AppImages {
 
   static const kitchen = '$_path/kitchen.png';
 
-  static const storage = '$_path/storage.png';
+  static const parking = '$_path/parking.png';
 
   static const elevator = '$_path/elevator.png';
 
@@ -114,5 +114,7 @@ class AppImages {
 
   static const water = '$_path/water.png';
 
-  static const eletronic = '$_path/eletronic.png';
+  static const electricity = '$_path/electricity.png';
+
+  static const noImageThumbnail = '$_path/no_image_thumbnail.png';
 }

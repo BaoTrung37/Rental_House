@@ -15,7 +15,7 @@ class AppRoutes {
   static const String home = '/home';
 
   /// home detail
-  static const String roomDetail = '/room_detail';
+  static const String houseDetail = '/house_detail';
 
   /// favorite
   static const String favorite = '/favorite';
