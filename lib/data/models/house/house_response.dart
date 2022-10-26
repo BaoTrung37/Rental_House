@@ -11,7 +11,7 @@ class HouseResponse {
     required this.capacity,
     required this.streetName,
     required this.houseNumber,
-    required this.depositPrice,
+    required this.depositMonth,
     required this.waterPrice,
     required this.electricPrice,
     required this.internetPrice,
@@ -37,7 +37,7 @@ class HouseResponse {
   final String streetName;
   final String houseNumber;
   @JsonKey(defaultValue: 0)
-  final int depositPrice;
+  final int depositMonth;
   final int waterPrice;
   @JsonKey(defaultValue: 0)
   final int electricPrice;
@@ -65,7 +65,7 @@ class HouseResponse {
         capacity: capacity,
         streetName: streetName,
         houseNumber: houseNumber,
-        depositPrice: depositPrice,
+        depositMonth: depositMonth,
         waterPrice: waterPrice,
         electricPrice: electricPrice,
         internetPrice: internetPrice,

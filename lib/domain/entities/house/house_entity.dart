@@ -19,7 +19,7 @@ class HouseEntity with _$HouseEntity {
     @Default(0) int area,
     @Default(1) int capacity,
     @Default(500000) int rentalPrice,
-    @Default(0) int depositPrice,
+    @Default(0) int depositMonth,
     @Default(0) int waterPrice,
     @Default(0) int electricPrice,
     @Default(0) int internetPrice,
