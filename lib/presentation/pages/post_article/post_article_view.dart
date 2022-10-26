@@ -466,7 +466,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
         const SizedBox(height: 8),
         InputTextField.singleLine(
           labelText: 'Đặt cọc (tháng)',
-          placeholder: 'Tiền cọc',
+          placeholder: 'Số tháng cần đặt cọc',
           initialText: state.house?.depositMonth.toString(),
           keyboardType: TextInputType.number,
           textInputAction: TextInputAction.next,
