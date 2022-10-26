@@ -1,4 +1,4 @@
-import 'package:batru_house_rental/data/models/chat/chat_entity.dart';
+import 'package:batru_house_rental/domain/entities/chat/chat_entity.dart';
 import 'package:batru_house_rental/presentation/pages/chat/widgets/image_item.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:flutter/material.dart';
