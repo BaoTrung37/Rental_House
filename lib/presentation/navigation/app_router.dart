@@ -7,6 +7,7 @@ import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_
 import 'package:batru_house_rental/presentation/pages/login/login_view.dart';
 import 'package:batru_house_rental/presentation/pages/main_menu/main_menu_view.dart';
 import 'package:batru_house_rental/presentation/pages/my_page/mypage_view.dart';
+import 'package:batru_house_rental/presentation/pages/owner_house/owner_house_view.dart';
 import 'package:batru_house_rental/presentation/pages/post_article/post_article_view.dart';
 import 'package:batru_house_rental/presentation/pages/search/search_view.dart';
 import 'package:batru_house_rental/presentation/pages/splash/splash_view.dart';
@@ -104,6 +105,11 @@ class AppRouter {
         return MaterialPageRoute(
           settings: settings,
           builder: (context) => const PostArticleView(),
+        );
+      case AppRoutes.ownerHouse:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => const OwnerHouseView(),
         );
       default:
         return null;

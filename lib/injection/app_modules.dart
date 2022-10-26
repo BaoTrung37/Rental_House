@@ -15,6 +15,7 @@ import 'package:batru_house_rental/domain/use_case/address/post_address_use_case
 import 'package:batru_house_rental/domain/use_case/article/get_article_filter_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_article_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_article_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/article/get_articles_by_user_id_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_initial_article_data_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_user_by_id_use_case.dart';
@@ -154,6 +155,10 @@ class AppModules {
     /// get article filter list use case
     injector.registerLazySingleton<GetArticleFilterListUseCase>(
         () => GetArticleFilterListUseCase());
+
+    /// get articles by user id use case
+    injector.registerLazySingleton<GetArticlesByUserIdUseCase>(
+        () => GetArticlesByUserIdUseCase());
 
     /// house type repository
     injector.registerLazySingleton<HouseTypeRepository>(
