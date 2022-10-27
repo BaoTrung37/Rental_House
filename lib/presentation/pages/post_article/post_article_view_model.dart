@@ -89,7 +89,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
         streetName: '',
         area: 0,
         capacity: 1,
-        depositPrice: 0,
+        depositMonth: 0,
         electricPrice: 0,
         waterPrice: 0,
         internetPrice: 0,
@@ -154,7 +154,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
           capacity: state.house?.capacity ?? 0,
           streetName: state.house?.streetName ?? '',
           houseNumber: state.house?.houseNumber ?? '',
-          depositPrice: state.house?.depositPrice ?? 0,
+          depositMonth: state.house?.depositMonth ?? 0,
           waterPrice: state.house?.waterPrice ?? 0,
           electricPrice: state.house?.electricPrice ?? 0,
           internetPrice: state.house?.internetPrice ?? 0,
@@ -271,7 +271,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
     try {
       state = state.copyWith(
         house: state.house?.copyWith(
-          depositPrice: int.parse(depositPrice),
+          depositMonth: int.parse(depositPrice),
         ),
       );
     } on Exception catch (e) {

@@ -65,7 +65,7 @@ class ConvenientItem extends StatelessWidget {
           ),
         ),
         Text(
-          NumberFormatHelper.formatPrice(price),
+          NumberFormatHelper.formatShortPrice(price),
           textAlign: TextAlign.center,
           style: AppTextStyles.textSmall.copyWith(
             color: context.colors.textPrimary,

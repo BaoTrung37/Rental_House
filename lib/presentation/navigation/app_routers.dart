@@ -34,4 +34,7 @@ class AppRoutes {
 
   /// post article
   static const String postArticle = '/post_article';
+
+  /// owner house
+  static const String ownerHouse = '/owner_house';
 }

@@ -92,7 +92,9 @@ class _MyPageViewState extends ConsumerState<MyPageView>
         ),
         const AppDivider(),
         ListTile(
-          onTap: () {},
+          onTap: () {
+            ref.read(appNavigatorProvider).navigateTo(AppRoutes.ownerHouse);
+          },
           horizontalTitleGap: 1,
           title: const Text(
             'Phòng đã thuê',

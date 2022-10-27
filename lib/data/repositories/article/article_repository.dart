@@ -177,6 +177,68 @@ class ArticleRepository {
     return articles;
   }
 
+  Future<List<ArticleEntity>> getArticlesByUserId(String userId) async {
+    final houseSnapshot = await _fireStore
+        .collection('house')
+        .where('userId', isEqualTo: userId)
+        .get();
+
+    final articles = <ArticleEntity>[];
+    for (final house in houseSnapshot.docs) {
+      final imageHouseSnapshot = await _fireStore
+          .collection('imageHouse')
+          .where('houseId', isEqualTo: house.id)
+          .get();
+      final convenientHouseSnapshot = await _fireStore
+          .collection('convenientHouse')
+          .where('houseId', isEqualTo: house.id)
+          .get();
+      final houseTypeSnapshot = await _fireStore
+          .collection('houseType')
+          .where('houseId', isEqualTo: house.id)
+          .limit(1)
+          .get();
+      final houseEntity = HouseResponse.fromJson(house.data()).toEntity();
+      final houseTypeResponse = houseTypeSnapshot.docs.map((e) {
+        return HouseTypeResponse.fromJson(e.data());
+      });
+
+      final type = _types
+          .firstWhere((element) => element.id == houseTypeResponse.first.typeId)
+          .toEntity();
+
+      final imageList = imageHouseSnapshot.docs
+          .map(
+            (e) => ImageHouseResponse.fromJson(e.data()).toEntity(),
+          )
+          .toList();
+      //
+      final convenienHouseResponse = convenientHouseSnapshot.docs
+          .map(
+            (e) => ConvenientHouseResponse.fromJson(e.data()),
+          )
+          .toList();
+
+      final convenientList = convenienHouseResponse
+          .map(
+            (e) => _convenients
+                .firstWhere((element) => element.id == e.convenientId)
+                .toEntity(),
+          )
+          .toList();
+
+      articles.add(ArticleEntity(
+        id: houseEntity.id,
+        house: houseEntity,
+        imageList: imageList,
+        convenientList: convenientList,
+        type: type,
+      ));
+    }
+
+    return articles;
+  }
+
   Future<List<ArticleEntity>> getArticlesByFiled(
       ArticleFilterInput input) async {
     final addressSnapshot = await _fireStore

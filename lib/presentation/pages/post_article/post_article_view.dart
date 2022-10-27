@@ -72,7 +72,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
 
   Future<void> _onPostArticleButton() async {
     final houseId = await _viewModel.postArticle();
-    
+
     if (houseId != null) {
       ref.read(appNavigatorProvider).goBack();
       await ref.read(appNavigatorProvider).navigateTo(
@@ -435,13 +435,25 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           },
         ),
         const SizedBox(height: 8),
+        // InputTextField.singleLine(
+        //   labelText: 'Số phòng quản lý',
+        //   placeholder: 'Số lượng người tối đa có thể chứa',
+        //   keyboardType: TextInputType.number,
+        //   initialText: houseState?.capacity.toString(),
+        //   textInputAction: TextInputAction.next,
+        //   validator: Validator().required().build(),
+        //   onTextChange: (value) {
+        //      _viewModel.setHouseCapacity(value!);
+        //   },
+        // ),
+        // const SizedBox(height: 8),
         const Text(
           'Chi phí',
           style: AppTextStyles.headingSmall,
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 16),
         InputTextField.singleLine(
-          labelText: 'Giá cho thuê (VNĐ/phòng)',
+          labelText: 'Giá cho thuê (VNĐ)',
           placeholder: 'Diện tích phòng',
           initialText: state.house?.rentalPrice.toString(),
           keyboardType: TextInputType.number,
@@ -453,9 +465,9 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
         ),
         const SizedBox(height: 8),
         InputTextField.singleLine(
-          labelText: 'Đặt cọc (VNĐ/phòng)',
-          placeholder: 'Tiền cọc',
-          initialText: state.house?.depositPrice.toString(),
+          labelText: 'Đặt cọc (tháng)',
+          placeholder: 'Số tháng cần đặt cọc',
+          initialText: state.house?.depositMonth.toString(),
           keyboardType: TextInputType.number,
           textInputAction: TextInputAction.next,
           onTextChange: (value) {
@@ -488,7 +500,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
         ),
         const SizedBox(height: 8),
         InputTextField.singleLine(
-          labelText: 'Tiền Internet (VNĐ/phòng)',
+          labelText: 'Tiền Internet (VNĐ)',
           placeholder: 'Tiền nước',
           initialText: state.house?.internetPrice.toString(),
           keyboardType: TextInputType.number,

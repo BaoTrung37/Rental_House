@@ -129,18 +129,33 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
               onButtonTap: () {},
               leftIcon: const Icon(
                 Icons.chat_bubble_outline_sharp,
+                size: 16,
                 color: Colors.white,
               ),
               title: 'Chat',
             ),
+            if (state.article?.house?.depositMonth != 0)
+              AppButton(
+                onButtonTap: () {
+                  
+                },
+                leftIcon: const Icon(
+                  Icons.money_off_csred_outlined,
+                  color: Colors.white,
+                  size: 16,
+                ),
+                title: 'Đặt chỗ',
+                backgroundColor: context.colors.contentAlert,
+              ),
             AppButton(
               onButtonTap: () {},
               leftIcon: const Icon(
                 Icons.phone,
+                size: 16,
                 color: Colors.white,
               ),
               title: 'Gọi',
-              backgroundColor: context.colors.contentAlert,
+              backgroundColor: context.colors.contentEntry,
             ),
           ],
         ),
@@ -234,11 +249,11 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
                 _buildDetailTitle(),
                 const SizedBox(height: 10),
                 _buildDetailText(context),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 16),
-                  child: AppDivider(height: 1),
-                ),
-                _buildSeeMoreOrCollapseButton(context),
+                // const Padding(
+                //   padding: EdgeInsets.symmetric(vertical: 16),
+                //   child: AppDivider(height: 1),
+                // ),
+                // _buildSeeMoreOrCollapseButton(context),
               ],
             ),
           ),
@@ -531,28 +546,24 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
   Text _buildLocationTitle() =>
       const Text('Địa chỉ', style: AppTextStyles.headingXSmall);
 
-  Center _buildSeeMoreOrCollapseButton(BuildContext context) {
-    return Center(
-      child: Text(
-        'Xem thêm',
-        style: AppTextStyles.textMediumBold.copyWith(
-          color: context.colors.primaryText,
-        ),
-      ),
-    );
-  }
+  // Center _buildSeeMoreOrCollapseButton(BuildContext context) {
+  //   return Center(
+  //     child: Text(
+  //       'Xem thêm',
+  //       style: AppTextStyles.textMediumBold.copyWith(
+  //         color: context.colors.primaryText,
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _buildDetailText(BuildContext context) {
     final article = ref.watch(_provider).article;
-    return SizedBox(
-      height: 70,
-      child: Text(
-        article?.house?.description ?? '',
-        overflow: TextOverflow.ellipsis,
-        maxLines: 3,
-        style: AppTextStyles.textMedium.copyWith(
-          color: context.colors.textPrimary,
-        ),
+    return Text(
+      article?.house?.description ?? '',
+      overflow: TextOverflow.ellipsis,
+      style: AppTextStyles.textMedium.copyWith(
+        color: context.colors.textPrimary,
       ),
     );
   }
@@ -570,7 +581,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
   Center _buildRoomPrice(BuildContext context) {
     return Center(
       child: Text(
-        'Giá phòng: ${NumberFormatHelper.formatPrice(state.article?.house?.rentalPrice ?? 0)}/phòng',
+        'Giá phòng: ${NumberFormatHelper.formatShortPrice(state.article?.house?.rentalPrice ?? 0)}/phòng',
         style: AppTextStyles.textLarge.copyWith(
           color: context.colors.contentSpecialMain,
         ),
@@ -589,7 +600,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
 
   Text _buildSubTitle(BuildContext context) {
     return Text(
-      'TÌM NGƯỜI THUÊ.',
+      'TÌM NGƯỜI THUÊ. ${state.article?.house?.capacity}',
       style: AppTextStyles.labelSmallLight.copyWith(
         color: context.colors.textSecondary,
       ),
@@ -660,7 +671,9 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
           ),
         ),
         Text(
-          '1 Tháng',
+          state.article?.house?.depositMonth == 0
+              ? 'Không'
+              : '${state.article?.house?.depositMonth} tháng',
           style: AppTextStyles.labelSmallLight.copyWith(
             color: context.colors.contentSpecialText,
           ),
