@@ -42,7 +42,6 @@ class _OwnerHouseViewState extends ConsumerState<OwnerHouseView> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 
@@ -59,8 +58,10 @@ class _OwnerHouseViewState extends ConsumerState<OwnerHouseView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 10),
-              Text('Số phòng của tôi: ${_state.houseArticleList.length}',
-                  style: AppTextStyles.headingXSmall),
+              Text(
+                'Số phòng của tôi: ${_state.houseArticleList.length}',
+                style: AppTextStyles.headingXSmall,
+              ),
               const SizedBox(height: 10),
               Expanded(
                 child: _buildHouseList(),
