@@ -46,7 +46,7 @@ class RelativeHouseItemView extends StatelessWidget {
           ),
           const SizedBox(height: 2),
           Text(
-            '${NumberFormatHelper.formatPrice(articleEntity.house?.rentalPrice ?? 0)}/phòng',
+            '${NumberFormatHelper.formatShortPrice(articleEntity.house?.rentalPrice ?? 0)}/phòng',
             style: AppTextStyles.textMediumBold.copyWith(
               color: context.colors.contentSpecialMain,
             ),
