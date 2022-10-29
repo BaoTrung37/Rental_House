@@ -9,6 +9,7 @@ class ChatItem extends StatelessWidget {
     Key? key,
   }) : super(key: key);
   final ChatEntity chatEntity;
+  final bool isMe = true;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -16,7 +17,7 @@ class ChatItem extends StatelessWidget {
       color: context.colors.backgroundPrimary,
       child: Row(
         mainAxisAlignment:
-            chatEntity.isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
+            isMe ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
           _buildMessageBody(context),
         ],
@@ -30,18 +31,16 @@ class ChatItem extends StatelessWidget {
           BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.7),
       // width: MediaQuery.of(context).size.width * 0.7,
       decoration: BoxDecoration(
-        color: chatEntity.isMe
+        color: isMe
             ? context.colors.secondaryBackgroundPrimary
             : context.colors.backgroundSecondary,
         borderRadius: BorderRadius.only(
           topLeft: const Radius.circular(12),
           topRight: const Radius.circular(12),
-          bottomLeft: chatEntity.isMe
-              ? const Radius.circular(12)
-              : const Radius.circular(0),
-          bottomRight: !chatEntity.isMe
-              ? const Radius.circular(12)
-              : const Radius.circular(0),
+          bottomLeft:
+              isMe ? const Radius.circular(12) : const Radius.circular(0),
+          bottomRight:
+              !isMe ? const Radius.circular(12) : const Radius.circular(0),
         ),
       ),
       child: chatEntity.type == ChatType.message.value
@@ -70,7 +69,7 @@ class ChatItem extends StatelessWidget {
   Widget _buildMessage(BuildContext context) {
     return Text(
       chatEntity.message,
-      textAlign: chatEntity.isMe ? TextAlign.end : TextAlign.start,
+      textAlign: isMe ? TextAlign.end : TextAlign.start,
       style: AppTextStyles.textSmall.copyWith(
         color: context.colors.textPrimary,
       ),

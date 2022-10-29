@@ -2,19 +2,15 @@ class ChatEntity {
   ChatEntity({
     required this.id,
     required this.senderId,
-    required this.receiverId,
     required this.message,
     required this.type,
     required this.createdAt,
-    this.isMe = false,
   });
   final String id;
   final String senderId;
-  final String receiverId;
   final String message;
   final String type;
-  final String createdAt;
-  final bool isMe;
+  final DateTime createdAt;
 }
 
 enum ChatType {

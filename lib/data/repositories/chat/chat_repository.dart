@@ -1,4 +1,6 @@
+import 'package:batru_house_rental/data/models/chat/chat_response.dart';
 import 'package:batru_house_rental/domain/entities/chat/chat_room_entity.dart';
+import 'package:batru_house_rental/domain/use_case/chat/post_chat_room_use_case.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -35,6 +37,78 @@ class ChatRepository {
     });
 
     return chatRoomList;
+  }
+
+  Future<List<ChatRoomEntity>> getChatRoomListByUserId(String userId) async {
+    final chatRoomSnapshots =
+        await _fireStore.collection('user').doc().collection('chatroom').get();
+    final chatRoomList = <ChatRoomEntity>[];
+    return [];
+  }
+
+  Future<void> createChatRoom(PostChatRoomInput postChatRoomInput) async {
+    // final chatRoomSnapshots = await _fireStore
+    //     .collection('chatroom')
+    //     .where('user1', isEqualTo: userId)
+    //     .where('user2', isEqualTo: receiverId)
+    //     .get();
+    // if (chatRoomSnapshots.docs.isEmpty) {
+    //   final chatRoomSnapshots = await _fireStore
+    //       .collection('chatroom')
+    //       .where('user1', isEqualTo: receiverId)
+    //       .where('user2', isEqualTo: userId)
+    //       .get();
+    //   if (chatRoomSnapshots.docs.isEmpty) {
+    //     await _fireStore.collection('chatroom').add({
+    //       'user1': userId,
+    //       'user2': receiverId,
+    //       'createdAt': DateTime.now().millisecondsSinceEpoch,
+    //     });
+    //   }
+    // }
+    final roomId = (postChatRoomInput.userId
+                .toLowerCase()
+                .compareTo(postChatRoomInput.receiverId.toLowerCase()) <
+            0)
+        ? postChatRoomInput.userId + postChatRoomInput.receiverId
+        : postChatRoomInput.receiverId + postChatRoomInput.userId;
+    final roomSnapshot =
+        await _fireStore.collection('chatroom').doc(roomId).get();
+    final isRoomExist = roomSnapshot.exists;
+    final chatEntity = postChatRoomInput.chatEntity;
+    if (!isRoomExist) {
+      await _fireStore
+          .collection('chatroom')
+          .doc(roomId)
+          .collection('chat')
+          .add(
+            ChatResponse(
+              id: chatEntity.id,
+              senderId: chatEntity.senderId,
+              message: chatEntity.message,
+              type: chatEntity.type,
+              createdAt: chatEntity.createdAt,
+            ).toJson(),
+          );
+      // add id chat room to user 1
+      await _fireStore
+          .collection('user')
+          .doc(postChatRoomInput.userId)
+          .collection('chatroom')
+          .doc(roomId)
+          .set({
+        'patern': postChatRoomInput.receiverId,
+      });
+      // add id chat room to user 2
+      await _fireStore
+          .collection('user')
+          .doc(postChatRoomInput.receiverId)
+          .collection('chatroom')
+          .doc(roomId)
+          .set({
+        'receiverId': postChatRoomInput.userId,
+      });
+    }
   }
 
   Stream<QuerySnapshot> getChatMessage(String groupChatId, int limit) {
