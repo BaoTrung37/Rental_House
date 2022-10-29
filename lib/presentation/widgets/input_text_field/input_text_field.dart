@@ -272,6 +272,7 @@ class _TextBoxState extends State<InputTextField> {
                         labelText: widget.labelText,
                         border: InputBorder.none,
                         hintText: widget.placeholder,
+                        isDense: true,
                         hintStyle: widget.placeholderTextStyle ??
                             AppTextStyles.textMedium.copyWith(
                               color: context.colors.textSecondary,

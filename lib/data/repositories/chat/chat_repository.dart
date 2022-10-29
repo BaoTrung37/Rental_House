@@ -47,25 +47,6 @@ class ChatRepository {
   }
 
   Future<void> createChatRoom(PostChatRoomInput postChatRoomInput) async {
-    // final chatRoomSnapshots = await _fireStore
-    //     .collection('chatroom')
-    //     .where('user1', isEqualTo: userId)
-    //     .where('user2', isEqualTo: receiverId)
-    //     .get();
-    // if (chatRoomSnapshots.docs.isEmpty) {
-    //   final chatRoomSnapshots = await _fireStore
-    //       .collection('chatroom')
-    //       .where('user1', isEqualTo: receiverId)
-    //       .where('user2', isEqualTo: userId)
-    //       .get();
-    //   if (chatRoomSnapshots.docs.isEmpty) {
-    //     await _fireStore.collection('chatroom').add({
-    //       'user1': userId,
-    //       'user2': receiverId,
-    //       'createdAt': DateTime.now().millisecondsSinceEpoch,
-    //     });
-    //   }
-    // }
     final roomId = (postChatRoomInput.userId
                 .toLowerCase()
                 .compareTo(postChatRoomInput.receiverId.toLowerCase()) <
@@ -76,20 +57,22 @@ class ChatRepository {
         await _fireStore.collection('chatroom').doc(roomId).get();
     final isRoomExist = roomSnapshot.exists;
     final chatEntity = postChatRoomInput.chatEntity;
+
+    await _fireStore
+        .collection('chatroom')
+        .doc(roomId)
+        .collection('chat')
+        .doc(DateTime.now().microsecondsSinceEpoch.toString())
+        .set(
+          ChatResponse(
+            id: chatEntity.id,
+            senderId: chatEntity.senderId,
+            message: chatEntity.message,
+            type: chatEntity.type,
+            createdAt: chatEntity.createdAt,
+          ).toJson(),
+        );
     if (!isRoomExist) {
-      await _fireStore
-          .collection('chatroom')
-          .doc(roomId)
-          .collection('chat')
-          .add(
-            ChatResponse(
-              id: chatEntity.id,
-              senderId: chatEntity.senderId,
-              message: chatEntity.message,
-              type: chatEntity.type,
-              createdAt: chatEntity.createdAt,
-            ).toJson(),
-          );
       // add id chat room to user 1
       await _fireStore
           .collection('user')
