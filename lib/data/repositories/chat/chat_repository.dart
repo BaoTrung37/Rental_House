@@ -1,49 +1,55 @@
 import 'package:batru_house_rental/data/models/chat/chat_response.dart';
+import 'package:batru_house_rental/data/models/user/user_response.dart';
+import 'package:batru_house_rental/domain/entities/chat/chat_entity.dart';
 import 'package:batru_house_rental/domain/entities/chat/chat_room_entity.dart';
 import 'package:batru_house_rental/domain/use_case/chat/post_chat_room_use_case.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 class ChatRepository {
   final _fireStore = FirebaseFirestore.instance;
-  final _fireStorage = FirebaseStorage.instance;
+  // final _fireStorage = FirebaseStorage.instance;
 
-  Future<List<ChatRoomEntity>> getChatRoomList(String userId) async {
+  Future<List<ChatRoomEntity>> getChatRoomListByUserId(String userId) async {
     final chatRoomSnapshots = await _fireStore
+        .collection('user')
+        .doc(userId)
         .collection('chatroom')
-        .where('user1', isEqualTo: userId)
-        .where('user2', isEqualTo: userId)
         .get();
     final chatRoomList = <ChatRoomEntity>[];
-    chatRoomSnapshots.docs.map((e) async {
-      final chatSnapshots = await _fireStore
-          .collection('chatroom')
-          .doc(e.id)
-          .collection('chat')
-          .orderBy('createdAt', descending: true)
-          .limit(1)
+    // debugPrint('chatRoomSnapshots: ${chatRoomSnapshots.docs.length}');
+    for (final chatRoomSnapshot in chatRoomSnapshots.docs) {
+      // debugPrint(chatRoomSnapshot.data()['receiverId']);
+      final receiverUserSnapshot = await _fireStore
+          .collection('user')
+          .doc(chatRoomSnapshot.data()['receiverId'])
           .get();
-      final chatRoom = ChatRoomEntity(
-        id: e.id,
-        receiverId:
-            e.data()['user2'] != userId ? e.data()['user2'] : e.data()['user1'],
-        onwerId: userId,
-        lastMessage: chatSnapshots.docs.first.data()['message'],
-        type: chatSnapshots.docs.first.data()['type'],
-        createdAt: chatSnapshots.docs.first.data()['createdAt'],
-        isMe: chatSnapshots.docs.first.data()['isMe'],
+      final receiverUser =
+          UserResponse.fromJson(receiverUserSnapshot.data()!).toEntity();
+      final lastMessage = await getLastMessage(chatRoomSnapshot.id);
+      final chatRoomEntity = ChatRoomEntity(
+        id: chatRoomSnapshot.id,
+        receiverUser: receiverUser,
+        lastMessage: lastMessage.message,
+        type: lastMessage.type,
+        lastMessageTime: lastMessage.createdAt,
       );
-      chatRoomList.add(chatRoom);
-    });
+      chatRoomList.add(chatRoomEntity);
+    }
 
     return chatRoomList;
   }
 
-  Future<List<ChatRoomEntity>> getChatRoomListByUserId(String userId) async {
-    final chatRoomSnapshots =
-        await _fireStore.collection('user').doc().collection('chatroom').get();
-    final chatRoomList = <ChatRoomEntity>[];
-    return [];
+  Future<ChatEntity> getLastMessage(String chatRoomId) async {
+    final chatRoomSnapshots = await _fireStore
+        .collection('chatroom')
+        .doc(chatRoomId)
+        .collection('chat')
+        .orderBy('id', descending: true)
+        .limit(1)
+        .get();
+
+    return ChatResponse.fromJson(chatRoomSnapshots.docs.first.data())
+        .toEntity();
   }
 
   Future<void> createChatRoom(PostChatRoomInput postChatRoomInput) async {
@@ -51,8 +57,8 @@ class ChatRepository {
                 .toLowerCase()
                 .compareTo(postChatRoomInput.receiverId.toLowerCase()) <
             0)
-        ? postChatRoomInput.userId + postChatRoomInput.receiverId
-        : postChatRoomInput.receiverId + postChatRoomInput.userId;
+        ? '${postChatRoomInput.userId}-${postChatRoomInput.receiverId}'
+        : '${postChatRoomInput.receiverId}-${postChatRoomInput.userId}';
     final roomSnapshot =
         await _fireStore.collection('chatroom').doc(roomId).get();
     final isRoomExist = roomSnapshot.exists;
@@ -80,7 +86,7 @@ class ChatRepository {
           .collection('chatroom')
           .doc(roomId)
           .set({
-        'patern': postChatRoomInput.receiverId,
+        'receiverId': postChatRoomInput.receiverId,
       });
       // add id chat room to user 2
       await _fireStore

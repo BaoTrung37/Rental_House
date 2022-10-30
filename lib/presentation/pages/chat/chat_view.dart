@@ -1,4 +1,4 @@
-import 'package:batru_house_rental/domain/use_case/chat/get_chat_room_list_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/chat/get_chat_room_list_by_user_id_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/pages/chat/chat_state.dart';
 import 'package:batru_house_rental/presentation/pages/chat/chat_view_model.dart';
@@ -11,7 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final chatProvider = StateNotifierProvider<ChatViewModel, ChatState>(
   (ref) => ChatViewModel(
-    injector.get<GetChatRoomListUseCase>(),
+    injector.get<GetChatRoomListByUserIdUseCase>(),
   ),
 );
 
@@ -56,7 +56,7 @@ class _ChatViewState extends ConsumerState<ChatView> {
           const AppDivider(),
           ChatInputView(
             onSendButtonTapped: (value) {
-              print('text: $value');
+              // print('text: $value');
             },
             // focusNode: focusNode,
           ),
