@@ -1,5 +1,4 @@
 import 'package:batru_house_rental/data/utilities/common/json_date_time_converter.dart';
-import 'package:batru_house_rental/domain/entities/chat/chat_room_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'chat_room_response.g.dart';
@@ -26,11 +25,11 @@ class ChatRoomResponse {
 
   Map<String, dynamic> toJson() => _$ChatRoomResponseToJson(this);
 
-  ChatRoomEntity toEntity() => ChatRoomEntity(
-        id: id,
-        receiverId: receiverId,
-        lastMessage: lastMessage,
-        type: type,
-        lastMessageTime: lastMessageTime,
-      );
+  // ChatRoomEntity toEntity() => ChatRoomEntity(
+  //       id: id,
+  //       receiverId: receiverId,
+  //       lastMessage: lastMessage,
+  //       type: type,
+  //       lastMessageTime: lastMessageTime,
+  //     );
 }

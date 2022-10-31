@@ -1,5 +1,6 @@
 import 'package:batru_house_rental/domain/entities/chat/chat_room_entity.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
+import 'package:batru_house_rental/presentation/utilities/helper/date_format_helper.dart';
 import 'package:flutter/material.dart';
 
 class BubbleChatItem extends StatelessWidget {
@@ -60,7 +61,7 @@ class BubbleChatItem extends StatelessWidget {
 
   Widget _buildTimestampLastMessage(BuildContext context) {
     return Text(
-      '2 phút trước',
+      chatRoomEntity.lastMessageTime.getPublishDatePastFormatString,
       style: AppTextStyles.textSmall.copyWith(
         color: context.colors.textSecondary,
       ),

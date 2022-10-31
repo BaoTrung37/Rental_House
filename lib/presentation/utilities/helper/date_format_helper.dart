@@ -15,8 +15,26 @@ class DateFormatHelper {
   static final millisecondsIn59Minutes59Seconds =
       DateFormatHelper.secondsIn59Minutes59Seconds * 1000;
 
-  static String getPublishDatePastFormatString(DateTime date) {
-    return DateFormat('yyyy/MM/dd HH:mm').format(date);
+  static String getPublishDatePastFormatString(
+    DateTime postDate,
+  ) {
+    final compareDate = DateTime.now();
+    final differenceDuration = compareDate.difference(postDate).abs();
+    final differenceSeconds = differenceDuration.inSeconds;
+
+    if (differenceSeconds <= secondsIn59Seconds) {
+      return 'Bây giờ';
+    }
+
+    if (differenceSeconds <= secondsIn59Minutes59Seconds) {
+      return '${differenceDuration.inMinutes} phút trước';
+    }
+
+    if (differenceSeconds <= secondsIn23Hours59Minutes59Seconds) {
+      return '${differenceDuration.inHours} giờ trước';
+    }
+
+    return DateFormat('yyyy/MM/dd').format(postDate);
   }
 }
 
