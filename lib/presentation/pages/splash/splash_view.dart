@@ -18,7 +18,7 @@ class _SplashViewState extends ConsumerState<SplashView> {
     Future.delayed(const Duration(seconds: 2), () async {
       FirebaseAuth.instance.authStateChanges().listen((User? user) {
         if (user != null) {
-          ref.read(appNavigatorProvider).navigateTo(AppRoutes.login);
+          ref.read(appNavigatorProvider).navigateTo(AppRoutes.mainMenu);
         } else {
           ref.read(appNavigatorProvider).navigateTo(AppRoutes.login);
         }
