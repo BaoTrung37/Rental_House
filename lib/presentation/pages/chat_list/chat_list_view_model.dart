@@ -28,4 +28,9 @@ class ChatListViewModel extends StateNotifier<ChatListState> {
       );
     }
   }
+
+  Future<String> getCurrentUserId() async {
+    final currentUser = await _getCurrentUserInformationUseCase.run();
+    return currentUser.id;
+  }
 }

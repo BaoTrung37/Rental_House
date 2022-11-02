@@ -2,10 +2,11 @@ import 'package:batru_house_rental/data/models/chat/chat_response.dart';
 import 'package:batru_house_rental/data/models/user/user_response.dart';
 import 'package:batru_house_rental/domain/entities/chat/chat_entity.dart';
 import 'package:batru_house_rental/domain/entities/chat/chat_room_entity.dart';
+import 'package:batru_house_rental/domain/use_case/chat/get_chat_message_list_by_room_id_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/post_chat_room_use_case.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class ChatRepository {
+class ChatRoomRepository {
   final _fireStore = FirebaseFirestore.instance;
   // final _fireStorage = FirebaseStorage.instance;
 
@@ -100,37 +101,4 @@ class ChatRepository {
     }
   }
 
-  Stream<QuerySnapshot> getChatMessage(String groupChatId, int limit) {
-    return _fireStore
-        .collection('chats')
-        .doc(groupChatId)
-        .collection(groupChatId)
-        .orderBy('createdAt', descending: true)
-        .limit(limit)
-        .snapshots();
-  }
-
-  void sendMessage(String lastMessage, int type, String groupId, String idFrom,
-      String idTo) {
-    // final DocumentReference documentReference = _fireStore
-    //     .collection('FirestoreConstants.pathChatsCollection')
-    //     .doc(groupId)
-    //     .collection(groupId)
-    //     .doc(DateTime.now().millisecondsSinceEpoch.toString());
-
-    // final ChatInfo chatInfo = ChatInfo(
-    //   idFrom: idFrom,
-    //   idTo: idTo,
-    //   lastMessage: lastMessage,
-    //   timestamp: DateTime.now().millisecondsSinceEpoch.toString(),
-    //   type: type,
-    // );
-
-    // _fireStore.runTransaction(
-    //   (transaction) async => transaction.set(
-    //     documentReference,
-    //     chatInfo.toJson(),
-    //   ),
-    // );
-  }
 }

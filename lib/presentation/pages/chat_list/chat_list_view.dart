@@ -3,6 +3,7 @@ import 'package:batru_house_rental/domain/use_case/auth/get_current_user_informa
 import 'package:batru_house_rental/domain/use_case/chat/get_chat_room_list_by_user_id_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
+import 'package:batru_house_rental/presentation/pages/chat/chat_view.dart';
 import 'package:batru_house_rental/presentation/pages/chat_list/chat_list_state.dart';
 import 'package:batru_house_rental/presentation/pages/chat_list/chat_list_view_model.dart';
 import 'package:batru_house_rental/presentation/pages/chat_list/widgets/bubble_chat_item.dart';
@@ -38,8 +39,13 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
     super.initState();
   }
 
-  void _onTapChatItem() {
-    ref.read(appNavigatorProvider).navigateTo(AppRoutes.chat);
+  void _onTapChatItem(String roomId) {
+    ref.read(appNavigatorProvider).navigateTo(
+          AppRoutes.chat,
+          arguments: ChatArguments(
+            roomId: roomId,
+          ),
+        );
   }
 
   @override
@@ -60,7 +66,9 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
     debugPrint(chatRoomList.length.toString());
     return ListView.builder(
       itemBuilder: (context, index) => BubbleChatItem(
-        onTap: _onTapChatItem,
+        onTap: () => _onTapChatItem(
+          chatRoomList[index].id,
+        ),
         chatRoomEntity: chatRoomList[index],
       ),
       itemCount: chatRoomList.length,
