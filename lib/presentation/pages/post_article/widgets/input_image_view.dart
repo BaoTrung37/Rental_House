@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:batru_house_rental/presentation/resources/resources.dart';
-import 'package:batru_house_rental/presentation/utilities/utilites.dart';
+import 'package:batru_house_rental/presentation/utilities/utilities.dart';
 import 'package:flutter/material.dart';
 
 class InputImageView extends StatelessWidget {

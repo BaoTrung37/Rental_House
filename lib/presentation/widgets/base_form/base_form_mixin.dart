@@ -1,4 +1,4 @@
-import 'package:batru_house_rental/presentation/utilities/utilites.dart';
+import 'package:batru_house_rental/presentation/utilities/utilities.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
