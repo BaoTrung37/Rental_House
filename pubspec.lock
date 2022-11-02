@@ -126,33 +126,21 @@ packages:
       name: cloud_firestore
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
-    version: "3.4.9"
-=======
     version: "4.0.3"
->>>>>>> main
   cloud_firestore_platform_interface:
     dependency: transitive
     description:
       name: cloud_firestore_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
-    version: "5.7.5"
-=======
     version: "5.8.3"
->>>>>>> main
   cloud_firestore_web:
     dependency: transitive
     description:
       name: cloud_firestore_web
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
-    version: "2.8.8"
-=======
     version: "3.0.3"
->>>>>>> main
   code_builder:
     dependency: transitive
     description:
@@ -250,33 +238,21 @@ packages:
       name: firebase_auth
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
-    version: "3.10.0"
-=======
     version: "4.1.0"
->>>>>>> main
   firebase_auth_platform_interface:
     dependency: transitive
     description:
       name: firebase_auth_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
-    version: "6.10.0"
-=======
     version: "6.11.0"
->>>>>>> main
   firebase_auth_web:
     dependency: transitive
     description:
       name: firebase_auth_web
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
-    version: "4.5.0"
-=======
     version: "5.1.0"
->>>>>>> main
   firebase_core:
     dependency: "direct main"
     description:
@@ -325,33 +301,21 @@ packages:
       name: firebase_storage
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
-    version: "10.3.9"
-=======
     version: "11.0.3"
->>>>>>> main
   firebase_storage_platform_interface:
     dependency: transitive
     description:
       name: firebase_storage_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
-    version: "4.1.19"
-=======
     version: "4.1.22"
->>>>>>> main
   firebase_storage_web:
     dependency: transitive
     description:
       name: firebase_storage_web
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
-    version: "3.3.7"
-=======
     version: "3.3.13"
->>>>>>> main
   fixnum:
     dependency: transitive
     description:

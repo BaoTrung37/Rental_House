@@ -15,14 +15,6 @@ class _SplashViewState extends ConsumerState<SplashView> {
   @override
   void initState() {
     super.initState();
-    // WidgetsBinding.instance.addPostFrameCallback((_) async {
-    // final currentUser = injector.get<AuthRepository>().user;
-    // if (currentUser != null) {
-    //   await ref.read(appNavigatorProvider).navigateTo(AppRoutes.mainMenu);
-    // } else {
-    //   await ref.read(appNavigatorProvider).navigateTo(AppRoutes.login);
-    // }
-    // });
     Future.delayed(const Duration(seconds: 2), () async {
       FirebaseAuth.instance.authStateChanges().listen((User? user) {
         if (user != null) {
