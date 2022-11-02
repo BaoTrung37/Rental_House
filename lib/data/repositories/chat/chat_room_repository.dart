@@ -2,7 +2,6 @@ import 'package:batru_house_rental/data/models/chat/chat_response.dart';
 import 'package:batru_house_rental/data/models/user/user_response.dart';
 import 'package:batru_house_rental/domain/entities/chat/chat_entity.dart';
 import 'package:batru_house_rental/domain/entities/chat/chat_room_entity.dart';
-import 'package:batru_house_rental/domain/use_case/chat/get_chat_message_list_by_room_id_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/post_chat_room_use_case.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -100,5 +99,4 @@ class ChatRoomRepository {
       });
     }
   }
-
 }
