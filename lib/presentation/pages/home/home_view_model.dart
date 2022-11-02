@@ -16,7 +16,7 @@ class HomeViewModel extends StateNotifier<HomeState> {
   Future<void> initData() async {
     try {
       state = state.copyWith(
-        status: LoadingStatus.initial,
+        status: LoadingStatus.inProgress,
       );
       final districts = await _getDistrictListUseCase.run('01');
       final articles = await _getArticleListUseCase.run(10);

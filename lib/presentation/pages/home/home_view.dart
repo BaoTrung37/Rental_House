@@ -9,8 +9,7 @@ import 'package:batru_house_rental/presentation/pages/home/widgets/home_place_sm
 import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_view.dart';
 import 'package:batru_house_rental/presentation/pages/search/search_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
-import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
-import 'package:batru_house_rental/presentation/widgets/app_indicator/app_loading_indicator.dart';
+import 'package:batru_house_rental/presentation/widgets/app_indicator/loading_view.dart';
 import 'package:batru_house_rental/presentation/widgets/buttons/app_button.dart';
 import 'package:batru_house_rental/presentation/widgets/cards/info_room_horizontal_small_card_item.dart';
 import 'package:flutter/material.dart';
@@ -55,9 +54,10 @@ class _HomeViewState extends ConsumerState<HomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.colors.backgroundSecondary,
-      body: _state.status == LoadingStatus.initial
-          ? const AppLoadingIndicator()
-          : _buildBodyView(context),
+      body: LoadingView(
+        status: _state.status,
+        child: _buildBodyView(context),
+      ),
     );
   }
 

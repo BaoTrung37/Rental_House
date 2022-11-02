@@ -46,18 +46,29 @@ class _LoginViewState extends ConsumerState<LoginView> {
             child: IntroSlider(
               listContentConfig: const [
                 ContentConfig(
-                  title: 'Welcome to Batru House Rental',
-                  description: 'We are happy to see you here',
+                  backgroundNetworkImage:
+                      'https://noithatminhkhang.vn/upload/news/phong-ngu-001-500x340-2926.jpg',
+                  title: 'Cách tìm nhà đơn giản',
                 ),
                 ContentConfig(
-                  title: 'Welcome to Batru House Rental',
-                  description: 'We are happy to see you here',
+                  backgroundNetworkImage:
+                      'https://amia.vn/wp-content/uploads/2021/02/tranh-hoa-trang-tri-phong-ngu-dep-hien-dai-1633.jpg',
+                  title: 'Đáp ứng mọi ngân sách',
+                  // backgroundColor: Colors.red,
                 ),
               ],
+              // listCustomTabs: [
+              //   Container(
+              //     width: 100,
+              //     height: 100,
+              //     color: Colors.amber,
+              //   )
+              // ],
               isShowDoneBtn: false,
               isShowNextBtn: false,
               isShowPrevBtn: false,
               isShowSkipBtn: false,
+              // backgroundColorAllTabs: Colors.red,
               isAutoScroll: true,
               isLoopAutoScroll: true,
               autoScrollInterval: const Duration(seconds: 5),
