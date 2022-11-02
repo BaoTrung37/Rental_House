@@ -8,10 +8,10 @@ class AuthRepository {
   final FirebaseAuth fireAuth = FirebaseAuth.instance;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  User get user => fireAuth.currentUser!;
+  User? get user => fireAuth.currentUser;
 
   Future<UserResponse> getCurrentUserInformation() async {
-    final userDocument = await firestore.collection('user').doc(user.uid).get();
+    final userDocument = await firestore.collection('user').doc(user!.uid).get();
     final userResponse = UserResponse.fromJson(userDocument.data()!);
     return userResponse;
   }
