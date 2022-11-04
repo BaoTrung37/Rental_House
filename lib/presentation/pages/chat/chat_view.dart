@@ -1,5 +1,3 @@
-import 'package:batru_house_rental/domain/use_case/chat/get_chat_use_case.dart';
-import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/pages/chat/chat_state.dart';
 import 'package:batru_house_rental/presentation/pages/chat/chat_view_model.dart';
 import 'package:batru_house_rental/presentation/pages/chat/widgets/chat_item.dart';
@@ -8,9 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final _provider = StateNotifierProvider.autoDispose<ChatViewModel, ChatState>(
-  (ref) => ChatViewModel(
-    injector.get<GetChatUseCase>(),
-  ),
+  (ref) => ChatViewModel(),
 );
 
 class ChatView extends ConsumerStatefulWidget {

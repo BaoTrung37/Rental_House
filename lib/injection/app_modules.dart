@@ -21,7 +21,6 @@ import 'package:batru_house_rental/domain/use_case/auth/get_current_user_informa
 import 'package:batru_house_rental/domain/use_case/auth/get_user_by_id_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/google_login_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/logout_use_case.dart';
-import 'package:batru_house_rental/domain/use_case/chat/get_chat_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/commune/get_commune_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/convenient/get_convenient_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/convenient_house/post_convenient_house_list_use_case.dart';
@@ -40,9 +39,6 @@ class AppModules {
   static Future<void> inject() async {
     /// chat repository
     injector.registerLazySingleton<ChatRepository>(() => ChatRepository());
-
-    /// chat use case
-    injector.registerLazySingleton<GetChatUseCase>(() => GetChatUseCase());
 
     /// auth repository
     injector.registerLazySingleton<AuthRepository>(() => AuthRepository());
