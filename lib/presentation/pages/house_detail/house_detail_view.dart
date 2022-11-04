@@ -3,7 +3,9 @@ import 'dart:ui';
 import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_article_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_article_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_user_by_id_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/chat/post_chat_room_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
 import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_state.dart';
@@ -12,14 +14,15 @@ import 'package:batru_house_rental/presentation/pages/house_detail/widgets/conve
 import 'package:batru_house_rental/presentation/pages/house_detail/widgets/convenient_list_item.dart';
 import 'package:batru_house_rental/presentation/pages/house_detail/widgets/relative_house_item_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
-import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
 import 'package:batru_house_rental/presentation/utilities/helper/date_format_helper.dart';
 import 'package:batru_house_rental/presentation/utilities/helper/number_format_helper.dart';
+import 'package:batru_house_rental/presentation/widgets/app_dialog/show_app_dialog.dart';
 import 'package:batru_house_rental/presentation/widgets/app_divider/app_divider.dart';
-import 'package:batru_house_rental/presentation/widgets/app_indicator/app_loading_indicator.dart';
+import 'package:batru_house_rental/presentation/widgets/app_indicator/loading_view.dart';
 import 'package:batru_house_rental/presentation/widgets/base_app_bar/base_app_bar.dart';
 import 'package:batru_house_rental/presentation/widgets/buttons/app_button.dart';
 import 'package:batru_house_rental/presentation/widgets/image/image_border.dart';
+import 'package:batru_house_rental/presentation/widgets/input_text_field/input_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -28,7 +31,9 @@ final _familyProvider = StateNotifierProvider.autoDispose
   (ref, argument) => HouseDetailViewModel(
     injector.get<GetArticleUseCase>(),
     injector.get<GetUserByIdUseCase>(),
+    injector.get<GetCurrentUserInformationUseCase>(),
     injector.get<GetArticleListUseCase>(),
+    injector.get<PostChatRoomUseCase>(),
   ),
 );
 
@@ -96,9 +101,10 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
         title: 'Chi tiết phòng',
         shouldShowBottomDivider: true,
       ),
-      body: state.status == LoadingStatus.initial
-          ? const AppLoadingIndicator()
-          : _buildBodyContent(context),
+      body: LoadingView(
+        status: state.status,
+        child: _buildBodyContent(context),
+      ),
     );
   }
 
@@ -126,7 +132,46 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             AppButton(
-              onButtonTap: () {},
+              onButtonTap: () {
+                showAppDialog(
+                  context,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text('Chat với chủ nhà'),
+                      const SizedBox(height: 8),
+                      const AppDivider(),
+                      const SizedBox(height: 8),
+                      const Text(
+                          'Bạn vui lòng đọc kĩ mô tả trước khi hỏi nhé!\nBạn muốn hỏi gì nè?'),
+                      const SizedBox(height: 8),
+                      InputTextField(
+                        placeholder: 'Nhập nội dung!',
+                        initialText: state.message,
+                        onTextChange: (value) {
+                          debugPrint(value!);
+                          _viewModel.onMessageChanged(value);
+                        },
+                      ),
+                    ],
+                  ),
+                  actions: [
+                    ActionAppDialog(
+                      actionDialogTitle: 'Huỷ',
+                      onAction: (_) {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    ActionAppDialog(
+                      actionDialogTitle: 'Gửi',
+                      onAction: (_) async {
+                        Navigator.of(context).pop();
+                        await _viewModel.onSendMessage();
+                      },
+                    ),
+                  ],
+                );
+              },
               leftIcon: const Icon(
                 Icons.chat_bubble_outline_sharp,
                 size: 16,
@@ -136,9 +181,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
             ),
             if (state.article?.house?.depositMonth != 0)
               AppButton(
-                onButtonTap: () {
-                  
-                },
+                onButtonTap: () {},
                 leftIcon: const Icon(
                   Icons.money_off_csred_outlined,
                   color: Colors.white,

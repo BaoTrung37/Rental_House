@@ -5,13 +5,20 @@ import 'package:batru_house_rental/presentation/widgets/app_will_pop_scope.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ChatNavigatorView extends ConsumerWidget {
-  const ChatNavigatorView({
-    Key? key,
-  }) : super(key: key);
+class ChatNavigatorView extends ConsumerStatefulWidget {
+  const ChatNavigatorView({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ChatNavigatorViewState();
+}
+
+class _ChatNavigatorViewState extends ConsumerState<ChatNavigatorView>
+    with AutomaticKeepAliveClientMixin {
+  @mustCallSuper
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
     return AppWillPopScope(
       navigator: ref.read(chatNavigatorProvider),
       child: Navigator(
@@ -21,4 +28,8 @@ class ChatNavigatorView extends ConsumerWidget {
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

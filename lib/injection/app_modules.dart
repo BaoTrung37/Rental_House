@@ -2,6 +2,7 @@ import 'package:batru_house_rental/data/repositories/address/address_repository.
 import 'package:batru_house_rental/data/repositories/article/article_repository.dart';
 import 'package:batru_house_rental/data/repositories/auth/auth_repository.dart';
 import 'package:batru_house_rental/data/repositories/chat/chat_message_repository.dart';
+import 'package:batru_house_rental/data/repositories/chat_room/chat_room_repository.dart';
 import 'package:batru_house_rental/data/repositories/commune/commune_repository.dart';
 import 'package:batru_house_rental/data/repositories/convenient/convenient_repository.dart';
 import 'package:batru_house_rental/data/repositories/convenient_house/convenient_house_repository.dart';
@@ -40,9 +41,13 @@ import 'package:batru_house_rental/injection/injector.dart';
 
 class AppModules {
   static Future<void> inject() async {
-    /// chat repository
+    /// chat message repository
     injector.registerLazySingleton<ChatMessageRepository>(
         () => ChatMessageRepository());
+
+    /// chat room repository
+    injector
+        .registerLazySingleton<ChatRoomRepository>(() => ChatRoomRepository());
 
     /// get chat message list by id use case
     injector.registerLazySingleton<GetChatMessageListByIdUseCase>(
