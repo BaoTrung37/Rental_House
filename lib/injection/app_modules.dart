@@ -1,7 +1,7 @@
 import 'package:batru_house_rental/data/repositories/address/address_repository.dart';
 import 'package:batru_house_rental/data/repositories/article/article_repository.dart';
 import 'package:batru_house_rental/data/repositories/auth/auth_repository.dart';
-import 'package:batru_house_rental/data/repositories/chat/chat_repository.dart';
+import 'package:batru_house_rental/data/repositories/chat/chat_message_repository.dart';
 import 'package:batru_house_rental/data/repositories/commune/commune_repository.dart';
 import 'package:batru_house_rental/data/repositories/convenient/convenient_repository.dart';
 import 'package:batru_house_rental/data/repositories/convenient_house/convenient_house_repository.dart';
@@ -21,6 +21,7 @@ import 'package:batru_house_rental/domain/use_case/auth/get_current_user_informa
 import 'package:batru_house_rental/domain/use_case/auth/get_user_by_id_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/google_login_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/logout_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/chat/get_chat_message_list_by_room_id_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/commune/get_commune_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/convenient/get_convenient_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/convenient_house/post_convenient_house_list_use_case.dart';
@@ -38,7 +39,12 @@ import 'package:batru_house_rental/injection/injector.dart';
 class AppModules {
   static Future<void> inject() async {
     /// chat repository
-    injector.registerLazySingleton<ChatRepository>(() => ChatRepository());
+    injector.registerLazySingleton<ChatMessageRepository>(
+        () => ChatMessageRepository());
+
+    /// get chat message list by id use case
+    injector.registerLazySingleton<GetChatMessageListByIdUseCase>(
+        () => GetChatMessageListByIdUseCase());
 
     /// auth repository
     injector.registerLazySingleton<AuthRepository>(() => AuthRepository());
