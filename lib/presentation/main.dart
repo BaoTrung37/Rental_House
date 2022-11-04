@@ -18,6 +18,7 @@ Future<void> main() async {
   Future<void> startApp() async {
     await Initialize.initializationSetup();
     // Dependency
+    await Initialize.initializationSetup();
     await AppModules.inject();
     await injector.allReady();
 
