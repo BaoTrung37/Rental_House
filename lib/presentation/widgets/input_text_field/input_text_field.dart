@@ -276,6 +276,7 @@ class _TextBoxState extends State<InputTextField> {
                             AppTextStyles.textMedium.copyWith(
                               color: context.colors.textSecondary,
                             ),
+                        isDense: true,
                         hintMaxLines: widget.hintMaxLines,
                         errorStyle: _hiddenTextStyle,
                         errorBorder: InputBorder.none,
