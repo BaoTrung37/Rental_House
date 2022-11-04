@@ -1,12 +1,16 @@
+import 'package:batru_house_rental/domain/entities/chat_room/chat_room_entity.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
+import 'package:batru_house_rental/presentation/utilities/helper/date_format_helper.dart';
 import 'package:flutter/material.dart';
 
 class BubbleChatItem extends StatelessWidget {
   const BubbleChatItem({
     required this.onTap,
+    required this.chatRoomEntity,
     Key? key,
   }) : super(key: key);
   final VoidCallback onTap;
+  final ChatRoomEntity chatRoomEntity;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +61,7 @@ class BubbleChatItem extends StatelessWidget {
 
   Widget _buildTimestampLastMessage(BuildContext context) {
     return Text(
-      '2 phút trước',
+      chatRoomEntity.lastMessageTime.getPublishDatePastFormatString,
       style: AppTextStyles.textSmall.copyWith(
         color: context.colors.textSecondary,
       ),
@@ -66,7 +70,7 @@ class BubbleChatItem extends StatelessWidget {
 
   Widget _buildMessageRev(BuildContext context) {
     return Text(
-      'Bạn có tin nhắn mới Bạn có tin nhắn mới Bạn có tin nhắn mới Bạn có tin nhắn mới',
+      chatRoomEntity.lastMessage,
       style: AppTextStyles.textSmall.copyWith(
         color: context.colors.textSecondary,
       ),
@@ -77,7 +81,7 @@ class BubbleChatItem extends StatelessWidget {
 
   Widget _buildUsernameText(BuildContext context) {
     return Text(
-      'Bảo Trung',
+      chatRoomEntity.receiverUser.name,
       style: AppTextStyles.headingXSmallLight.copyWith(
         color: context.colors.textPrimary,
       ),
@@ -87,9 +91,9 @@ class BubbleChatItem extends StatelessWidget {
   }
 
   Widget _buildAvatar() {
-    return const CircleAvatar(
+    return CircleAvatar(
       minRadius: 21,
-      backgroundImage: NetworkImage('https://picsum.photos/200'),
+      backgroundImage: NetworkImage(chatRoomEntity.receiverUser.avatar),
     );
   }
 }
