@@ -9,7 +9,9 @@ part 'house_detail_state.freezed.dart';
 class HouseDetailState with _$HouseDetailState {
   const factory HouseDetailState({
     @Default(LoadingStatus.initial) LoadingStatus status,
+    @Default(LoadingStatus.initial) LoadingStatus sendMessageStatus,
     @Default([]) List<ArticleEntity> houseArticleRelativeList,
+    @Default('') String message,
     ArticleEntity? article,
     UserEntity? onwerHouse,
   }) = _HouseDetailState;
