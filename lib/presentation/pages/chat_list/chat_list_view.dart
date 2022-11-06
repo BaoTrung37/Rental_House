@@ -3,9 +3,10 @@ import 'package:batru_house_rental/domain/use_case/chat/get_chat_room_list_by_us
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/pages/chat_list/chat_list_state.dart';
 import 'package:batru_house_rental/presentation/pages/chat_list/chat_list_view_model.dart';
-import 'package:batru_house_rental/presentation/pages/chat_list/widgets/bubble_chat_item.dart';
-import 'package:batru_house_rental/presentation/widgets/app_indicator/loading_view.dart';
+import 'package:batru_house_rental/presentation/pages/chat_list/views/bubble_chat_item.dart';
+import 'package:batru_house_rental/presentation/pages/chat_list/views/chat_list_item_cell.dart';
 import 'package:batru_house_rental/presentation/widgets/base_app_bar/base_app_bar.dart';
+import 'package:batru_house_rental/presentation/widgets/infinite_list/infinite_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -29,10 +30,6 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    Future.delayed(Duration.zero, () {
-      _viewModel.initData();
-    });
     super.initState();
   }
 
@@ -47,28 +44,44 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(_provider);
     return Scaffold(
       appBar: const BaseAppBar.titleOnly(
         title: 'Tin nhắn',
       ),
-      body: LoadingView(
-        status: ref.watch(_provider).loadingStatus,
-        child: _buildChatRoomList(),
+      body: Column(
+        children: [
+          Expanded(
+            child: InfiniteListView(
+              canPullToRefresh: true,
+              perPage: 10,
+              emptyView: const Center(
+                child: Text('Không có tin nhắn'),
+              ),
+              cellBuilder: _buildCell,
+              getDatasources: (int pageKey, int perPage) async {
+                final data = await _viewModel.getChatRoomList();
+                return data;
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildChatRoomList() {
-    final chatRoomList = ref.watch(_provider).chatRoomList;
-    debugPrint(chatRoomList.length.toString());
-    return ListView.builder(
-      itemBuilder: (context, index) => BubbleChatItem(
-        onTap: () => _onTapChatItem(
-          chatRoomList[index].id,
+  Widget _buildCell(Datasource<dynamic> dataSource, int index) {
+    if (dataSource is BubbleChatCell) {
+      return GestureDetector(
+        onTap: () {
+          _onTapChatItem(dataSource.getData.chatRoomEntity.id);
+        },
+        child: BubbleChatItem(
+          chatRoomEntity: dataSource.getData.chatRoomEntity,
         ),
-        chatRoomEntity: chatRoomList[index],
-      ),
-      itemCount: chatRoomList.length,
-    );
+      );
+    } else {
+      return Container();
+    }
   }
 }
