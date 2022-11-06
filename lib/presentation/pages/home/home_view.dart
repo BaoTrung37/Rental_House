@@ -5,13 +5,14 @@ import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
 import 'package:batru_house_rental/presentation/pages/home/home_state.dart';
 import 'package:batru_house_rental/presentation/pages/home/home_view_model.dart';
-import 'package:batru_house_rental/presentation/pages/home/widgets/home_place_small_card.dart';
+import 'package:batru_house_rental/presentation/pages/home/views/home_place_small_card.dart';
 import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_view.dart';
 import 'package:batru_house_rental/presentation/pages/search/search_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/widgets/app_indicator/loading_view.dart';
 import 'package:batru_house_rental/presentation/widgets/buttons/app_button.dart';
 import 'package:batru_house_rental/presentation/widgets/cards/info_room_horizontal_small_card_item.dart';
+import 'package:batru_house_rental/presentation/widgets/infinite_list/refresh_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -54,9 +55,24 @@ class _HomeViewState extends ConsumerState<HomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.colors.backgroundSecondary,
-      body: LoadingView(
-        status: _state.status,
-        child: _buildBodyView(context),
+      body: RefreshView(
+        onRefresh: () async {
+          await _viewModel.initData();
+        },
+        onOverScroll: (mode, distance, limit) {
+          switch (mode) {
+            case RefreshIndicatorMode.drag:
+            case RefreshIndicatorMode.armed:
+            case RefreshIndicatorMode.snap:
+            default:
+              setState(() {});
+              break;
+          }
+        },
+        child: LoadingView(
+          status: _state.status,
+          child: _buildBodyView(context),
+        ),
       ),
     );
   }
