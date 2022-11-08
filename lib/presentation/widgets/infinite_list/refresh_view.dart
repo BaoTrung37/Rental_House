@@ -25,6 +25,7 @@ class RefreshView extends StatefulWidget {
     this.color,
     this.needTopPadding = false,
     this.onOverScroll,
+    this.iconSize = 27,
     Key? key,
   }) : super(key: key);
 
@@ -36,6 +37,7 @@ class RefreshView extends StatefulWidget {
   final bool needTopPadding;
   final OnOverScroll? onOverScroll;
 
+  final int iconSize;
   @override
   RefreshIndicatorState createState() => RefreshIndicatorState();
 }
@@ -311,7 +313,7 @@ class RefreshIndicatorState extends State<RefreshView>
               child: Container(
                 padding: EdgeInsets.only(
                   top: widget.needTopPadding
-                      ? _displacement + 50
+                      ? _displacement + MediaQuery.of(context).padding.top
                       : _displacement,
                   bottom: _displacement + 10,
                 ),
@@ -323,11 +325,10 @@ class RefreshIndicatorState extends State<RefreshView>
                     builder: (BuildContext context, Widget? child) {
                       if (_mode == RefreshIndicatorMode.armed ||
                           _mode == RefreshIndicatorMode.snap) {
-                        return CircularProgressIndicator(color: _color);
+                        return _buildSizeIcon();
                       } else if (_dragOffset != null) {
-                        return CircularProgressIndicator(
+                        return _buildSizeIcon(
                           value: _dragOffset! / _triggerLimit,
-                          color: _color,
                         );
                       } else {
                         return Container();
@@ -339,6 +340,20 @@ class RefreshIndicatorState extends State<RefreshView>
             ),
           ),
       ],
+    );
+  }
+
+  Widget _buildSizeIcon({
+    double? value,
+  }) {
+    return SizedBox(
+      width: widget.iconSize.toDouble(),
+      height: widget.iconSize.toDouble(),
+      child: CircularProgressIndicator(
+        value: value,
+        strokeWidth: 2.8,
+        color: _color,
+      ),
     );
   }
 }
