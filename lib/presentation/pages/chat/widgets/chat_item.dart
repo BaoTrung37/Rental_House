@@ -6,10 +6,11 @@ import 'package:flutter/material.dart';
 class ChatItem extends StatelessWidget {
   const ChatItem({
     required this.chatEntity,
+    required this.isMe,
     Key? key,
   }) : super(key: key);
   final ChatEntity chatEntity;
-  final bool isMe = true;
+  final bool isMe;
   @override
   Widget build(BuildContext context) {
     return Container(

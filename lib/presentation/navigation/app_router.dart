@@ -79,7 +79,9 @@ class AppRouter {
       case AppRoutes.chat:
         return MaterialPageRoute(
           settings: settings,
-          builder: (context) => const ChatView(),
+          builder: (context) => ChatView(
+            chatArguments: settings.arguments as ChatArguments,
+          ),
         );
 
       case AppRoutes.chatList:

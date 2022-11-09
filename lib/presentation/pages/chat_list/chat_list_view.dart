@@ -1,6 +1,10 @@
+import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
+import 'package:batru_house_rental/domain/entities/user/user_entity.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/get_chat_room_list_by_user_id_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
+import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
+import 'package:batru_house_rental/presentation/pages/chat/chat_view.dart';
 import 'package:batru_house_rental/presentation/pages/chat_list/chat_list_state.dart';
 import 'package:batru_house_rental/presentation/pages/chat_list/chat_list_view_model.dart';
 import 'package:batru_house_rental/presentation/pages/chat_list/views/bubble_chat_item.dart';
@@ -33,13 +37,14 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
     super.initState();
   }
 
-  void _onTapChatItem(String roomId) {
-    // ref.read(appNavigatorProvider).navigateTo(
-    //       AppRoutes.chat,
-    //       arguments: ChatArguments(
-    //         roomId: roomId,
-    //       ),
-    //     );
+  void _onTapChatItem(String roomId, UserEntity receiverUser) {
+    ref.read(appNavigatorProvider).navigateTo(
+          AppRoutes.chat,
+          arguments: ChatArguments(
+            roomId: roomId,
+            receiverUser: receiverUser,
+          ),
+        );
   }
 
   @override
@@ -74,7 +79,10 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
     if (dataSource is BubbleChatCell) {
       return GestureDetector(
         onTap: () {
-          _onTapChatItem(dataSource.getData.chatRoomEntity.id);
+          _onTapChatItem(
+            dataSource.getData.chatRoomEntity.id,
+            dataSource.getData.chatRoomEntity.receiverUser,
+          );
         },
         child: BubbleChatItem(
           chatRoomEntity: dataSource.getData.chatRoomEntity,
