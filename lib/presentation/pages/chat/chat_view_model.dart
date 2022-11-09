@@ -28,7 +28,7 @@ class ChatViewModel extends StateNotifier<ChatState> {
     return _getChatRoomListByUserIdUseCase.run(
       GetChatMessageListByIdInput(
         roomId: roomId,
-        limit: 10,
+        limit: limit,
       ),
     );
   }
