@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class ChatItem extends StatelessWidget {
   const ChatItem({
     required this.chatEntity,
-    this.isMe = true,
+    required this.isMe,
     Key? key,
   }) : super(key: key);
   final ChatEntity chatEntity;

@@ -1,4 +1,5 @@
 import 'package:batru_house_rental/data/models/chat/chat_response.dart';
+import 'package:batru_house_rental/domain/entities/user/user_entity.dart';
 import 'package:batru_house_rental/domain/use_case/chat/get_chat_message_list_by_room_id_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/pages/chat/chat_state.dart';
@@ -22,8 +23,10 @@ final chatProvider =
 class ChatArguments {
   ChatArguments({
     required this.roomId,
+    required this.receiverUser,
   });
   final String roomId;
+  final UserEntity receiverUser;
 }
 
 class ChatView extends ConsumerStatefulWidget {
@@ -85,16 +88,16 @@ class _ChatViewState extends ConsumerState<ChatView> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(chatProvider);
+    // final state = ref.watch(chatProvider);
     return Scaffold(
-      appBar: const BaseAppBar.titleAndBackButton(
-        title: 'Bảo Trung',
+      appBar: BaseAppBar.titleAndBackButton(
+        title: widget.chatArguments.receiverUser.name,
       ),
       body: Column(
         children: [
           StreamBuilder<QuerySnapshot>(
             stream: _viewModel.getChatMessageListStream(
-                widget.chatArguments.roomId, 10),
+                widget.chatArguments.roomId, _limit),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 if ((snapshot.data?.docs.length ?? 0) > 0) {
@@ -163,13 +166,12 @@ class _ChatViewState extends ConsumerState<ChatView> {
   Widget _buildChatItem(
       BuildContext context, DocumentSnapshot? documentSnapshot) {
     if (documentSnapshot != null) {
-
       final chatEntity =
           ChatResponse.fromJson(documentSnapshot.data() as Map<String, dynamic>)
               .toEntity();
       return ChatItem(
         chatEntity: chatEntity,
-        isMe: chatEntity.senderId == '1',
+        isMe: chatEntity.senderId != widget.chatArguments.receiverUser.id,
       );
     }
     return Container();
