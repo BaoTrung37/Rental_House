@@ -1,6 +1,9 @@
 import 'package:batru_house_rental/data/models/chat/chat_response.dart';
+import 'package:batru_house_rental/domain/entities/chat/chat_entity.dart';
 import 'package:batru_house_rental/domain/entities/user/user_entity.dart';
+import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/get_chat_message_list_by_room_id_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/chat/post_message_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/pages/chat/chat_state.dart';
 import 'package:batru_house_rental/presentation/pages/chat/chat_view_model.dart';
@@ -17,6 +20,8 @@ final chatProvider =
     StateNotifierProvider.autoDispose<ChatViewModel, ChatState>(
   (ref) => ChatViewModel(
     injector.get<GetChatMessageListByIdUseCase>(),
+    injector.get<GetCurrentUserInformationUseCase>(),
+    injector.get<PostMessageUseCase>(),
   ),
 );
 
@@ -120,8 +125,16 @@ class _ChatViewState extends ConsumerState<ChatView> {
           ),
           const AppDivider(),
           ChatInputView(
-            onSendButtonTapped: (value) {
-              // print('text: $value');
+            onSendTap: () {
+              debugPrint('onSendTap');
+              _viewModel.postMessage(
+                widget.chatArguments.roomId,
+                ChatType.message,
+              );
+            },
+            onTextChanged: (value) {
+              debugPrint(value);
+              _viewModel.onTextChange(value);
             },
           ),
         ],
