@@ -31,8 +31,7 @@ class ChatRoomRepository {
         receiverUser: receiverUser,
         lastMessage: lastMessage.message,
         type: lastMessage.type,
-        lastMessageTime:
-            lastMessage.createdAt.subtract(const Duration(hours: 7)),
+        lastMessageTime: lastMessage.createdAt,
       );
       chatRoomList.add(chatRoomEntity);
     }
