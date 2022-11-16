@@ -1,7 +1,7 @@
 import 'package:batru_house_rental/data/repositories/address/address_repository.dart';
 import 'package:batru_house_rental/data/repositories/article/article_repository.dart';
 import 'package:batru_house_rental/data/repositories/auth/auth_repository.dart';
-import 'package:batru_house_rental/data/repositories/chat/chat_message_repository.dart';
+import 'package:batru_house_rental/data/repositories/chat_message/chat_message_repository.dart';
 import 'package:batru_house_rental/data/repositories/chat_room/chat_room_repository.dart';
 import 'package:batru_house_rental/data/repositories/commune/commune_repository.dart';
 import 'package:batru_house_rental/data/repositories/convenient/convenient_repository.dart';
@@ -25,6 +25,7 @@ import 'package:batru_house_rental/domain/use_case/auth/logout_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/get_chat_message_list_by_room_id_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/get_chat_room_list_by_user_id_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/post_chat_room_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/chat/post_message_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/commune/get_commune_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/convenient/get_convenient_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/convenient_house/post_convenient_house_list_use_case.dart';
@@ -56,6 +57,10 @@ class AppModules {
     /// post chat room use case
     injector.registerLazySingleton<PostChatRoomUseCase>(
         () => PostChatRoomUseCase());
+
+    /// post message use case
+    injector
+        .registerLazySingleton<PostMessageUseCase>(() => PostMessageUseCase());
 
     /// get chat room list by user Id use case
     injector.registerLazySingleton<GetChatRoomListByUserIdUseCase>(

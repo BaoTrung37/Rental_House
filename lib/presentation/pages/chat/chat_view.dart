@@ -1,6 +1,9 @@
 import 'package:batru_house_rental/data/models/chat/chat_response.dart';
+import 'package:batru_house_rental/domain/entities/chat/chat_entity.dart';
 import 'package:batru_house_rental/domain/entities/user/user_entity.dart';
+import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/get_chat_message_list_by_room_id_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/chat/post_message_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/pages/chat/chat_state.dart';
 import 'package:batru_house_rental/presentation/pages/chat/chat_view_model.dart';
@@ -17,6 +20,8 @@ final chatProvider =
     StateNotifierProvider.autoDispose<ChatViewModel, ChatState>(
   (ref) => ChatViewModel(
     injector.get<GetChatMessageListByIdUseCase>(),
+    injector.get<GetCurrentUserInformationUseCase>(),
+    injector.get<PostMessageUseCase>(),
   ),
 );
 
@@ -47,6 +52,7 @@ class _ChatViewState extends ConsumerState<ChatView> {
   bool isShowScroll = false;
   final int _limitIncrement = 20;
   final ScrollController scrollController = ScrollController();
+  final TextEditingController textEditingController = TextEditingController();
 
   @override
   void initState() {
@@ -55,6 +61,20 @@ class _ChatViewState extends ConsumerState<ChatView> {
     });
     scrollController.addListener(_scrollListener);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    textEditingController.dispose();
+    super.dispose();
+  }
+
+  void onSendMessage() {
+    _viewModel.postMessage(
+      textEditingController.text,
+      widget.chatArguments.roomId,
+      ChatType.message,
+    );
   }
 
   void _scrollListener() {
@@ -121,8 +141,13 @@ class _ChatViewState extends ConsumerState<ChatView> {
           const AppDivider(),
           ChatInputView(
             onSendButtonTapped: (value) {
-              // print('text: $value');
+              _viewModel.postMessage(
+                value,
+                widget.chatArguments.roomId,
+                ChatType.message,
+              );
             },
+            controller: textEditingController,
           ),
         ],
       ),

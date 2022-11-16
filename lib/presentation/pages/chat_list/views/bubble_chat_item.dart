@@ -55,8 +55,6 @@ class BubbleChatItem extends StatelessWidget {
   }
 
   Widget _buildTimestampLastMessage(BuildContext context) {
-    debugPrint(
-        'chatRoomEntity.lastMessage.timestamp: ${chatRoomEntity.lastMessageTime.toString()}');
     return Text(
       chatRoomEntity.lastMessageTime.getPublishDatePastFormatString,
       style: AppTextStyles.textSmall.copyWith(

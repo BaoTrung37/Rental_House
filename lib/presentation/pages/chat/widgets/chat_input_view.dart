@@ -1,5 +1,4 @@
 import 'package:batru_house_rental/presentation/resources/resources.dart';
-import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
 import 'package:batru_house_rental/presentation/widgets/buttons/app_button.dart';
 import 'package:batru_house_rental/presentation/widgets/input_text_field/input_text_field.dart';
 import 'package:flutter/material.dart';
@@ -7,17 +6,29 @@ import 'package:flutter/material.dart';
 class ChatInputView extends StatefulWidget {
   const ChatInputView({
     required this.onSendButtonTapped,
-    this.loadingStatus = LoadingStatus.initial,
+    required this.controller,
     Key? key,
   }) : super(key: key);
 
-  final LoadingStatus loadingStatus;
   final ValueChanged<String> onSendButtonTapped;
+  final TextEditingController controller;
   @override
   State<ChatInputView> createState() => _ChatInputViewState();
 }
 
 class _ChatInputViewState extends State<ChatInputView> {
+  late final _textFieldKey = GlobalKey<FormFieldState>();
+  @override
+  void initState() {
+    // TODO: implement initState
+    widget.controller.addListener(() {
+      if (!mounted) {
+        return;
+      }
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -40,34 +51,34 @@ class _ChatInputViewState extends State<ChatInputView> {
       // buttonState: LoadingStatus.initial,
       backgroundColor: Colors.transparent,
       leftIcon: AppIcons.send(),
-      onButtonTap: () {
-        sendMessage();
-        // print('text3: ${widget.controller.text}');
-      },
+      onButtonTap: sendCommend,
     );
   }
 
-  void sendMessage() {
+  void sendCommend() {
     setState(() {
-      // if (_textFieldKey.currentState?.validate() == true) {
-      //   if (widget.controller.text.isNotEmpty) {
-      //     widget.onSendButtonTapped(
-      //       widget.controller.text,
-      //     );
-      //   }
-      //   widget.controller.clear();
-      // }
+      if (widget.controller.text.isNotEmpty) {
+        widget.onSendButtonTapped(
+          widget.controller.text,
+        );
+      }
+      widget.controller.clear();
     });
   }
 
   Widget _buildTextField() => InputTextField.singleLine(
-        placeholder: 'Type a message',
+        placeholder: 'Nhập nội dung',
+        controller: widget.controller,
         onTextChange: (value) {
-          // setState(() {
-          //   widget.controller.text = value!;
-          // });
+          if (value == null) {
+            return;
+          }
+          if (value.isEmpty || value.length == 1) {
+            setState(() {});
+          }
         },
-        onSubmit: sendMessage,
+        textFieldKey: _textFieldKey,
+        onEditingComplete: sendCommend,
         keyboardType: TextInputType.multiline,
         isAutoDisposeController: false,
         isAutoValidateWhenOutFocus: false,
