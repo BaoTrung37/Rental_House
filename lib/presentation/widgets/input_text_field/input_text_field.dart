@@ -37,6 +37,7 @@ class InputTextField extends StatefulWidget {
     this.isAutoDisposeController = true,
     this.isAutoValidateWhenOutFocus = true,
     Key? key,
+    this.onEditingComplete,
   }) : super(key: key);
 
   const InputTextField.singleLine({
@@ -70,6 +71,7 @@ class InputTextField extends StatefulWidget {
     this.isAutoDisposeController = true,
     this.isAutoValidateWhenOutFocus = true,
     Key? key,
+    this.onEditingComplete,
   })  : minHeight = null,
         minLine = 1,
         maxLine = 1,
@@ -107,6 +109,7 @@ class InputTextField extends StatefulWidget {
     this.isAutoDisposeController = true,
     this.isAutoValidateWhenOutFocus = true,
     Key? key,
+    this.onEditingComplete,
   })  : keyboardType = TextInputType.multiline,
         maxLine = null,
         super(key: key);
@@ -114,7 +117,8 @@ class InputTextField extends StatefulWidget {
   final String? initialText;
   final String? description;
   final String? labelText;
-  final VoidCallback? onSubmit;
+  final ValueChanged<String?>? onSubmit;
+  final VoidCallback? onEditingComplete;
   final GlobalKey<FormFieldState>? textFieldKey;
   final FormFieldValidator<String>? validator;
   final List<TextInputFormatter>? inputFormatters;
@@ -243,7 +247,8 @@ class _TextBoxState extends State<InputTextField> {
                     child: TextFormField(
                       key: _textFieldKey,
                       enabled: widget.isActive,
-                      onEditingComplete: widget.onSubmit,
+                      onEditingComplete: widget.onEditingComplete,
+                      onFieldSubmitted: widget.onSubmit,
                       onChanged: (value) {
                         setState(() {
                           _isTextEmpty = value.isEmpty;

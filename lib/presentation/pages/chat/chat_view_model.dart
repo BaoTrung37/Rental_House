@@ -32,25 +32,23 @@ class ChatViewModel extends StateNotifier<ChatState> {
     );
   }
 
-  Future<void> postMessage(String roomId, ChatType chatType) async {
+  Future<void> postMessage(
+      String message, String roomId, ChatType chatType) async {
     try {
-      if (state.message == '') {
+      if (message.isEmpty) {
         return;
       }
       final currentUser = await _getCurrentUserInformationUseCase.run();
       await _postMessageUseCase.run(PostMessageInput(
         chatResponse: ChatResponse(
           createdAt: DateTime.now(),
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
-          message: state.message,
+          id: DateTime.now().microsecondsSinceEpoch.toString(),
+          message: message,
           senderId: currentUser.id,
           type: chatType.value,
         ),
         roomId: roomId,
       ));
-      state = state.copyWith(
-        message: '',
-      );
     } catch (e) {
       debugPrint('ChatViewModel postMess error: $e');
       state = state.copyWith(
@@ -58,26 +56,4 @@ class ChatViewModel extends StateNotifier<ChatState> {
       );
     }
   }
-
-  void onTextChange(String text) {
-    state = state.copyWith(
-      message: text,
-    );
-  }
-
-  // Future<void> initData() async {
-  //   try {
-  //     state = state.copyWith(loadingStatus: LoadingStatus.inProgress);
-  //     final chatList = await _getChatUseCase.run();
-  //     state = state.copyWith(
-  //       loadingStatus: LoadingStatus.success,
-  //       chatList: chatList,
-  //     );
-  //   } catch (e) {
-  //     debugPrint('ChatViewModel initData error: $e');
-  //     state = state.copyWith(
-  //       loadingStatus: LoadingStatus.error,
-  //     );
-  //   }
-  // }
 }

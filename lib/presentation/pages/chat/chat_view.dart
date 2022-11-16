@@ -52,6 +52,7 @@ class _ChatViewState extends ConsumerState<ChatView> {
   bool isShowScroll = false;
   final int _limitIncrement = 20;
   final ScrollController scrollController = ScrollController();
+  final TextEditingController textEditingController = TextEditingController();
 
   @override
   void initState() {
@@ -60,6 +61,23 @@ class _ChatViewState extends ConsumerState<ChatView> {
     });
     scrollController.addListener(_scrollListener);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    textEditingController.dispose();
+    super.dispose();
+  }
+
+  void onSendMessage() {
+    _viewModel.postMessage(
+      textEditingController.text,
+      widget.chatArguments.roomId,
+      ChatType.message,
+    );
+    setState(() {
+      textEditingController.text = '';
+    });
   }
 
   void _scrollListener() {
@@ -125,16 +143,17 @@ class _ChatViewState extends ConsumerState<ChatView> {
           ),
           const AppDivider(),
           ChatInputView(
-            onSendTap: () {
-              debugPrint('onSendTap');
+            onSendButtonTapped: (value) {
               _viewModel.postMessage(
+                value,
                 widget.chatArguments.roomId,
                 ChatType.message,
               );
             },
+            controller: textEditingController,
             onTextChanged: (value) {
-              debugPrint(value);
-              _viewModel.onTextChange(value);
+              // _viewModel.onTextChange(value);
+              textEditingController.text = value;
             },
           ),
         ],

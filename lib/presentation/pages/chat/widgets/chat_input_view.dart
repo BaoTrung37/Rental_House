@@ -6,12 +6,14 @@ import 'package:flutter/material.dart';
 class ChatInputView extends StatefulWidget {
   const ChatInputView({
     required this.onTextChanged,
-    required this.onSendTap,
+    required this.onSendButtonTapped,
+    required this.controller,
     Key? key,
   }) : super(key: key);
 
   final ValueChanged<String> onTextChanged;
-  final VoidCallback onSendTap;
+  final ValueChanged<String> onSendButtonTapped;
+  final TextEditingController controller;
   @override
   State<ChatInputView> createState() => _ChatInputViewState();
 }
@@ -39,15 +41,28 @@ class _ChatInputViewState extends State<ChatInputView> {
       // buttonState: LoadingStatus.initial,
       backgroundColor: Colors.transparent,
       leftIcon: AppIcons.send(),
-      onButtonTap: widget.onSendTap,
+      onButtonTap: sendCommend,
     );
+  }
+
+  void sendCommend() {
+    setState(() {
+      if (widget.controller.text.isNotEmpty) {
+        widget.onSendButtonTapped(
+          widget.controller.text,
+        );
+      }
+      widget.controller.clear();
+    });
   }
 
   Widget _buildTextField() => InputTextField.singleLine(
         placeholder: 'Nhập nội dung',
+        controller: widget.controller,
         onTextChange: (value) {
           widget.onTextChanged.call(value!);
         },
+        onEditingComplete: sendCommend,
         keyboardType: TextInputType.multiline,
         isAutoDisposeController: false,
         isAutoValidateWhenOutFocus: false,
