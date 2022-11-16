@@ -75,9 +75,6 @@ class _ChatViewState extends ConsumerState<ChatView> {
       widget.chatArguments.roomId,
       ChatType.message,
     );
-    setState(() {
-      textEditingController.text = '';
-    });
   }
 
   void _scrollListener() {
@@ -151,10 +148,6 @@ class _ChatViewState extends ConsumerState<ChatView> {
               );
             },
             controller: textEditingController,
-            onTextChanged: (value) {
-              // _viewModel.onTextChange(value);
-              textEditingController.text = value;
-            },
           ),
         ],
       ),

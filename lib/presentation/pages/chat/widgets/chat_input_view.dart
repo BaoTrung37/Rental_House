@@ -5,13 +5,11 @@ import 'package:flutter/material.dart';
 
 class ChatInputView extends StatefulWidget {
   const ChatInputView({
-    required this.onTextChanged,
     required this.onSendButtonTapped,
     required this.controller,
     Key? key,
   }) : super(key: key);
 
-  final ValueChanged<String> onTextChanged;
   final ValueChanged<String> onSendButtonTapped;
   final TextEditingController controller;
   @override
@@ -72,7 +70,12 @@ class _ChatInputViewState extends State<ChatInputView> {
         placeholder: 'Nhập nội dung',
         controller: widget.controller,
         onTextChange: (value) {
-          widget.onTextChanged.call(value!);
+          if (value == null) {
+            return;
+          }
+          if (value.isEmpty || value.length == 1) {
+            setState(() {});
+          }
         },
         textFieldKey: _textFieldKey,
         onEditingComplete: sendCommend,
