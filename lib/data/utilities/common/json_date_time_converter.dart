@@ -11,7 +11,9 @@ class JsonDateTimeConverter implements JsonConverter<DateTime, String> {
       newJson = json.substring(0, json.length - 1);
     }
 
-    return DateTime.parse('${newJson}Z');
+    return DateTime.parse('${newJson}Z')
+        .toLocal()
+        .subtract(const Duration(hours: 7));
   }
 
   @override

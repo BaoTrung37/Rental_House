@@ -19,6 +19,18 @@ class ChatInputView extends StatefulWidget {
 }
 
 class _ChatInputViewState extends State<ChatInputView> {
+  late final _textFieldKey = GlobalKey<FormFieldState>();
+  @override
+  void initState() {
+    // TODO: implement initState
+    widget.controller.addListener(() {
+      if (!mounted) {
+        return;
+      }
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -62,6 +74,7 @@ class _ChatInputViewState extends State<ChatInputView> {
         onTextChange: (value) {
           widget.onTextChanged.call(value!);
         },
+        textFieldKey: _textFieldKey,
         onEditingComplete: sendCommend,
         keyboardType: TextInputType.multiline,
         isAutoDisposeController: false,
