@@ -209,10 +209,10 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
         screenshotUrlList.map(
           (e) {
             final imageId = DateTime.now()
-                .add(const Duration(milliseconds: 13))
+                .add(const Duration(microseconds: 1))
                 .millisecondsSinceEpoch
                 .toString();
-            // debugPrint('imageId: $imageId');
+            debugPrint('imageId: $imageId');
             return ImageHouseResponse(id: imageId, houseId: houseId, url: e);
           },
         ).toList(),
