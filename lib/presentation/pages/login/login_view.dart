@@ -125,7 +125,9 @@ class _LoginViewState extends ConsumerState<LoginView> {
       onButtonTap: () async {
         final isSuccess = await _viewModel.loginSuccess();
         if (isSuccess) {
-          await ref.read(appNavigatorProvider).navigateTo(AppRoutes.mainMenu);
+          await ref
+              .read(appNavigatorProvider)
+              .navigateTo(AppRoutes.mainMenu, shoulClearStack: true);
         }
       },
     );
