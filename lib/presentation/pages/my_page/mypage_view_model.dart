@@ -28,6 +28,11 @@ class MyPageViewModel extends StateNotifier<MyPageState> {
     }
   }
 
+  Future<String> getCurrentUserId() async {
+    final user = await _getUserInformationUseCase.run();
+    return user.id;
+  }
+
   Future<void> logout(VoidCallback? action) async {
     state = state.copyWith(
       status: LoadingStatus.inProgress,

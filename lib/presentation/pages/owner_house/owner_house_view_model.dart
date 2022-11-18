@@ -13,12 +13,11 @@ class OwnerHouseViewModel extends StateNotifier<OwnerHouseState> {
 
   final GetArticlesByUserIdUseCase _getArticlesByUserIdUseCase;
   final GetCurrentUserInformationUseCase _getCurrentUserInformationUseCase;
-  Future<void> initData() async {
+  Future<void> initData(String userId) async {
     try {
       state = state.copyWith(status: LoadingStatus.inProgress);
-      final currentUser = await _getCurrentUserInformationUseCase.run();
-      final houseArticleList =
-          await _getArticlesByUserIdUseCase.run(currentUser.id);
+      // final currentUser = await _getCurrentUserInformationUseCase.run();
+      final houseArticleList = await _getArticlesByUserIdUseCase.run(userId);
       state = state.copyWith(
         houseArticleList: houseArticleList,
         status: LoadingStatus.success,

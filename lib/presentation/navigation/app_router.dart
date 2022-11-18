@@ -111,7 +111,9 @@ class AppRouter {
       case AppRoutes.ownerHouse:
         return MaterialPageRoute(
           settings: settings,
-          builder: (context) => const OwnerHouseView(),
+          builder: (context) => OwnerHouseView(
+            arguments: settings.arguments as OnwerHouseArguments,
+          ),
         );
       default:
         return null;
