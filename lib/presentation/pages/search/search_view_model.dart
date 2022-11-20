@@ -86,9 +86,9 @@ class SearchViewModel extends StateNotifier<SearchState> {
     );
   }
 
-  Future<void> onTypeChanged(String type) async {
+  Future<void> onTypeChanged(String? type) async {
     state = state.copyWith(
-      currentType: state.types.firstWhere(
+      currentType: state.types.firstWhereOrNull(
         (e) => e.name == type,
       ),
     );

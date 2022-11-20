@@ -224,6 +224,15 @@ class _FilterDrawerViewState extends ConsumerState<FilterDrawerView> {
             showSelectedItems: true,
             fit: FlexFit.loose,
           ),
+          clearButtonProps: ClearButtonProps(
+            icon: IconButton(
+              icon: const Icon(Icons.clear),
+              onPressed: () async {
+                await _viewModel.onTypeChanged(null);
+              },
+            ),
+            isVisible: true,
+          ),
           items: _state.types.map((element) => element.name).toList(),
           dropdownDecoratorProps: const DropDownDecoratorProps(
             dropdownSearchDecoration: InputDecoration(
@@ -231,9 +240,10 @@ class _FilterDrawerViewState extends ConsumerState<FilterDrawerView> {
               hintText: 'Bấm để chọn loại phòng',
             ),
           ),
-          onChanged: (value) {
-            _viewModel.onTypeChanged(value!);
+          onChanged: (value) async {
+            await _viewModel.onTypeChanged(value);
           },
+          selectedItem: _state.currentType?.name,
         ),
       ),
     );
