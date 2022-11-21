@@ -17,7 +17,8 @@ import 'package:batru_house_rental/presentation/widgets/cards/info_room_horizont
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final searchProvider = StateNotifierProvider<SearchViewModel, SearchState>(
+final searchProvider =
+    StateNotifierProvider.autoDispose<SearchViewModel, SearchState>(
   (ref) => SearchViewModel(
     injector.get<GetTypeListUseCase>(),
     injector.get<GetProvinceListUseCase>(),
