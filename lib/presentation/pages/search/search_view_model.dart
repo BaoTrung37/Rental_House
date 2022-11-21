@@ -5,6 +5,7 @@ import 'package:batru_house_rental/domain/use_case/province/get_province_list_us
 import 'package:batru_house_rental/domain/use_case/type/get_type_list_use_case.dart';
 import 'package:batru_house_rental/presentation/pages/search/search_state.dart';
 import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -85,33 +86,35 @@ class SearchViewModel extends StateNotifier<SearchState> {
     );
   }
 
-  Future<void> onTypeChanged(String type) async {
+  Future<void> onTypeChanged(String? type) async {
     state = state.copyWith(
-      currentType: state.types.firstWhere(
+      currentType: state.types.firstWhereOrNull(
         (e) => e.name == type,
       ),
     );
   }
 
-  Future<void> onCommuneChanged(String communeName) async {
+  Future<void> onCommuneChanged(String? communeName) async {
     state = state.copyWith(
-      currentCommune: state.communes.firstWhere(
+      currentCommune: state.communes.firstWhereOrNull(
         (e) => e.name == communeName,
       ),
     );
   }
 
-  Future<void> onDistrictChanged(String districtName) async {
+  Future<void> onDistrictChanged(String? districtName) async {
     state = state.copyWith(
-      currentDistrict: state.districts.firstWhere(
+      currentDistrict: state.districts.firstWhereOrNull(
         (e) => e.name == districtName,
       ),
       currentCommune: null,
     );
-    final communes =
-        await _getCommuneListUseCase.run(state.currentDistrict!.id);
-    state = state.copyWith(
-      communes: communes,
-    );
+    if (state.currentDistrict != null) {
+      final communes =
+          await _getCommuneListUseCase.run(state.currentDistrict!.id);
+      state = state.copyWith(
+        communes: communes,
+      );
+    }
   }
 }

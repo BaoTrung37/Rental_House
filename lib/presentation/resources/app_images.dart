@@ -117,4 +117,6 @@ class AppImages {
   static const electricity = '$_path/electricity.png';
 
   static const noImageThumbnail = '$_path/no_image_thumbnail.png';
+
+  static const house = '$_path/house.png';
 }
