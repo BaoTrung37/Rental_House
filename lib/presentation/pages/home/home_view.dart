@@ -38,20 +38,25 @@ class _HomeViewState extends ConsumerState<HomeView> {
   HomeState get _state => ref.watch(_provider);
 
   final ScrollController _scrollController = ScrollController();
-
+  bool isShowPostArticle = false;
   @override
   void initState() {
     Future.delayed(Duration.zero, () async {
       await _viewModel.initData();
     });
+
+    _scrollController.addListener(_scrollListener);
     super.initState();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
+    _scrollController.dispose();
     super.dispose();
   }
+
+  void _scrollListener() {}
 
   @override
   Widget build(BuildContext context) {
@@ -83,21 +88,24 @@ class _HomeViewState extends ConsumerState<HomeView> {
     return Stack(
       children: [
         _buildBody(context),
-        Positioned(
-          bottom: 10,
-          left: 130,
-          height: 40,
-          right: 130,
-          child: AppButton(
-            leftIcon: AppIcons.add(
-              color: Colors.white,
+        if (!isShowPostArticle)
+          Positioned(
+            bottom: 10,
+            left: 130,
+            height: 40,
+            right: 130,
+            child: AppButton(
+              leftIcon: AppIcons.add(
+                color: Colors.white,
+              ),
+              title: 'Đăng bài',
+              onButtonTap: () {
+                ref
+                    .read(appNavigatorProvider)
+                    .navigateTo(AppRoutes.postArticle);
+              },
             ),
-            title: 'Đăng bài',
-            onButtonTap: () {
-              ref.read(appNavigatorProvider).navigateTo(AppRoutes.postArticle);
-            },
           ),
-        ),
       ],
     );
   }
