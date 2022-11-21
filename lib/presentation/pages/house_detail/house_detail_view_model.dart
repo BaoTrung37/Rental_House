@@ -23,11 +23,12 @@ class HouseDetailViewModel extends StateNotifier<HouseDetailState> {
   final GetCurrentUserInformationUseCase _getCurrentUserInformationUseCase;
   final GetArticleListUseCase _getArticleListUseCase;
   final PostChatRoomUseCase _postChatRoomUseCase;
-
+  late String ownerHouseUserId;
   Future<void> init(String houseId) async {
     try {
       state = state.copyWith(status: LoadingStatus.inProgress);
       final article = await _getArticleUseCase.run(houseId);
+      ownerHouseUserId = article.house!.userId;
       final ownerHouse = await _getUserByIdUseCase.run(article.house!.userId);
       final houseArticleRelativeList = await _getArticleListUseCase.run(10);
       state = state.copyWith(
@@ -67,6 +68,10 @@ class HouseDetailViewModel extends StateNotifier<HouseDetailState> {
       state = state.copyWith(status: LoadingStatus.error);
       debugPrint('House detail: $e');
     }
+  }
+
+  Future<String> getOwnerHouseUserId() async {
+    return ownerHouseUserId;
   }
 
   void onMessageChanged(String message) {
