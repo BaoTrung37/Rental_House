@@ -37,6 +37,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
   HomeViewModel get _viewModel => ref.read(_provider.notifier);
   HomeState get _state => ref.watch(_provider);
 
+  final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     Future.delayed(Duration.zero, () async {
@@ -102,6 +104,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
   CustomScrollView _buildBody(BuildContext context) {
     return CustomScrollView(
+      controller: _scrollController,
       slivers: [
         SliverToBoxAdapter(
           child: _buildSlider(context),
