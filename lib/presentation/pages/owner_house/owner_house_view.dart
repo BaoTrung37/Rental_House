@@ -1,6 +1,5 @@
 import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_articles_by_user_id_use_case.dart';
-import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
 import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_view.dart';
@@ -13,29 +12,39 @@ import 'package:batru_house_rental/presentation/widgets/base_app_bar/base_app_ba
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final _provider =
-    StateNotifierProvider.autoDispose<OwnerHouseViewModel, OwnerHouseState>(
-  (ref) => OwnerHouseViewModel(
+final _familyProvider = StateNotifierProvider.family
+    .autoDispose<OwnerHouseViewModel, OwnerHouseState, String>(
+  (ref, argument) => OwnerHouseViewModel(
     injector.get<GetArticlesByUserIdUseCase>(),
-    injector.get<GetCurrentUserInformationUseCase>(),
   ),
 );
 
-class OwnerHouseView extends ConsumerStatefulWidget {
-  const OwnerHouseView({super.key});
+class OnwerHouseArguments {
+  OnwerHouseArguments({
+    required this.userId,
+  });
+  final String userId;
+}
 
+class OwnerHouseView extends ConsumerStatefulWidget {
+  const OwnerHouseView({
+    required this.arguments,
+    Key? key,
+  }) : super(key: key);
+  final OnwerHouseArguments arguments;
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _OwnerHouseViewState();
 }
 
 class _OwnerHouseViewState extends ConsumerState<OwnerHouseView> {
+  late final _provider = _familyProvider(widget.arguments.userId);
   OwnerHouseViewModel get _viewModel => ref.read(_provider.notifier);
   OwnerHouseState get _state => ref.watch(_provider);
 
   @override
   void initState() {
     Future.delayed(Duration.zero, () async {
-      await _viewModel.initData();
+      await _viewModel.initData(widget.arguments.userId);
     });
     super.initState();
   }
@@ -49,7 +58,7 @@ class _OwnerHouseViewState extends ConsumerState<OwnerHouseView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.colors.backgroundSecondary,
-      appBar: const BaseAppBar.titleAndBackButton(title: 'Phòng của tôi'),
+      appBar: const BaseAppBar.titleAndBackButton(title: 'Phòng đã đăng'),
       body: LoadingView(
         status: _state.status,
         child: Padding(
@@ -59,7 +68,7 @@ class _OwnerHouseViewState extends ConsumerState<OwnerHouseView> {
             children: [
               const SizedBox(height: 10),
               Text(
-                'Số phòng của tôi: ${_state.houseArticleList.length}',
+                'Số phòng: ${_state.houseArticleList.length}',
                 style: AppTextStyles.headingXSmall,
               ),
               const SizedBox(height: 10),
