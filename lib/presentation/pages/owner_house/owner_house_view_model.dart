@@ -8,15 +8,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class OwnerHouseViewModel extends StateNotifier<OwnerHouseState> {
   OwnerHouseViewModel(
     this._getArticlesByUserIdUseCase,
-    this._getCurrentUserInformationUseCase,
   ) : super(const OwnerHouseState());
 
   final GetArticlesByUserIdUseCase _getArticlesByUserIdUseCase;
-  final GetCurrentUserInformationUseCase _getCurrentUserInformationUseCase;
   Future<void> initData(String userId) async {
     try {
       state = state.copyWith(status: LoadingStatus.inProgress);
-      // final currentUser = await _getCurrentUserInformationUseCase.run();
       final houseArticleList = await _getArticlesByUserIdUseCase.run(userId);
       state = state.copyWith(
         houseArticleList: houseArticleList,

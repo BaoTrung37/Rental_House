@@ -17,7 +17,6 @@ final _familyProvider = StateNotifierProvider.family
     .autoDispose<OwnerHouseViewModel, OwnerHouseState, String>(
   (ref, argument) => OwnerHouseViewModel(
     injector.get<GetArticlesByUserIdUseCase>(),
-    injector.get<GetCurrentUserInformationUseCase>(),
   ),
 );
 
