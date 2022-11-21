@@ -6,8 +6,13 @@ import 'package:batru_house_rental/data/models/house_type/house_type_response.da
 import 'package:batru_house_rental/data/models/image_house/image_house_response.dart';
 import 'package:batru_house_rental/data/models/type/type_response.dart';
 import 'package:batru_house_rental/domain/entities/article/article_entity.dart';
+import 'package:batru_house_rental/domain/entities/convenient/convenient_entity.dart';
+import 'package:batru_house_rental/domain/entities/house/house_entity.dart';
+import 'package:batru_house_rental/domain/entities/image_house/image_house_entity.dart';
+import 'package:batru_house_rental/domain/entities/type/type_entity.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_article_filter_list_use_case.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 class ArticleRepository {
   final _fireStore = FirebaseFirestore.instance;
@@ -122,56 +127,70 @@ class ArticleRepository {
         .get();
 
     final articles = <ArticleEntity>[];
-    for (final house in houseSnapshot.docs) {
-      final imageHouseSnapshot = await _fireStore
-          .collection('imageHouse')
-          .where('houseId', isEqualTo: house.id)
-          .get();
-      final convenientHouseSnapshot = await _fireStore
-          .collection('convenientHouse')
-          .where('houseId', isEqualTo: house.id)
-          .get();
-      final houseTypeSnapshot = await _fireStore
-          .collection('houseType')
-          .where('houseId', isEqualTo: house.id)
-          .limit(1)
-          .get();
-      final houseEntity = HouseResponse.fromJson(house.data()).toEntity();
-      final houseTypeResponse = houseTypeSnapshot.docs.map((e) {
-        return HouseTypeResponse.fromJson(e.data());
-      });
+    try {
+      for (final house in houseSnapshot.docs) {
+        HouseEntity houseEntity;
+        TypeEntity type;
+        List<ImageHouseEntity> imageList;
+        List<ConvenientEntity> convenientList;
+        try {
+          final imageHouseSnapshot = await _fireStore
+              .collection('imageHouse')
+              .where('houseId', isEqualTo: house.id)
+              .get();
+          final convenientHouseSnapshot = await _fireStore
+              .collection('convenientHouse')
+              .where('houseId', isEqualTo: house.id)
+              .get();
+          final houseTypeSnapshot = await _fireStore
+              .collection('houseType')
+              .where('houseId', isEqualTo: house.id)
+              .limit(1)
+              .get();
+          houseEntity = HouseResponse.fromJson(house.data()).toEntity();
+          final houseTypeResponse = houseTypeSnapshot.docs.map((e) {
+            return HouseTypeResponse.fromJson(e.data());
+          });
 
-      final type = _types
-          .firstWhere((element) => element.id == houseTypeResponse.first.typeId)
-          .toEntity();
+          type = _types
+              .firstWhere(
+                  (element) => element.id == houseTypeResponse.first.typeId)
+              .toEntity();
 
-      final imageList = imageHouseSnapshot.docs
-          .map(
-            (e) => ImageHouseResponse.fromJson(e.data()).toEntity(),
-          )
-          .toList();
-      //
-      final convenienHouseResponse = convenientHouseSnapshot.docs
-          .map(
-            (e) => ConvenientHouseResponse.fromJson(e.data()),
-          )
-          .toList();
+          imageList = imageHouseSnapshot.docs
+              .map(
+                (e) => ImageHouseResponse.fromJson(e.data()).toEntity(),
+              )
+              .toList();
+          //
+          final convenienHouseResponse = convenientHouseSnapshot.docs
+              .map(
+                (e) => ConvenientHouseResponse.fromJson(e.data()),
+              )
+              .toList();
 
-      final convenientList = convenienHouseResponse
-          .map(
-            (e) => _convenients
-                .firstWhere((element) => element.id == e.convenientId)
-                .toEntity(),
-          )
-          .toList();
+          convenientList = convenienHouseResponse
+              .map(
+                (e) => _convenients
+                    .firstWhere((element) => element.id == e.convenientId)
+                    .toEntity(),
+              )
+              .toList();
+        } catch (e) {
+          debugPrint(e.toString());
+          continue;
+        }
 
-      articles.add(ArticleEntity(
-        id: houseEntity.id,
-        house: houseEntity,
-        imageList: imageList,
-        convenientList: convenientList,
-        type: type,
-      ));
+        articles.add(ArticleEntity(
+          id: houseEntity.id,
+          house: houseEntity,
+          imageList: imageList,
+          convenientList: convenientList,
+          type: type,
+        ));
+      }
+    } catch (e) {
+      debugPrint(e.toString());
     }
 
     return articles;
@@ -184,56 +203,70 @@ class ArticleRepository {
         .get();
 
     final articles = <ArticleEntity>[];
-    for (final house in houseSnapshot.docs) {
-      final imageHouseSnapshot = await _fireStore
-          .collection('imageHouse')
-          .where('houseId', isEqualTo: house.id)
-          .get();
-      final convenientHouseSnapshot = await _fireStore
-          .collection('convenientHouse')
-          .where('houseId', isEqualTo: house.id)
-          .get();
-      final houseTypeSnapshot = await _fireStore
-          .collection('houseType')
-          .where('houseId', isEqualTo: house.id)
-          .limit(1)
-          .get();
-      final houseEntity = HouseResponse.fromJson(house.data()).toEntity();
-      final houseTypeResponse = houseTypeSnapshot.docs.map((e) {
-        return HouseTypeResponse.fromJson(e.data());
-      });
+    try {
+      for (final house in houseSnapshot.docs) {
+        HouseEntity houseEntity;
+        TypeEntity type;
+        List<ImageHouseEntity> imageList;
+        List<ConvenientEntity> convenientList;
+        try {
+          final imageHouseSnapshot = await _fireStore
+              .collection('imageHouse')
+              .where('houseId', isEqualTo: house.id)
+              .get();
+          final convenientHouseSnapshot = await _fireStore
+              .collection('convenientHouse')
+              .where('houseId', isEqualTo: house.id)
+              .get();
+          final houseTypeSnapshot = await _fireStore
+              .collection('houseType')
+              .where('houseId', isEqualTo: house.id)
+              .limit(1)
+              .get();
+          houseEntity = HouseResponse.fromJson(house.data()).toEntity();
+          final houseTypeResponse = houseTypeSnapshot.docs.map((e) {
+            return HouseTypeResponse.fromJson(e.data());
+          });
 
-      final type = _types
-          .firstWhere((element) => element.id == houseTypeResponse.first.typeId)
-          .toEntity();
+          type = _types
+              .firstWhere(
+                  (element) => element.id == houseTypeResponse.first.typeId)
+              .toEntity();
 
-      final imageList = imageHouseSnapshot.docs
-          .map(
-            (e) => ImageHouseResponse.fromJson(e.data()).toEntity(),
-          )
-          .toList();
-      //
-      final convenienHouseResponse = convenientHouseSnapshot.docs
-          .map(
-            (e) => ConvenientHouseResponse.fromJson(e.data()),
-          )
-          .toList();
+          imageList = imageHouseSnapshot.docs
+              .map(
+                (e) => ImageHouseResponse.fromJson(e.data()).toEntity(),
+              )
+              .toList();
+          //
+          final convenienHouseResponse = convenientHouseSnapshot.docs
+              .map(
+                (e) => ConvenientHouseResponse.fromJson(e.data()),
+              )
+              .toList();
 
-      final convenientList = convenienHouseResponse
-          .map(
-            (e) => _convenients
-                .firstWhere((element) => element.id == e.convenientId)
-                .toEntity(),
-          )
-          .toList();
+          convenientList = convenienHouseResponse
+              .map(
+                (e) => _convenients
+                    .firstWhere((element) => element.id == e.convenientId)
+                    .toEntity(),
+              )
+              .toList();
+        } catch (e) {
+          debugPrint(e.toString());
+          continue;
+        }
 
-      articles.add(ArticleEntity(
-        id: houseEntity.id,
-        house: houseEntity,
-        imageList: imageList,
-        convenientList: convenientList,
-        type: type,
-      ));
+        articles.add(ArticleEntity(
+          id: houseEntity.id,
+          house: houseEntity,
+          imageList: imageList,
+          convenientList: convenientList,
+          type: type,
+        ));
+      }
+    } catch (e) {
+      debugPrint(e.toString());
     }
 
     return articles;

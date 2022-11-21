@@ -13,6 +13,7 @@ import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_
 import 'package:batru_house_rental/presentation/pages/house_detail/widgets/convenient_item.dart';
 import 'package:batru_house_rental/presentation/pages/house_detail/widgets/convenient_list_item.dart';
 import 'package:batru_house_rental/presentation/pages/house_detail/widgets/relative_house_item_view.dart';
+import 'package:batru_house_rental/presentation/pages/owner_house/owner_house_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/utilities/helper/date_format_helper.dart';
 import 'package:batru_house_rental/presentation/utilities/helper/number_format_helper.dart';
@@ -389,7 +390,12 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
                     Icons.arrow_forward_ios_sharp,
                     size: 16,
                   ),
-                  onPressed: () {},
+                  onPressed: () async {
+                    final userId = await _viewModel.getOwnerHouseUserId();
+                    await ref.read(appNavigatorProvider).navigateTo(
+                        AppRoutes.ownerHouse,
+                        arguments: OnwerHouseArguments(userId: userId));
+                  },
                 )
               ],
             ),
