@@ -32,6 +32,7 @@ import 'package:batru_house_rental/domain/use_case/convenient_house/post_conveni
 import 'package:batru_house_rental/domain/use_case/district/get_district_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/house/get_house_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/house/post_house_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/house/remove_house_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/house_type/post_house_type_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/image_house/get_image_house_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/image_house/post_image_house_list_use_case.dart';
@@ -139,6 +140,10 @@ class AppModules {
 
     /// post house use case
     injector.registerLazySingleton<PostHouseUseCase>(() => PostHouseUseCase());
+
+    /// remove house use case
+    injector
+        .registerLazySingleton<RemoveHouseUseCase>(() => RemoveHouseUseCase());
 
     /// image house repository
     injector.registerLazySingleton<ImageHouseRepository>(

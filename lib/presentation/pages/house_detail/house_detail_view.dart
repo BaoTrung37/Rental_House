@@ -6,6 +6,7 @@ import 'package:batru_house_rental/domain/use_case/article/get_article_use_case.
 import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_user_by_id_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/post_chat_room_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/house/remove_house_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
 import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_state.dart';
@@ -35,6 +36,7 @@ final _familyProvider = StateNotifierProvider.autoDispose
     injector.get<GetCurrentUserInformationUseCase>(),
     injector.get<GetArticleListUseCase>(),
     injector.get<PostChatRoomUseCase>(),
+    injector.get<RemoveHouseUseCase>(),
   ),
 );
 

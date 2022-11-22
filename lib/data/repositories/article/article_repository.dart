@@ -119,6 +119,42 @@ class ArticleRepository {
     );
   }
 
+  Future<void> removeArticleById(String houseId) async {
+    await _fireStore.collection('house').doc(houseId).delete().then(
+        (value) => debugPrint('Remove house: $houseId'),
+        onError: (e) => debugPrint('Error updating document $e'));
+    await _fireStore
+        .collection('imageHouse')
+        .where('houseId', isEqualTo: houseId)
+        .get()
+        .then(
+          (value) => value.docs.map(
+            (e) => _fireStore.collection('imageHouse').doc(e.id).delete(),
+          ),
+          onError: (e) => debugPrint('Error updating document $e'),
+        );
+    await _fireStore
+        .collection('convenientHouse')
+        .where('houseId', isEqualTo: houseId)
+        .get()
+        .then(
+          (value) => value.docs.map(
+            (e) => _fireStore.collection('convenientHouse').doc(e.id).delete(),
+          ),
+          onError: (e) => debugPrint('Error updating document $e'),
+        );
+    await _fireStore
+        .collection('houseType')
+        .where('houseId', isEqualTo: houseId)
+        .get()
+        .then(
+          (value) => value.docs.map(
+            (e) => _fireStore.collection('houseType').doc(e.id).delete(),
+          ),
+          onError: (e) => debugPrint('Error updating document $e'),
+        );
+  }
+
   Future<List<ArticleEntity>> getArticles(int limit) async {
     final houseSnapshot = await _fireStore
         .collection('house')
