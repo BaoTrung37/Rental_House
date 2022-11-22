@@ -10,7 +10,6 @@ import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_
 import 'package:batru_house_rental/presentation/pages/search/search_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/widgets/app_indicator/loading_view.dart';
-import 'package:batru_house_rental/presentation/widgets/buttons/app_button.dart';
 import 'package:batru_house_rental/presentation/widgets/cards/info_room_horizontal_small_card_item.dart';
 import 'package:batru_house_rental/presentation/widgets/infinite_list/refresh_view.dart';
 import 'package:flutter/material.dart';
@@ -37,18 +36,35 @@ class _HomeViewState extends ConsumerState<HomeView> {
   HomeViewModel get _viewModel => ref.read(_provider.notifier);
   HomeState get _state => ref.watch(_provider);
 
+  final ScrollController _scrollController = ScrollController();
+  bool isShowPostArticle = false;
   @override
   void initState() {
     Future.delayed(Duration.zero, () async {
       await _viewModel.initData();
     });
+
+    _scrollController.addListener(_scrollListener);
     super.initState();
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
+    _scrollController.dispose();
     super.dispose();
+  }
+
+  void _scrollListener() {
+    if (_scrollController.offset >= _scrollController.position.extentAfter) {
+      setState(() {
+        isShowPostArticle = true;
+      });
+    } else {
+      setState(() {
+        isShowPostArticle = false;
+      });
+    }
   }
 
   @override
@@ -81,27 +97,31 @@ class _HomeViewState extends ConsumerState<HomeView> {
     return Stack(
       children: [
         _buildBody(context),
-        Positioned(
-          bottom: 10,
-          left: 130,
-          height: 40,
-          right: 130,
-          child: AppButton(
-            leftIcon: AppIcons.add(
-              color: Colors.white,
+        if (!isShowPostArticle)
+          Positioned(
+            bottom: 10,
+            right: 10,
+            child: GestureDetector(
+              onTap: () {
+                ref
+                    .read(appNavigatorProvider)
+                    .navigateTo(AppRoutes.postArticle);
+              },
+              child: CircleAvatar(
+                minRadius: 24,
+                child: AppIcons.add(
+                  color: Colors.white,
+                ),
+              ),
             ),
-            title: 'Đăng bài',
-            onButtonTap: () {
-              ref.read(appNavigatorProvider).navigateTo(AppRoutes.postArticle);
-            },
           ),
-        ),
       ],
     );
   }
 
   CustomScrollView _buildBody(BuildContext context) {
     return CustomScrollView(
+      controller: _scrollController,
       slivers: [
         SliverToBoxAdapter(
           child: _buildSlider(context),

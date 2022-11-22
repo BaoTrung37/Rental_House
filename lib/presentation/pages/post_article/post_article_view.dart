@@ -26,6 +26,7 @@ import 'package:batru_house_rental/presentation/widgets/base_app_bar/base_app_ba
 import 'package:batru_house_rental/presentation/widgets/base_form/base_form_mixin.dart';
 import 'package:batru_house_rental/presentation/widgets/buttons/app_button.dart';
 import 'package:batru_house_rental/presentation/widgets/input_text_field/input_text_field.dart';
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -129,25 +130,25 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
         Step(
           state: setStepState(0),
           title: const Text(''),
-          // label: const Text('Thông tin'),
+          label: const Text('Thông tin'),
           content: _buildInfomationInputView(),
         ),
         Step(
           state: setStepState(1),
           title: const Text(''),
-          // label: const Text('Địa chỉ'),
+          label: const Text('Địa chỉ'),
           content: _buildLocationInputView(),
         ),
         Step(
           state: setStepState(2),
           title: const Text(''),
-          // label: const Text('Tiện ích'),
+          label: const Text('Tiện ích'),
           content: _buildConvenientInputView(),
         ),
         Step(
           state: setStepState(3),
           title: const Text(''),
-          // label: const Text('Xác nhận'),
+          label: const Text('Xác nhận'),
           content: _buildConfirmInputView(),
         ),
       ],
@@ -205,10 +206,17 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           labelText: 'Số điện thoại',
           placeholder: 'Nhập số điện thoại',
           keyboardType: TextInputType.phone,
+          inputFormatters: [
+            CurrencyTextInputFormatter(
+              symbol: '',
+              decimalDigits: 0,
+            ),
+          ],
           textInputAction: TextInputAction.next,
           validator: Validator().required().phone().build(),
           onTextChange: (value) {
             _viewModel.setPhoneNumber(value!);
+            // debugPrint(value);
           },
         ),
         const SizedBox(height: 8),
@@ -416,6 +424,12 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           placeholder: 'Số lượng người tối đa có thể chứa',
           keyboardType: TextInputType.number,
           initialText: houseState?.capacity.toString(),
+          inputFormatters: [
+            CurrencyTextInputFormatter(
+              symbol: '',
+              decimalDigits: 0,
+            ),
+          ],
           textInputAction: TextInputAction.next,
           validator: Validator().required().build(),
           onTextChange: (value) {
@@ -428,6 +442,12 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           placeholder: 'Diện tích phòng',
           initialText: houseState?.area.toString(),
           keyboardType: TextInputType.number,
+          inputFormatters: [
+            CurrencyTextInputFormatter(
+              symbol: '',
+              decimalDigits: 0,
+            ),
+          ],
           textInputAction: TextInputAction.next,
           validator: Validator().required().build(),
           onTextChange: (value) {
@@ -457,6 +477,12 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           placeholder: 'Diện tích phòng',
           initialText: state.house?.rentalPrice.toString(),
           keyboardType: TextInputType.number,
+          inputFormatters: [
+            CurrencyTextInputFormatter(
+              symbol: '',
+              decimalDigits: 0,
+            ),
+          ],
           textInputAction: TextInputAction.next,
           validator: Validator().required().build(),
           onTextChange: (value) {
@@ -469,6 +495,12 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           placeholder: 'Số tháng cần đặt cọc',
           initialText: state.house?.depositMonth.toString(),
           keyboardType: TextInputType.number,
+          inputFormatters: [
+            CurrencyTextInputFormatter(
+              symbol: '',
+              decimalDigits: 0,
+            ),
+          ],
           textInputAction: TextInputAction.next,
           onTextChange: (value) {
             _viewModel.setDipositPrice(value!);
@@ -480,6 +512,12 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           placeholder: 'Tiền điện',
           initialText: state.house?.electricPrice.toString(),
           keyboardType: TextInputType.number,
+          inputFormatters: [
+            CurrencyTextInputFormatter(
+              symbol: '',
+              decimalDigits: 0,
+            ),
+          ],
           textInputAction: TextInputAction.next,
           validator: Validator().required().build(),
           onTextChange: (value) {
@@ -492,6 +530,12 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           placeholder: 'Tiền nước',
           initialText: state.house?.waterPrice.toString(),
           keyboardType: TextInputType.number,
+          inputFormatters: [
+            CurrencyTextInputFormatter(
+              symbol: '',
+              decimalDigits: 0,
+            ),
+          ],
           textInputAction: TextInputAction.next,
           validator: Validator().required().build(),
           onTextChange: (value) {
@@ -504,6 +548,12 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           placeholder: 'Tiền nước',
           initialText: state.house?.internetPrice.toString(),
           keyboardType: TextInputType.number,
+          inputFormatters: [
+            CurrencyTextInputFormatter(
+              symbol: '',
+              decimalDigits: 0,
+            ),
+          ],
           textInputAction: TextInputAction.next,
           validator: Validator().required().build(),
           onTextChange: (value) {
@@ -529,6 +579,12 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
             placeholder: 'Tiền gửi xe',
             initialText: state.house?.parkingPrice.toString(),
             keyboardType: TextInputType.number,
+            inputFormatters: [
+              CurrencyTextInputFormatter(
+                symbol: '',
+                decimalDigits: 0,
+              ),
+            ],
             textInputAction: TextInputAction.next,
             validator: Validator().required().build(),
             onTextChange: (value) {

@@ -1,5 +1,6 @@
 import 'package:batru_house_rental/domain/entities/article/article_entity.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
+import 'package:batru_house_rental/presentation/utilities/helper/number_format_helper.dart';
 import 'package:flutter/material.dart';
 
 class InfoRoomHorizontalCardItemItem extends StatelessWidget {
@@ -100,7 +101,7 @@ class InfoRoomHorizontalCardItemItem extends StatelessWidget {
           style: AppTextStyles.labelSmallLight,
         ),
         Text(
-          '${articleEntity?.house?.rentalPrice.toString()} VND/phòng',
+          '${NumberFormatHelper.formatPrice(articleEntity?.house?.rentalPrice ?? 0)} VND',
           style: AppTextStyles.labelSmall.copyWith(
             color: context.colors.contentSpecialText,
           ),
