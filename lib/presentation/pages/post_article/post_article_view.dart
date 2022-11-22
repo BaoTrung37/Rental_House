@@ -206,12 +206,6 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           labelText: 'Số điện thoại',
           placeholder: 'Nhập số điện thoại',
           keyboardType: TextInputType.phone,
-          inputFormatters: [
-            CurrencyTextInputFormatter(
-              symbol: '',
-              decimalDigits: 0,
-            ),
-          ],
           textInputAction: TextInputAction.next,
           validator: Validator().required().phone().build(),
           onTextChange: (value) {
