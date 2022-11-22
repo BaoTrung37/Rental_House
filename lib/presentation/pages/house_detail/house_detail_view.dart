@@ -115,12 +115,53 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
         Expanded(
           child: _buildBodyView(context),
         ),
-        _buildBottomApp(context)
+        if (state.isYourHouse == true)
+          _buildOwnerBottomApp(context)
+        else
+          _buildCustomerBottomApp(context),
       ],
     );
   }
 
-  Widget _buildBottomApp(BuildContext context) {
+  Widget _buildOwnerBottomApp(BuildContext context) {
+    return Container(
+      height: 60,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: context.colors.backgroundSecondary,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            AppButton(
+              onButtonTap: () {},
+              leftIcon: const Icon(
+                Icons.settings,
+                size: 16,
+                color: Colors.white,
+              ),
+              title: 'Sửa',
+              backgroundColor: context.colors.contentEntry,
+            ),
+            AppButton(
+              onButtonTap: () {},
+              leftIcon: const Icon(
+                Icons.remove_circle_outline_sharp,
+                size: 16,
+                color: Colors.white,
+              ),
+              title: 'Xoá',
+              backgroundColor: context.colors.error,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCustomerBottomApp(BuildContext context) {
     return Container(
       height: 60,
       width: double.infinity,
@@ -180,17 +221,17 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
               ),
               title: 'Chat',
             ),
-            if (state.article?.house?.depositMonth != 0)
-              AppButton(
-                onButtonTap: () {},
-                leftIcon: const Icon(
-                  Icons.money_off_csred_outlined,
-                  color: Colors.white,
-                  size: 16,
-                ),
-                title: 'Đặt chỗ',
-                backgroundColor: context.colors.contentAlert,
+            // if (state.article?.house?.depositMonth != 0)
+            AppButton(
+              onButtonTap: () {},
+              leftIcon: const Icon(
+                Icons.money_off_csred_outlined,
+                color: Colors.white,
+                size: 16,
               ),
+              title: 'Đặt chỗ',
+              backgroundColor: context.colors.contentAlert,
+            ),
             AppButton(
               onButtonTap: () {},
               leftIcon: const Icon(

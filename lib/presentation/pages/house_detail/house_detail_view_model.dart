@@ -28,6 +28,7 @@ class HouseDetailViewModel extends StateNotifier<HouseDetailState> {
     try {
       state = state.copyWith(status: LoadingStatus.inProgress);
       final article = await _getArticleUseCase.run(houseId);
+      final currentUser = await _getCurrentUserInformationUseCase.run();
       ownerHouseUserId = article.house!.userId;
       final ownerHouse = await _getUserByIdUseCase.run(article.house!.userId);
       final houseArticleRelativeList = await _getArticleListUseCase.run(10);
@@ -35,6 +36,7 @@ class HouseDetailViewModel extends StateNotifier<HouseDetailState> {
         article: article,
         onwerHouse: ownerHouse,
         houseArticleRelativeList: houseArticleRelativeList,
+        isYourHouse: currentUser.id == ownerHouseUserId,
         status: LoadingStatus.success,
       );
     } catch (e) {
