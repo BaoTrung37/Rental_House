@@ -10,7 +10,6 @@ import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_
 import 'package:batru_house_rental/presentation/pages/search/search_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/widgets/app_indicator/loading_view.dart';
-import 'package:batru_house_rental/presentation/widgets/buttons/app_button.dart';
 import 'package:batru_house_rental/presentation/widgets/cards/info_room_horizontal_small_card_item.dart';
 import 'package:batru_house_rental/presentation/widgets/infinite_list/refresh_view.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +55,17 @@ class _HomeViewState extends ConsumerState<HomeView> {
     super.dispose();
   }
 
-  void _scrollListener() {}
+  void _scrollListener() {
+    if (_scrollController.offset >= _scrollController.position.extentAfter) {
+      setState(() {
+        isShowPostArticle = true;
+      });
+    } else {
+      setState(() {
+        isShowPostArticle = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,19 +100,19 @@ class _HomeViewState extends ConsumerState<HomeView> {
         if (!isShowPostArticle)
           Positioned(
             bottom: 10,
-            left: 130,
-            height: 40,
-            right: 130,
-            child: AppButton(
-              leftIcon: AppIcons.add(
-                color: Colors.white,
-              ),
-              title: 'Đăng bài',
-              onButtonTap: () {
+            right: 10,
+            child: GestureDetector(
+              onTap: () {
                 ref
                     .read(appNavigatorProvider)
                     .navigateTo(AppRoutes.postArticle);
               },
+              child: CircleAvatar(
+                minRadius: 24,
+                child: AppIcons.add(
+                  color: Colors.white,
+                ),
+              ),
             ),
           ),
       ],
