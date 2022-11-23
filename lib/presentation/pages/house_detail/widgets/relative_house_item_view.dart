@@ -24,7 +24,7 @@ class RelativeHouseItemView extends StatelessWidget {
               aspectRatio: 16 / 9,
               child: Image.network(
                 articleEntity.imageList.first.url,
-                fit: BoxFit.fill,
+                fit: BoxFit.cover,
               ),
             ),
           ),

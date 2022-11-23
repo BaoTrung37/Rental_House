@@ -6,6 +6,7 @@ import 'package:batru_house_rental/domain/use_case/article/get_article_use_case.
 import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_user_by_id_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/post_chat_room_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/house/remove_house_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
 import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_state.dart';
@@ -35,6 +36,7 @@ final _familyProvider = StateNotifierProvider.autoDispose
     injector.get<GetCurrentUserInformationUseCase>(),
     injector.get<GetArticleListUseCase>(),
     injector.get<PostChatRoomUseCase>(),
+    injector.get<RemoveHouseUseCase>(),
   ),
 );
 
@@ -115,12 +117,53 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
         Expanded(
           child: _buildBodyView(context),
         ),
-        _buildBottomApp(context)
+        if (state.isYourHouse == true)
+          _buildOwnerBottomApp(context)
+        else
+          _buildCustomerBottomApp(context),
       ],
     );
   }
 
-  Widget _buildBottomApp(BuildContext context) {
+  Widget _buildOwnerBottomApp(BuildContext context) {
+    return Container(
+      height: 60,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: context.colors.backgroundSecondary,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            AppButton(
+              onButtonTap: () {},
+              leftIcon: const Icon(
+                Icons.settings,
+                size: 16,
+                color: Colors.white,
+              ),
+              title: 'Sửa',
+              backgroundColor: context.colors.contentEntry,
+            ),
+            AppButton(
+              onButtonTap: () {},
+              leftIcon: const Icon(
+                Icons.remove_circle_outline_sharp,
+                size: 16,
+                color: Colors.white,
+              ),
+              title: 'Xoá',
+              backgroundColor: context.colors.error,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCustomerBottomApp(BuildContext context) {
     return Container(
       height: 60,
       width: double.infinity,
@@ -180,17 +223,17 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
               ),
               title: 'Chat',
             ),
-            if (state.article?.house?.depositMonth != 0)
-              AppButton(
-                onButtonTap: () {},
-                leftIcon: const Icon(
-                  Icons.money_off_csred_outlined,
-                  color: Colors.white,
-                  size: 16,
-                ),
-                title: 'Đặt chỗ',
-                backgroundColor: context.colors.contentAlert,
+            // if (state.article?.house?.depositMonth != 0)
+            AppButton(
+              onButtonTap: () {},
+              leftIcon: const Icon(
+                Icons.money_off_csred_outlined,
+                color: Colors.white,
+                size: 16,
               ),
+              title: 'Đặt chỗ',
+              backgroundColor: context.colors.contentAlert,
+            ),
             AppButton(
               onButtonTap: () {},
               leftIcon: const Icon(

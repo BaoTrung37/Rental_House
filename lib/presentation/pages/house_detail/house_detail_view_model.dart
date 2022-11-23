@@ -4,6 +4,7 @@ import 'package:batru_house_rental/domain/use_case/article/get_article_use_case.
 import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_user_by_id_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/post_chat_room_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/house/remove_house_use_case.dart';
 import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_state.dart';
 import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ class HouseDetailViewModel extends StateNotifier<HouseDetailState> {
     this._getCurrentUserInformationUseCase,
     this._getArticleListUseCase,
     this._postChatRoomUseCase,
+    this._removeHouseUseCase,
   ) : super(const HouseDetailState());
 
   final GetArticleUseCase _getArticleUseCase;
@@ -23,11 +25,13 @@ class HouseDetailViewModel extends StateNotifier<HouseDetailState> {
   final GetCurrentUserInformationUseCase _getCurrentUserInformationUseCase;
   final GetArticleListUseCase _getArticleListUseCase;
   final PostChatRoomUseCase _postChatRoomUseCase;
+  final RemoveHouseUseCase _removeHouseUseCase;
   late String ownerHouseUserId;
   Future<void> init(String houseId) async {
     try {
       state = state.copyWith(status: LoadingStatus.inProgress);
       final article = await _getArticleUseCase.run(houseId);
+      final currentUser = await _getCurrentUserInformationUseCase.run();
       ownerHouseUserId = article.house!.userId;
       final ownerHouse = await _getUserByIdUseCase.run(article.house!.userId);
       final houseArticleRelativeList = await _getArticleListUseCase.run(10);
@@ -35,12 +39,17 @@ class HouseDetailViewModel extends StateNotifier<HouseDetailState> {
         article: article,
         onwerHouse: ownerHouse,
         houseArticleRelativeList: houseArticleRelativeList,
+        isYourHouse: currentUser.id == ownerHouseUserId,
         status: LoadingStatus.success,
       );
     } catch (e) {
       state = state.copyWith(status: LoadingStatus.error);
       debugPrint('House detail: $e');
     }
+  }
+
+  Future<void> onRemoveHouse() async{
+    
   }
 
   Future<void> onSendMessage() async {

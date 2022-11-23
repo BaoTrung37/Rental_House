@@ -34,8 +34,8 @@ class InputImageView extends StatelessWidget {
 
   Widget _buildImageItemView(
     File screenshotPath, {
-    double height = 150,
-    double width = 150,
+    double height = 130,
+    double width = 130,
   }) {
     return SizedBox(
       width: width,

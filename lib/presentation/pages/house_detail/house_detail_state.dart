@@ -14,5 +14,6 @@ class HouseDetailState with _$HouseDetailState {
     @Default('') String message,
     ArticleEntity? article,
     UserEntity? onwerHouse,
+    @Default(false) isYourHouse,
   }) = _HouseDetailState;
 }

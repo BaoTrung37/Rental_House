@@ -206,12 +206,6 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           labelText: 'Số điện thoại',
           placeholder: 'Nhập số điện thoại',
           keyboardType: TextInputType.phone,
-          inputFormatters: [
-            CurrencyTextInputFormatter(
-              symbol: '',
-              decimalDigits: 0,
-            ),
-          ],
           textInputAction: TextInputAction.next,
           validator: Validator().required().phone().build(),
           onTextChange: (value) {
@@ -343,6 +337,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           onChanged: (value) async {
             await _viewModel.onDistrictChanged(value!);
           },
+          selectedItem: state.currentDistrict?.name,
         ),
         DropdownSearch<String>(
           popupProps: const PopupProps.menu(
@@ -358,6 +353,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           onChanged: (value) {
             _viewModel.onCommuneChanged(value!);
           },
+          selectedItem: state.currentCommune?.name,
         ),
         const SizedBox(height: 8),
         InputTextField.singleLine(
