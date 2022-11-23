@@ -235,7 +235,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
     try {
       state = state.copyWith(
         house: state.house?.copyWith(
-          capacity: int.parse(capacity),
+          capacity: int.parse(capacity.replaceAll(',', '')),
         ),
       );
     } on Exception catch (e) {
@@ -247,7 +247,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
     try {
       state = state.copyWith(
         house: state.house?.copyWith(
-          area: int.parse(area),
+          area: int.parse(area.replaceAll(',', '')),
         ),
       );
     } on Exception catch (e) {
@@ -259,7 +259,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
     try {
       state = state.copyWith(
         house: state.house?.copyWith(
-          rentalPrice: int.parse(rentalPrice),
+          rentalPrice: int.parse(rentalPrice.replaceAll(',', '')),
         ),
       );
     } on Exception catch (e) {
@@ -271,7 +271,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
     try {
       state = state.copyWith(
         house: state.house?.copyWith(
-          depositMonth: int.parse(depositPrice),
+          depositMonth: int.parse(depositPrice.replaceAll(',', '')),
         ),
       );
     } on Exception catch (e) {
@@ -283,7 +283,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
     try {
       state = state.copyWith(
         house: state.house?.copyWith(
-          electricPrice: int.parse(electricPrice),
+          electricPrice: int.parse(electricPrice.replaceAll(',', '')),
         ),
       );
     } on Exception catch (e) {
@@ -295,7 +295,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
     try {
       state = state.copyWith(
         house: state.house?.copyWith(
-          waterPrice: int.parse(waterPrice),
+          waterPrice: int.parse(waterPrice.replaceAll(',', '')),
         ),
       );
     } on Exception catch (e) {
@@ -307,7 +307,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
     try {
       state = state.copyWith(
         house: state.house?.copyWith(
-          internetPrice: int.parse(internetPrice),
+          internetPrice: int.parse(internetPrice.replaceAll(',', '')),
         ),
       );
     } on Exception catch (e) {
@@ -319,7 +319,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
     try {
       state = state.copyWith(
         house: state.house?.copyWith(
-          parkingPrice: int.parse(parkingPrice),
+          parkingPrice: int.parse(parkingPrice.replaceAll(',', '')),
         ),
       );
     } on Exception catch (e) {
