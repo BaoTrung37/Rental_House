@@ -1,13 +1,11 @@
 import 'dart:io';
 
-import 'package:batru_house_rental/data/models/address/address_reponse.dart';
 import 'package:batru_house_rental/data/models/convenient_house/convenient_house_reponse.dart';
 import 'package:batru_house_rental/data/models/house/house_response.dart';
 import 'package:batru_house_rental/data/models/house_type/house_type_response.dart';
 import 'package:batru_house_rental/data/models/image_house/image_house_response.dart';
 import 'package:batru_house_rental/domain/entities/convenient_house/convenient_house_entity.dart';
 import 'package:batru_house_rental/domain/entities/house/house_entity.dart';
-import 'package:batru_house_rental/domain/use_case/address/post_address_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/commune/get_commune_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/convenient/get_convenient_list_use_case.dart';
@@ -34,7 +32,6 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
     this._getCommuneListUseCase,
     this._getConvenientListUseCase,
     this._postHouseUseCase,
-    this._postAddressUseCase,
     this._postConvenientHouseListUseCase,
     this._postImageHouseListUseCase,
     this._postImageToStorageUseCase,
@@ -48,7 +45,6 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
   final GetCommuneListUseCase _getCommuneListUseCase;
   final GetConvenientListUseCase _getConvenientListUseCase;
   final PostHouseUseCase _postHouseUseCase;
-  final PostAddressUseCase _postAddressUseCase;
   final PostConvenientHouseListUseCase _postConvenientHouseListUseCase;
   final PostImageHouseListUseCase _postImageHouseListUseCase;
   final PostImageToStorageUseCase _postImageToStorageUseCase;
@@ -141,10 +137,10 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
         status: LoadingStatus.inProgress,
       );
       final houseId = DateTime.now().millisecondsSinceEpoch.toString();
-      final postId = DateTime.now()
-          .add(const Duration(milliseconds: 1))
-          .millisecondsSinceEpoch
-          .toString();
+      // final postId = DateTime.now()
+      //     .add(const Duration(milliseconds: 1))
+      //     .millisecondsSinceEpoch
+      //     .toString();
 
       final currentUser = await _getCurrentUserInformationUseCase.run();
       await _postHouseUseCase.run(
