@@ -11,6 +11,7 @@ import 'package:batru_house_rental/domain/entities/house/house_entity.dart';
 import 'package:batru_house_rental/domain/entities/image_house/image_house_entity.dart';
 import 'package:batru_house_rental/domain/entities/type/type_entity.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_article_filter_list_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/house/remove_house_use_case.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -119,40 +120,37 @@ class ArticleRepository {
     );
   }
 
-  Future<void> removeArticleById(String houseId) async {
+  Future<void> removeArticleById(RemoveHouseInput removeHouseInput) async {
+    final houseId = removeHouseInput.houseId;
+    final imageIdList = removeHouseInput.imageIdList;
+    final convenientIdList = removeHouseInput.convenientIdList;
+    final houseTypeId = removeHouseInput.houseTypeId;
     await _fireStore.collection('house').doc(houseId).delete().then(
         (value) => debugPrint('Remove house: $houseId'),
         onError: (e) => debugPrint('Error updating document $e'));
-    await _fireStore
-        .collection('imageHouse')
-        .where('houseId', isEqualTo: houseId)
-        .get()
-        .then(
-          (value) => value.docs.map(
-            (e) => _fireStore.collection('imageHouse').doc(e.id).delete(),
-          ),
-          onError: (e) => debugPrint('Error updating document $e'),
-        );
-    await _fireStore
-        .collection('convenientHouse')
-        .where('houseId', isEqualTo: houseId)
-        .get()
-        .then(
-          (value) => value.docs.map(
-            (e) => _fireStore.collection('convenientHouse').doc(e.id).delete(),
-          ),
-          onError: (e) => debugPrint('Error updating document $e'),
-        );
-    await _fireStore
-        .collection('houseType')
-        .where('houseId', isEqualTo: houseId)
-        .get()
-        .then(
-          (value) => value.docs.map(
-            (e) => _fireStore.collection('houseType').doc(e.id).delete(),
-          ),
-          onError: (e) => debugPrint('Error updating document $e'),
-        );
+
+    await _fireStore.collection('houseType').doc(houseTypeId).delete().then(
+        (value) => debugPrint('Remove houseType: $houseTypeId'),
+        onError: (e) => debugPrint('Error updating document $e'));
+
+    await Future.wait(
+      imageIdList.map((e) async {
+        await _fireStore
+            .collection('imageHouse')
+            .doc(e)
+            .delete()
+            .then((value) => debugPrint('Remove image: $e'));
+      }),
+    );
+    await Future.wait(
+      convenientIdList.map((e) async {
+        await _fireStore
+            .collection('convenientHouse')
+            .doc(e)
+            .delete()
+            .then((value) => debugPrint('Remove convenient: $e'));
+      }),
+    );
   }
 
   Future<List<ArticleEntity>> getArticles(int limit) async {

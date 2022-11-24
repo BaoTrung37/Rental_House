@@ -16,6 +16,7 @@ import 'package:batru_house_rental/presentation/pages/house_detail/widgets/conve
 import 'package:batru_house_rental/presentation/pages/house_detail/widgets/relative_house_item_view.dart';
 import 'package:batru_house_rental/presentation/pages/owner_house/owner_house_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
+import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
 import 'package:batru_house_rental/presentation/utilities/helper/date_format_helper.dart';
 import 'package:batru_house_rental/presentation/utilities/helper/number_format_helper.dart';
 import 'package:batru_house_rental/presentation/widgets/app_dialog/show_app_dialog.dart';
@@ -25,6 +26,7 @@ import 'package:batru_house_rental/presentation/widgets/base_app_bar/base_app_ba
 import 'package:batru_house_rental/presentation/widgets/buttons/app_button.dart';
 import 'package:batru_house_rental/presentation/widgets/image/image_border.dart';
 import 'package:batru_house_rental/presentation/widgets/input_text_field/input_text_field.dart';
+import 'package:batru_house_rental/presentation/widgets/snack_bar/error_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -86,18 +88,24 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
       'https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/other/cat_relaxing_on_patio_other/1800x1200_cat_relaxing_on_patio_other.jpg';
   @override
   Widget build(BuildContext context) {
-    // ref.listen<HouseDetailState>(
-    //   _provider,
-    //   (previous, next) {
-    //     if (next.getDetailLoadingStatus == LoadingStatus.error ||
-    //         next.postCommentStatus == LoadingStatus.error) {
-    //       showErrorSnackBar(
-    //         context: context,
-    //         errorMessage: next.errorMessage,
-    //       );
-    //     }
-    //   },
-    // );
+    ref.listen<HouseDetailState>(
+      _provider,
+      (previous, next) {
+        if (next.status == LoadingStatus.error &&
+            next.status != previous?.status) {
+          showErrorSnackBar(
+            context: context,
+            errorMessage: next.appError,
+          );
+        }
+
+        if (next.removeHouseStatus == LoadingStatus.success) {
+          ref
+              .read(appNavigatorProvider)
+              .popUntil(routeName: AppRoutes.mainMenu);
+        }
+      },
+    );
 
     return Scaffold(
       appBar: const BaseAppBar.titleAndBackButton(
@@ -137,29 +145,61 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            AppButton(
-              onButtonTap: () {},
-              leftIcon: const Icon(
-                Icons.settings,
-                size: 16,
-                color: Colors.white,
-              ),
-              title: 'Sửa',
-              backgroundColor: context.colors.contentEntry,
-            ),
-            AppButton(
-              onButtonTap: () {},
-              leftIcon: const Icon(
-                Icons.remove_circle_outline_sharp,
-                size: 16,
-                color: Colors.white,
-              ),
-              title: 'Xoá',
-              backgroundColor: context.colors.error,
-            ),
+            _buildUpdateHouseButton(context),
+            _buildRemoveHouseButton(context),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildRemoveHouseButton(BuildContext context) {
+    return AppButton(
+      onButtonTap: () {
+        showAppDialog(
+          context,
+          title: 'Xóa phòng',
+          content: 'Bạn có muốn xóa phòng này không?',
+          actions: [
+            ActionAppDialog(
+              actionDialogTitle: 'Đồng ý',
+              onAction: (_) async {
+                Navigator.of(context).pop();
+                await _viewModel.onRemoveHouse();
+                // ref
+                //     .read(appNavigatorProvider)
+                //     .popUntil(routeName: AppRoutes.mainMenu);
+              },
+            ),
+            ActionAppDialog(
+              actionDialogTitle: 'Bỏ đi',
+              onAction: (_) {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+      leftIcon: const Icon(
+        Icons.remove_circle_outline_sharp,
+        size: 16,
+        color: Colors.white,
+      ),
+      title: 'Xoá',
+      backgroundColor: context.colors.error,
+    );
+  }
+
+  Widget _buildUpdateHouseButton(BuildContext context) {
+    return AppButton(
+      onButtonTap: () {},
+      leftIcon: const Icon(
+        Icons.settings,
+        size: 16,
+        color: Colors.white,
+      ),
+      title: 'Sửa',
+      backgroundColor: context.colors.contentEntry,
     );
   }
 
@@ -175,78 +215,89 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            AppButton(
-              onButtonTap: () {
-                showAppDialog(
-                  context,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Text('Chat với chủ nhà'),
-                      const SizedBox(height: 8),
-                      const AppDivider(),
-                      const SizedBox(height: 8),
-                      const Text(
-                          'Bạn vui lòng đọc kĩ mô tả trước khi hỏi nhé!\nBạn muốn hỏi gì nè?'),
-                      const SizedBox(height: 8),
-                      InputTextField(
-                        placeholder: 'Nhập nội dung!',
-                        initialText: state.message,
-                        onTextChange: (value) {
-                          debugPrint(value!);
-                          _viewModel.onMessageChanged(value);
-                        },
-                      ),
-                    ],
-                  ),
-                  actions: [
-                    ActionAppDialog(
-                      actionDialogTitle: 'Huỷ',
-                      onAction: (_) {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                    ActionAppDialog(
-                      actionDialogTitle: 'Gửi',
-                      onAction: (_) async {
-                        Navigator.of(context).pop();
-                        await _viewModel.onSendMessage();
-                      },
-                    ),
-                  ],
-                );
-              },
-              leftIcon: const Icon(
-                Icons.chat_bubble_outline_sharp,
-                size: 16,
-                color: Colors.white,
-              ),
-              title: 'Chat',
-            ),
-            // if (state.article?.house?.depositMonth != 0)
-            AppButton(
-              onButtonTap: () {},
-              leftIcon: const Icon(
-                Icons.money_off_csred_outlined,
-                color: Colors.white,
-                size: 16,
-              ),
-              title: 'Đặt chỗ',
-              backgroundColor: context.colors.contentAlert,
-            ),
-            AppButton(
-              onButtonTap: () {},
-              leftIcon: const Icon(
-                Icons.phone,
-                size: 16,
-                color: Colors.white,
-              ),
-              title: 'Gọi',
-              backgroundColor: context.colors.contentEntry,
-            ),
+            _buildChatButton(context),
+            _buildDespoistButton(context),
+            _buildPhoneCallButton(context),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildPhoneCallButton(BuildContext context) {
+    return AppButton(
+      onButtonTap: () {},
+      leftIcon: const Icon(
+        Icons.phone,
+        size: 16,
+        color: Colors.white,
+      ),
+      title: 'Gọi',
+      backgroundColor: context.colors.contentEntry,
+    );
+  }
+
+  Widget _buildDespoistButton(BuildContext context) {
+    return AppButton(
+      onButtonTap: () {},
+      leftIcon: const Icon(
+        Icons.money_off_csred_outlined,
+        color: Colors.white,
+        size: 16,
+      ),
+      title: 'Đặt chỗ',
+      backgroundColor: context.colors.contentAlert,
+    );
+  }
+
+  Widget _buildChatButton(BuildContext context) {
+    return AppButton(
+      onButtonTap: () {
+        showAppDialog(
+          context,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('Chat với chủ nhà'),
+              const SizedBox(height: 8),
+              const AppDivider(),
+              const SizedBox(height: 8),
+              const Text(
+                  'Bạn vui lòng đọc kĩ mô tả trước khi hỏi nhé!\nBạn muốn hỏi gì nè?'),
+              const SizedBox(height: 8),
+              InputTextField(
+                placeholder: 'Nhập nội dung!',
+                initialText: state.message,
+                onTextChange: (value) {
+                  debugPrint(value!);
+                  _viewModel.onMessageChanged(value);
+                },
+              ),
+            ],
+          ),
+          actions: [
+            ActionAppDialog(
+              actionDialogTitle: 'Huỷ',
+              onAction: (_) {
+                Navigator.of(context).pop();
+              },
+            ),
+            ActionAppDialog(
+              actionDialogTitle: 'Gửi',
+              onAction: (_) async {
+                Navigator.of(context).pop();
+                await _viewModel.onSendMessage();
+              },
+            ),
+          ],
+        );
+      },
+      leftIcon: const Icon(
+        Icons.chat_bubble_outline_sharp,
+        size: 16,
+        color: Colors.white,
+      ),
+      title: 'Chat',
     );
   }
 

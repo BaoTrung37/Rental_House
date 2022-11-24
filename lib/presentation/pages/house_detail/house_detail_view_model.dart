@@ -48,8 +48,24 @@ class HouseDetailViewModel extends StateNotifier<HouseDetailState> {
     }
   }
 
-  Future<void> onRemoveHouse() async{
-    
+  Future<void> onRemoveHouse() async {
+    try {
+      state = state.copyWith(removeHouseStatus: LoadingStatus.inProgress);
+      await _removeHouseUseCase.run(RemoveHouseInput(
+        houseId: state.article!.house!.id,
+        imageIdList: state.article!.imageList.map((e) => e.id).toList(),
+        convenientIdList:
+            state.article!.convenientList.map((e) => e.id).toList(),
+        houseTypeId: state.article!.type!.id,
+      ));
+      state = state.copyWith(removeHouseStatus: LoadingStatus.success);
+    } catch (e) {
+      state = state.copyWith(
+        status: LoadingStatus.error,
+        appError: 'Lỗi xóa bài đăng',
+      );
+      debugPrint('Remove house: $e');
+    }
   }
 
   Future<void> onSendMessage() async {

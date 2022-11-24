@@ -10,6 +10,8 @@ class HouseDetailState with _$HouseDetailState {
   const factory HouseDetailState({
     @Default(LoadingStatus.initial) LoadingStatus status,
     @Default(LoadingStatus.initial) LoadingStatus sendMessageStatus,
+    @Default(LoadingStatus.initial) LoadingStatus removeHouseStatus,
+    @Default('') String appError,
     @Default([]) List<ArticleEntity> houseArticleRelativeList,
     @Default('') String message,
     ArticleEntity? article,
