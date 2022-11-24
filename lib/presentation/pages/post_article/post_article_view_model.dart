@@ -184,15 +184,15 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
         ),
       );
 
-      await _postAddressUseCase.run(
-        AddressResponse(
-          id: postId,
-          provinceId: state.currentProvince?.id ?? '01',
-          districtId: state.currentDistrict!.id,
-          communeId: state.currentCommune!.id,
-          houseId: houseId,
-        ),
-      );
+      // await _postAddressUseCase.run(
+      //   AddressResponse(
+      //     id: postId,
+      //     provinceId: state.currentProvince?.id ?? '01',
+      //     districtId: state.currentDistrict!.id,
+      //     communeId: state.currentCommune!.id,
+      //     houseId: houseId,
+      //   ),
+      // );
 
       await _postConvenientHouseListUseCase
           .run(state.convenientSelected.map((e) {

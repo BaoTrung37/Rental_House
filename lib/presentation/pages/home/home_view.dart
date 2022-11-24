@@ -75,6 +75,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
         onRefresh: () async {
           await _viewModel.initData();
         },
+        triggerMode: RefreshIndicatorTriggerMode.anywhere,
         onOverScroll: (mode, distance, limit) {
           switch (mode) {
             case RefreshIndicatorMode.drag:
