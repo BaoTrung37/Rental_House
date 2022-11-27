@@ -9,13 +9,16 @@ import 'package:batru_house_rental/presentation/pages/home/views/home_place_smal
 import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_view.dart';
 import 'package:batru_house_rental/presentation/pages/search/search_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
+import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
 import 'package:batru_house_rental/presentation/widgets/app_indicator/loading_view.dart';
 import 'package:batru_house_rental/presentation/widgets/cards/info_room_horizontal_small_card_item.dart';
 import 'package:batru_house_rental/presentation/widgets/infinite_list/refresh_view.dart';
+import 'package:batru_house_rental/presentation/widgets/snack_bar/error_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final _provider = StateNotifierProvider.autoDispose<HomeViewModel, HomeState>(
+final homeViewProvider =
+    StateNotifierProvider.autoDispose<HomeViewModel, HomeState>(
   (ref) => HomeViewModel(
     injector.get<GetDistrictListUseCase>(),
     injector.get<GetArticleListUseCase>(),
@@ -33,8 +36,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
   final mockThumbnail =
       'https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/other/cat_relaxing_on_patio_other/1800x1200_cat_relaxing_on_patio_other.jpg';
 
-  HomeViewModel get _viewModel => ref.read(_provider.notifier);
-  HomeState get _state => ref.watch(_provider);
+  HomeViewModel get _viewModel => ref.read(homeViewProvider.notifier);
+  HomeState get _state => ref.watch(homeViewProvider);
 
   final ScrollController _scrollController = ScrollController();
   bool isShowPostArticle = false;
@@ -69,6 +72,19 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<HomeState>(homeViewProvider, (previous, next) {
+      if (next.status == LoadingStatus.error &&
+          next.status != previous?.status) {
+        showErrorSnackBar(
+          context: context,
+          errorMessage: next.appError,
+        );
+      }
+      if (next.shouldReLoadData) {
+        _viewModel.initData();
+        _viewModel.setShouldReloadData(false);
+      }
+    });
     return Scaffold(
       backgroundColor: context.colors.backgroundSecondary,
       body: RefreshView(
@@ -208,7 +224,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
   }
 
   Widget _buildSearchFamousListView(BuildContext context) {
-    final famousDistrictList = ref.watch(_provider).famousDistrictList;
+    final famousDistrictList = ref.watch(homeViewProvider).famousDistrictList;
     return GridView.builder(
       // config list view not scroll on column
       shrinkWrap: true,

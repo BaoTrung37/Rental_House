@@ -18,6 +18,7 @@ part 'post_article_state.freezed.dart';
 class PostArticleState with _$PostArticleState {
   factory PostArticleState({
     @Default(LoadingStatus.initial) LoadingStatus status,
+    @Default(LoadingStatus.initial) LoadingStatus postButtonStatus,
     @Default(0) int currentStep,
     @Default(false) bool isParkingSpaceAvailable,
     @Default([]) List<TypeEntity> types,
