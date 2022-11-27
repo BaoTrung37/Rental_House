@@ -127,7 +127,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
         final isLastStep = ref.watch(_provider).currentStep == 3;
         final isFirstStep = ref.watch(_provider).currentStep == 0;
         return _buildButton(
-            isLastStep, details, isFirstStep, context, state.status);
+            isLastStep, details, isFirstStep, context, state.postButtonStatus);
       },
       steps: [
         Step(
