@@ -11,5 +11,7 @@ class HomeState with _$HomeState {
     @Default(LoadingStatus.initial) LoadingStatus status,
     @Default([]) List<DistrictEntity> famousDistrictList,
     @Default([]) List<ArticleEntity> houseArticleList,
+    @Default(false) bool shouldReLoadData,
+    @Default('') String appError,
   }) = _HomeState;
 }
