@@ -133,6 +133,16 @@ class ArticleRepository {
         (value) => debugPrint('Remove houseType: $houseTypeId'),
         onError: (e) => debugPrint('Error updating document $e'));
 
+    final addressList = await _fireStore
+        .collection('address')
+        .where('houseId', isEqualTo: houseId)
+        .get();
+    await Future.wait(addressList.docs.map((e) async {
+      await _fireStore.collection('address').doc(e.id).delete().then(
+          (value) => debugPrint('Remove address: ${e.id}'),
+          onError: (e) => debugPrint('Error updating document $e'));
+    }));
+
     await Future.wait(
       imageIdList.map((e) async {
         await _fireStore
