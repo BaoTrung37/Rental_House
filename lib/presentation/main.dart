@@ -15,9 +15,9 @@ Future<void> main() async {
     DeviceOrientation.portraitUp,
   ]);
 
-  await Initialize.initializationSetup();
   Future<void> startApp() async {
     // Dependency
+    await Initialize.initializationSetup();
     await AppModules.inject();
     await injector.allReady();
 

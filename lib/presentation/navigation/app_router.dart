@@ -3,11 +3,12 @@ import 'package:batru_house_rental/presentation/pages/chat/chat_view.dart';
 import 'package:batru_house_rental/presentation/pages/chat_list/chat_list_view.dart';
 import 'package:batru_house_rental/presentation/pages/favorite/favorite_view.dart';
 import 'package:batru_house_rental/presentation/pages/home/home_view.dart';
+import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_view.dart';
 import 'package:batru_house_rental/presentation/pages/login/login_view.dart';
 import 'package:batru_house_rental/presentation/pages/main_menu/main_menu_view.dart';
 import 'package:batru_house_rental/presentation/pages/my_page/mypage_view.dart';
+import 'package:batru_house_rental/presentation/pages/owner_house/owner_house_view.dart';
 import 'package:batru_house_rental/presentation/pages/post_article/post_article_view.dart';
-import 'package:batru_house_rental/presentation/pages/room_detail/room_detail_view.dart';
 import 'package:batru_house_rental/presentation/pages/search/search_view.dart';
 import 'package:batru_house_rental/presentation/pages/splash/splash_view.dart';
 import 'package:flutter/material.dart';
@@ -60,10 +61,13 @@ class AppRouter {
           builder: (context) => const HomeView(),
         );
 
-      case AppRoutes.roomDetail:
+      case AppRoutes.houseDetail:
+        final args = settings.arguments as HouseDetailArguments;
         return MaterialPageRoute(
           settings: settings,
-          builder: (context) => const RoomDetailView(),
+          builder: (context) => HouseDetailView(
+            houseId: args.houseId,
+          ),
         );
 
       case AppRoutes.favorite:
@@ -75,7 +79,9 @@ class AppRouter {
       case AppRoutes.chat:
         return MaterialPageRoute(
           settings: settings,
-          builder: (context) => const ChatView(),
+          builder: (context) => ChatView(
+            chatArguments: settings.arguments as ChatArguments,
+          ),
         );
 
       case AppRoutes.chatList:
@@ -90,14 +96,24 @@ class AppRouter {
           builder: (context) => const MyPageView(),
         );
       case AppRoutes.search:
+        final args = settings.arguments as SearchArguments;
         return MaterialPageRoute(
           settings: settings,
-          builder: (context) => const SearchView(),
+          builder: (context) => SearchView(
+            districtId: args.districtId,
+          ),
         );
       case AppRoutes.postArticle:
         return MaterialPageRoute(
           settings: settings,
           builder: (context) => const PostArticleView(),
+        );
+      case AppRoutes.ownerHouse:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => OwnerHouseView(
+            arguments: settings.arguments as OnwerHouseArguments,
+          ),
         );
       default:
         return null;

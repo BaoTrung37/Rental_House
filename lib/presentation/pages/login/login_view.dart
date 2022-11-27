@@ -1,4 +1,5 @@
 import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
+import 'package:batru_house_rental/domain/use_case/article/get_initial_article_data_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/google_login_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
@@ -14,6 +15,7 @@ import 'package:intro_slider/intro_slider.dart';
 final _provider = StateNotifierProvider.autoDispose<LoginViewModel, LoginState>(
   (ref) => LoginViewModel(
     injector.get<GoogleLoginUseCase>(),
+    injector.get<GetInitialArticleDataUseCase>(),
   ),
 );
 
@@ -28,6 +30,15 @@ class _LoginViewState extends ConsumerState<LoginView> {
   LoginViewModel get _viewModel => ref.read(_provider.notifier);
 
   @override
+  void initState() {
+    // TODO: implement initState
+    Future.delayed(Duration.zero, () async {
+      await _viewModel.initData();
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
@@ -36,18 +47,29 @@ class _LoginViewState extends ConsumerState<LoginView> {
             child: IntroSlider(
               listContentConfig: const [
                 ContentConfig(
-                  title: 'Welcome to Batru House Rental',
-                  description: 'We are happy to see you here',
+                  backgroundNetworkImage:
+                      'https://noithatminhkhang.vn/upload/news/phong-ngu-001-500x340-2926.jpg',
+                  title: 'Cách tìm nhà đơn giản',
                 ),
                 ContentConfig(
-                  title: 'Welcome to Batru House Rental',
-                  description: 'We are happy to see you here',
+                  backgroundNetworkImage:
+                      'https://amia.vn/wp-content/uploads/2021/02/tranh-hoa-trang-tri-phong-ngu-dep-hien-dai-1633.jpg',
+                  title: 'Đáp ứng mọi ngân sách',
+                  // backgroundColor: Colors.red,
                 ),
               ],
+              // listCustomTabs: [
+              //   Container(
+              //     width: 100,
+              //     height: 100,
+              //     color: Colors.amber,
+              //   )
+              // ],
               isShowDoneBtn: false,
               isShowNextBtn: false,
               isShowPrevBtn: false,
               isShowSkipBtn: false,
+              // backgroundColorAllTabs: Colors.red,
               isAutoScroll: true,
               isLoopAutoScroll: true,
               autoScrollInterval: const Duration(seconds: 5),
@@ -121,7 +143,9 @@ class _LoginViewState extends ConsumerState<LoginView> {
       onButtonTap: () async {
         final isSuccess = await _viewModel.loginSuccess();
         if (isSuccess) {
-          await ref.read(appNavigatorProvider).navigateTo(AppRoutes.mainMenu);
+          await ref
+              .read(appNavigatorProvider)
+              .navigateTo(AppRoutes.mainMenu, shoulClearStack: true);
         }
       },
     );

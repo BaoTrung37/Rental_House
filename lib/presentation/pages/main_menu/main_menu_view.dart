@@ -32,6 +32,11 @@ class _MainMenuViewState extends ConsumerState<MainMenuView>
   final double _navigationIconSize = 20;
 
   MainMenuViewModel get _viewModel => ref.read(mainMenuProvider.notifier);
+  @override
+  void dispose() {
+    
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

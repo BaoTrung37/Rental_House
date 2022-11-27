@@ -32,11 +32,12 @@ class InputTextField extends StatefulWidget {
     this.inputFormatters,
     this.backgroundColor,
     this.iconColor,
-    this.obscuringCharacter,
+    // this.obscuringCharacter,
     this.isActive = true,
     this.isAutoDisposeController = true,
     this.isAutoValidateWhenOutFocus = true,
     Key? key,
+    this.onEditingComplete,
   }) : super(key: key);
 
   const InputTextField.singleLine({
@@ -65,11 +66,12 @@ class InputTextField extends StatefulWidget {
     this.inputFormatters,
     this.backgroundColor,
     this.iconColor,
-    this.obscuringCharacter,
+    // this.obscuringCharacter,
     this.isActive = true,
     this.isAutoDisposeController = true,
     this.isAutoValidateWhenOutFocus = true,
     Key? key,
+    this.onEditingComplete,
   })  : minHeight = null,
         minLine = 1,
         maxLine = 1,
@@ -102,11 +104,12 @@ class InputTextField extends StatefulWidget {
     this.inputFormatters,
     this.backgroundColor,
     this.iconColor,
-    this.obscuringCharacter,
+    // this.obscuringCharacter,
     this.isActive = true,
     this.isAutoDisposeController = true,
     this.isAutoValidateWhenOutFocus = true,
     Key? key,
+    this.onEditingComplete,
   })  : keyboardType = TextInputType.multiline,
         maxLine = null,
         super(key: key);
@@ -114,7 +117,8 @@ class InputTextField extends StatefulWidget {
   final String? initialText;
   final String? description;
   final String? labelText;
-  final VoidCallback? onSubmit;
+  final ValueChanged<String?>? onSubmit;
+  final VoidCallback? onEditingComplete;
   final GlobalKey<FormFieldState>? textFieldKey;
   final FormFieldValidator<String>? validator;
   final List<TextInputFormatter>? inputFormatters;
@@ -129,7 +133,7 @@ class InputTextField extends StatefulWidget {
   final int? maxLine;
   final int? maxLength;
   final TextInputType? keyboardType;
-  final String? obscuringCharacter;
+  // final String? obscuringCharacter;
   final FocusNode? focusNode;
   final TextInputAction? textInputAction;
   final double? minHeight;
@@ -243,7 +247,8 @@ class _TextBoxState extends State<InputTextField> {
                     child: TextFormField(
                       key: _textFieldKey,
                       enabled: widget.isActive,
-                      onEditingComplete: widget.onSubmit,
+                      onEditingComplete: widget.onEditingComplete,
+                      onFieldSubmitted: widget.onSubmit,
                       onChanged: (value) {
                         setState(() {
                           _isTextEmpty = value.isEmpty;
@@ -252,7 +257,7 @@ class _TextBoxState extends State<InputTextField> {
                       },
                       obscureText: _obscureText,
                       // obscuringCharacter: widget.obscuringCharacter ??
-                      //     Constants.obscuringCharacter,
+                      // Constants.obscuringCharacter,
                       enableSuggestions: widget.enableSuggestions,
                       autocorrect: widget.autocorrect,
                       validator: widget.validator,
@@ -276,6 +281,7 @@ class _TextBoxState extends State<InputTextField> {
                             AppTextStyles.textMedium.copyWith(
                               color: context.colors.textSecondary,
                             ),
+                        isDense: true,
                         hintMaxLines: widget.hintMaxLines,
                         errorStyle: _hiddenTextStyle,
                         errorBorder: InputBorder.none,

@@ -5,6 +5,7 @@ import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
 import 'package:batru_house_rental/presentation/pages/my_page/mypage_state.dart';
 import 'package:batru_house_rental/presentation/pages/my_page/mypage_view_model.dart';
+import 'package:batru_house_rental/presentation/pages/owner_house/owner_house_view.dart';
 import 'package:batru_house_rental/presentation/resources/app_text_styles.dart';
 import 'package:batru_house_rental/presentation/widgets/app_divider/app_divider.dart';
 import 'package:batru_house_rental/presentation/widgets/base_app_bar/base_app_bar.dart';
@@ -82,7 +83,13 @@ class _MyPageViewState extends ConsumerState<MyPageView>
         ),
         const AppDivider(),
         ListTile(
-          onTap: () {},
+          onTap: () async {
+            final userId = await _viewModel.getCurrentUserId();
+
+            await ref.read(appNavigatorProvider).navigateTo(
+                AppRoutes.ownerHouse,
+                arguments: OnwerHouseArguments(userId: userId));
+          },
           horizontalTitleGap: 1,
           title: const Text(
             'Phòng đã đăng',

@@ -15,7 +15,7 @@ class AppRoutes {
   static const String home = '/home';
 
   /// home detail
-  static const String roomDetail = '/room_detail';
+  static const String houseDetail = '/house_detail';
 
   /// favorite
   static const String favorite = '/favorite';
@@ -34,4 +34,7 @@ class AppRoutes {
 
   /// post article
   static const String postArticle = '/post_article';
+
+  /// owner house
+  static const String ownerHouse = '/owner_house';
 }

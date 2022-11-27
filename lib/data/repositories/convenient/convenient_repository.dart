@@ -18,12 +18,4 @@ class ConvenientRepository {
     _items = list;
     return list;
   }
-
-  Future<void> addConvemient() async {
-    items.map(
-      (e) => _fireStore.collection('convenient').add(
-            e.toJson(),
-          ),
-    );
-  }
 }

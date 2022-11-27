@@ -8,5 +8,6 @@ class ConvenientEntity with _$ConvenientEntity {
     required String id,
     required String name,
     required String iconUrl,
+    @Default(false) bool isSelected,
   }) = _ConvenientEntity;
 }
