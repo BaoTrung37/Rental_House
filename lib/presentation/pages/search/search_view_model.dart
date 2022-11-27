@@ -80,7 +80,7 @@ class SearchViewModel extends StateNotifier<SearchState> {
   Future<void> _getDistrictInitial(String districtId) async {
     final districts = await _getDistrictListUseCase.run('01');
     state = state.copyWith(
-      currentDistrict: districts.firstWhere(
+      currentDistrict: districts.firstWhereOrNull(
         (e) => e.id == districtId,
       ),
     );
