@@ -1,4 +1,5 @@
 import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
+import 'package:batru_house_rental/domain/use_case/address/post_address_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/commune/get_commune_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/convenient/get_convenient_list_use_case.dart';
@@ -12,6 +13,7 @@ import 'package:batru_house_rental/domain/use_case/province/get_province_list_us
 import 'package:batru_house_rental/domain/use_case/type/get_type_list_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
+import 'package:batru_house_rental/presentation/pages/home/home_view.dart';
 import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_view.dart';
 import 'package:batru_house_rental/presentation/pages/post_article/post_article_state.dart';
 import 'package:batru_house_rental/presentation/pages/post_article/post_article_view_model.dart';
@@ -20,7 +22,7 @@ import 'package:batru_house_rental/presentation/pages/post_article/widgets/input
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/utilities/common/validator.dart';
 import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
-import 'package:batru_house_rental/presentation/widgets/app_indicator/app_loading_indicator.dart';
+import 'package:batru_house_rental/presentation/widgets/app_indicator/loading_view.dart';
 import 'package:batru_house_rental/presentation/widgets/base_app_bar/base_app_bar.dart';
 import 'package:batru_house_rental/presentation/widgets/base_form/base_form_mixin.dart';
 import 'package:batru_house_rental/presentation/widgets/buttons/app_button.dart';
@@ -44,6 +46,7 @@ final _provider =
     injector.get<PostImageToStorageUseCase>(),
     injector.get<GetCurrentUserInformationUseCase>(),
     injector.get<PostHouseTypeUseCase>(),
+    injector.get<PostAddressUseCase>(),
   ),
 );
 
@@ -73,6 +76,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
     final houseId = await _viewModel.postArticle();
 
     if (houseId != null) {
+      ref.read(homeViewProvider.notifier).setShouldReloadData(true);
       ref.read(appNavigatorProvider).goBack();
       await ref.read(appNavigatorProvider).navigateTo(
             AppRoutes.houseDetail,
@@ -103,9 +107,10 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
       appBar: const BaseAppBar.titleAndBackButton(
         title: 'Đăng phòng',
       ),
-      body: state.status == LoadingStatus.initial
-          ? const AppLoadingIndicator()
-          : _buildBody(),
+      body: LoadingView(
+        status: state.status,
+        child: _buildBody(),
+      ),
     );
   }
 
@@ -122,7 +127,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
         final isLastStep = ref.watch(_provider).currentStep == 3;
         final isFirstStep = ref.watch(_provider).currentStep == 0;
         return _buildButton(
-            isLastStep, details, isFirstStep, context, state.status);
+            isLastStep, details, isFirstStep, context, state.postButtonStatus);
       },
       steps: [
         Step(
@@ -154,7 +159,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
   }
 
   Container _buildButton(bool isLastStep, ControlsDetails details,
-      bool isFirstStep, BuildContext context, LoadingStatus status) {
+      bool isFirstStep, BuildContext context, LoadingStatus postButtonStatus) {
     return Container(
       margin: const EdgeInsets.only(top: 16),
       child: Row(
@@ -162,7 +167,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           Expanded(
             child: AppButton(
               isExpanded: true,
-              buttonState: status.buttonState,
+              buttonState: postButtonStatus.buttonState,
               title: isLastStep ? 'Đăng phòng' : 'Tiếp theo',
               onButtonTap: !isLastStep
                   ? details.onStepContinue

@@ -28,8 +28,15 @@ class HomeViewModel extends StateNotifier<HomeState> {
     } catch (e) {
       state = state.copyWith(
         status: LoadingStatus.error,
+        appError: e.toString(),
       );
       debugPrint('home view: $e');
     }
+  }
+
+  void setShouldReloadData(bool value) {
+    state = state.copyWith(
+      shouldReLoadData: value,
+    );
   }
 }
