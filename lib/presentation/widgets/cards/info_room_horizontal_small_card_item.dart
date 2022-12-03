@@ -96,8 +96,8 @@ class InfoRoomHorizontalCardItemItem extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Text(
-          'Tìm người thuê. ',
+        Text(
+          '${articleEntity?.type?.name ?? ''}. ${articleEntity?.house?.capacity ?? ''}',
           style: AppTextStyles.labelSmallLight,
         ),
         Text(
