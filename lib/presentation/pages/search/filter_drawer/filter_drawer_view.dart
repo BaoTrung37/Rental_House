@@ -175,26 +175,68 @@ class _FilterDrawerViewState extends ConsumerState<FilterDrawerView> {
   SliverPadding _buildPriceRoomSelectView() {
     return SliverPadding(
       padding: const EdgeInsets.all(8),
-      sliver: SliverGrid(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          mainAxisSpacing: 10,
-          crossAxisSpacing: 10,
-          childAspectRatio: 2,
-        ),
-        delegate: SliverChildBuilderDelegate(
-          (context, index) => Container(
-            decoration: BoxDecoration(
-              color: context.colors.action.withOpacity(0.5),
-            ),
-            child: const Center(
-              child: Text(
-                'Dưới 1 triệu',
-                style: AppTextStyles.textMedium,
+      sliver: SliverToBoxAdapter(
+        child: Column(
+          children: [
+            DropdownSearch<String>(
+              popupProps: const PopupProps.menu(
+                constraints: BoxConstraints(
+                  maxHeight: 220,
+                ),
+                showSelectedItems: true,
+                fit: FlexFit.loose,
               ),
+              clearButtonProps: ClearButtonProps(
+                icon: IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: () async {
+                    await _viewModel.onMinPriceChanged(null);
+                  },
+                ),
+                isVisible: true,
+              ),
+              items: _state.priceFilter.map((element) => element).toList(),
+              dropdownDecoratorProps: const DropDownDecoratorProps(
+                dropdownSearchDecoration: InputDecoration(
+                  labelText: 'Giá thấp nhất',
+                  hintText: 'Bấm để chọn giá thấp nhất',
+                ),
+              ),
+              onChanged: (value) async {
+                await _viewModel.onMinPriceChanged(value);
+              },
+              selectedItem: _state.minPrice?.name,
             ),
-          ),
-          childCount: 6,
+            DropdownSearch<String>(
+              popupProps: const PopupProps.menu(
+                constraints: BoxConstraints(
+                  maxHeight: 220,
+                ),
+                showSelectedItems: true,
+                fit: FlexFit.loose,
+              ),
+              clearButtonProps: ClearButtonProps(
+                icon: IconButton(
+                  icon: const Icon(Icons.clear),
+                  onPressed: () async {
+                    await _viewModel.onMaxPriceChanged(null);
+                  },
+                ),
+                isVisible: true,
+              ),
+              items: _state.priceFilter.map((element) => element).toList(),
+              dropdownDecoratorProps: const DropDownDecoratorProps(
+                dropdownSearchDecoration: InputDecoration(
+                  labelText: 'Giá tối đa',
+                  hintText: 'Bấm để chọn giá tối đa',
+                ),
+              ),
+              onChanged: (value) async {
+                await _viewModel.onMaxPriceChanged(value);
+              },
+              selectedItem: _state.maxPrice?.name,
+            ),
+          ],
         ),
       ),
     );

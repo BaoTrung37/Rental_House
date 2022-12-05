@@ -340,7 +340,13 @@ class ArticleRepository {
       for (final address in addressResponse) {
         if (type.houseId == address.houseId) {
           final house = await getArticeById(address.houseId);
-          articles.add(house);
+          final rentalPrice = house.house?.rentalPrice ?? 0;
+          final minPrice = input.minPrice ?? 0;
+          final maxPrice = input.maxPrice ?? 1000000000;
+
+          if (rentalPrice >= minPrice && rentalPrice <= maxPrice) {
+            articles.add(house);
+          }
         }
       }
     }

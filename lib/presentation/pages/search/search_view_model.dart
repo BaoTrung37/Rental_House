@@ -5,6 +5,7 @@ import 'package:batru_house_rental/domain/use_case/province/get_province_list_us
 import 'package:batru_house_rental/domain/use_case/type/get_type_list_use_case.dart';
 import 'package:batru_house_rental/presentation/pages/search/search_state.dart';
 import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
+import 'package:batru_house_rental/presentation/utilities/enums/price_filter.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -27,6 +28,7 @@ class SearchViewModel extends StateNotifier<SearchState> {
   Future<void> initData(String districtId) async {
     try {
       state = state.copyWith(status: LoadingStatus.inProgress);
+      final priceFilter = PriceFilter.values.map((e) => e.name).toList();
       final provinces = await _getProvinceListUseCase.run();
       final types = await _getTypeListUseCase.run();
       final districts = await _getDistrictListUseCase.run('01');
@@ -40,6 +42,7 @@ class SearchViewModel extends StateNotifier<SearchState> {
       );
 
       state = state.copyWith(
+        priceFilter: priceFilter,
         provinces: provinces,
         districts: districts,
         types: types,
@@ -63,6 +66,8 @@ class SearchViewModel extends StateNotifier<SearchState> {
           districtId: state.currentDistrict?.id,
           communeId: state.currentCommune?.id,
           typeId: state.currentType?.id,
+          minPrice: state.minPrice?.value,
+          maxPrice: state.maxPrice?.value,
         ),
       );
       state = state.copyWith(
@@ -82,6 +87,27 @@ class SearchViewModel extends StateNotifier<SearchState> {
     state = state.copyWith(
       currentDistrict: districts.firstWhereOrNull(
         (e) => e.id == districtId,
+      ),
+    );
+  }
+
+  Future<void> onMinPriceChanged(String? value) async {
+    state = state.copyWith(
+      minPrice: PriceFilter.values.firstWhereOrNull(
+        (e) => e.name == value,
+      ),
+    );
+    state = state.copyWith(
+      maxPrice: PriceFilter.values.firstWhereOrNull(
+        (e) => e.value >= state.minPrice!.value,
+      ),
+    );
+  }
+
+  Future<void> onMaxPriceChanged(String? value) async {
+    state = state.copyWith(
+      maxPrice: PriceFilter.values.firstWhereOrNull(
+        (e) => e.name == value,
       ),
     );
   }

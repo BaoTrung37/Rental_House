@@ -4,6 +4,7 @@ import 'package:batru_house_rental/domain/entities/district/district_entity.dart
 import 'package:batru_house_rental/domain/entities/province/province_entity.dart';
 import 'package:batru_house_rental/domain/entities/type/type_entity.dart';
 import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
+import 'package:batru_house_rental/presentation/utilities/enums/price_filter.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'search_state.freezed.dart';
@@ -17,6 +18,9 @@ class SearchState with _$SearchState {
     @Default([]) List<DistrictEntity> districts,
     @Default([]) List<CommuneEntity> communes,
     @Default([]) List<ArticleEntity> articles,
+    @Default([]) List<String> priceFilter,
+    PriceFilter? minPrice,
+    PriceFilter? maxPrice,
     TypeEntity? currentType,
     ProvinceEntity? currentProvince,
     DistrictEntity? currentDistrict,

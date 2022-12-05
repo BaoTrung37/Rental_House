@@ -16,8 +16,12 @@ class ArticleFilterInput {
     this.districtId,
     this.communeId,
     this.typeId,
+    this.minPrice,
+    this.maxPrice,
   });
   final String? districtId;
   final String? communeId;
   final String? typeId;
+  final int? minPrice;
+  final int? maxPrice;
 }
