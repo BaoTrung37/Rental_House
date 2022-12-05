@@ -50,7 +50,7 @@ class _ChatViewState extends ConsumerState<ChatView> {
 
   var _limit = 20;
   bool isShowScroll = false;
-  final int _limitIncrement = 20;
+  final int _limitIncrement = 10;
   final ScrollController scrollController = ScrollController();
   final TextEditingController textEditingController = TextEditingController();
 

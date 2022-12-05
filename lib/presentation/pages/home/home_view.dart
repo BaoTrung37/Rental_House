@@ -136,71 +136,97 @@ class _HomeViewState extends ConsumerState<HomeView> {
     );
   }
 
-  CustomScrollView _buildBody(BuildContext context) {
-    return CustomScrollView(
-      controller: _scrollController,
-      slivers: [
-        SliverToBoxAdapter(
-          child: _buildSlider(context),
+  Widget _buildBody(BuildContext context) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          // controller: _scrollController,
+          children: [
+            _buildSlider(context),
+            const SizedBox(height: 10),
+            _buildPlaceTitle(),
+            const SizedBox(height: 10),
+            _buildSearchFamousListView(context),
+            const SizedBox(height: 10),
+            _buildBanner(context),
+            const SizedBox(height: 10),
+            // _buildHouseArticleListView(),
+            // Expanded(
+            //   child: InfiniteListView(
+            //     perPage: 5,
+            //     cellBuilder: _buildCell,
+            //     emptyView: const Center(child: Text('haha')),
+            //     getDatasources: (int perkey, int page) async {
+            //       // debugPrint('page: $page');
+            //       // debugPrint('perkey: $perkey');
+            //       final data = await _viewModel.getArticleList(page);
+            //       return data;
+            //     },
+            //   ),
+            // ),
+            _buildHouseArticleListView(),
+          ],
         ),
-        const SliverToBoxAdapter(
-          child: SizedBox(height: 10),
-        ),
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          sliver: SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                // const HomeSearchCardView(),
-                const SizedBox(height: 24),
-                _buildPlaceTitle(),
-                const SizedBox(height: 10),
-                _buildSearchFamousListView(context),
-              ],
-            ),
-          ),
-        ),
-        const SliverToBoxAdapter(
-          child: SizedBox(height: 10),
-        ),
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          sliver: SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                _buildBanner(context),
-              ],
-            ),
-          ),
-        ),
-        const SliverToBoxAdapter(
-          child: SizedBox(height: 10),
-        ),
-        _buildHouseArticleListView(),
-      ],
+      ),
     );
   }
 
-  SliverPadding _buildHouseArticleListView() {
+  // Widget _buildCell(Datasource<dynamic> dataSource, int index) {
+  //   if (dataSource is RoomInfoItemCell) {
+  //     return InfoRoomHorizontalCardItemItem(
+  //       articleEntity: dataSource.getData.articleEntity,
+  //       onTap: () async {
+  //         await ref.read(appNavigatorProvider).navigateTo(
+  //               AppRoutes.houseDetail,
+  //               arguments: HouseDetailArguments(
+  //                 houseId: dataSource.getData.articleEntity.id,
+  //               ),
+  //             );
+  //       },
+  //     );
+  //   } else {
+  //     return Container();
+  //   }
+  // }
+
+  Widget _buildHouseArticleListView() {
     final houseArticleList = _state.houseArticleList;
-    return SliverPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      sliver: SliverList(
-        delegate: SliverChildBuilderDelegate(
-          (context, index) => InfoRoomHorizontalCardItemItem(
-            articleEntity: houseArticleList[index],
-            onTap: () async {
-              await ref.read(appNavigatorProvider).navigateTo(
-                    AppRoutes.houseDetail,
-                    arguments: HouseDetailArguments(
-                      houseId: houseArticleList[index].id,
-                    ),
-                  );
-            },
-          ),
-          childCount: houseArticleList.length,
-        ),
+    // return SliverPadding(
+    //   padding: const EdgeInsets.symmetric(horizontal: 16),
+    //   sliver: SliverList(
+    //     delegate: List.(
+    //       (context, index) => InfoRoomHorizontalCardItemItem(
+    //         articleEntity: houseArticleList[index],
+    //         onTap: () async {
+    //           await ref.read(appNavigatorProvider).navigateTo(
+    //                 AppRoutes.houseDetail,
+    //                 arguments: HouseDetailArguments(
+    //                   houseId: houseArticleList[index].id,
+    //                 ),
+    //               );
+    //         },
+    //       ),
+    //       childCount: houseArticleList.length,
+    //     ),
+    //   ),
+    // );
+    return ListView.builder(
+      itemBuilder: (context, index) => InfoRoomHorizontalCardItemItem(
+        articleEntity: houseArticleList[index],
+        onTap: () async {
+          await ref.read(appNavigatorProvider).navigateTo(
+                AppRoutes.houseDetail,
+                arguments: HouseDetailArguments(
+                  houseId: houseArticleList[index].id,
+                ),
+              );
+        },
       ),
+      itemCount: houseArticleList.length,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
     );
   }
 
