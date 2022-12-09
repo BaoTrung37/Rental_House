@@ -1,5 +1,4 @@
 import 'package:batru_house_rental/domain/use_case/article/get_article_list_use_case.dart';
-import 'package:batru_house_rental/domain/use_case/article/get_initial_article_data_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/district/get_district_list_use_case.dart';
 import 'package:batru_house_rental/presentation/pages/home/home_state.dart';
 import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
