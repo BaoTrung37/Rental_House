@@ -32,7 +32,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
   void initState() {
     // TODO: implement initState
     Future.delayed(Duration.zero, () async {
-      await _viewModel.initData();
+      // await _viewModel.initData();
     });
     super.initState();
   }

@@ -20,6 +20,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 final homeViewProvider =
     StateNotifierProvider.autoDispose<HomeViewModel, HomeState>(
   (ref) => HomeViewModel(
+    // injector.get<GetInitialArticleDataUseCase>(),
     injector.get<GetDistrictListUseCase>(),
     injector.get<GetArticleListUseCase>(),
   ),
