@@ -85,19 +85,19 @@ class _LoginViewState extends ConsumerState<LoginView> {
                   const SizedBox(height: 20),
                   _buildGoogleLoginButton(context),
                   const SizedBox(height: 20),
-                  GestureDetector(
-                    onTap: () {
-                      ref
-                          .read(appNavigatorProvider)
-                          .navigateTo(AppRoutes.mainMenu);
-                    },
-                    child: Text(
-                      'Skip',
-                      style: AppTextStyles.headingSmall.copyWith(
-                        color: Colors.blue,
-                      ),
-                    ),
-                  ),
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     ref
+                  //         .read(appNavigatorProvider)
+                  //         .navigateTo(AppRoutes.mainMenu);
+                  //   },
+                  //   child: Text(
+                  //     'Skip',
+                  //     style: AppTextStyles.headingSmall.copyWith(
+                  //       color: Colors.blue,
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),

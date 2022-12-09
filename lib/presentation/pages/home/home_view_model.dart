@@ -13,6 +13,7 @@ class HomeViewModel extends StateNotifier<HomeState> {
 
   final GetDistrictListUseCase _getDistrictListUseCase;
   final GetArticleListUseCase _getArticleListUseCase;
+  
   Future<void> initData() async {
     try {
       state = state.copyWith(
