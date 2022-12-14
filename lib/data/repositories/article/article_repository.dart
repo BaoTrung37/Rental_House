@@ -326,10 +326,29 @@ class ArticleRepository {
     final addressResponse = addressSnapshot.docs.map((e) {
       return AddressResponse.fromJson(e.data());
     });
+    final typeHouseSnapshot = await _fireStore
+        .collection('houseType')
+        .where('typeId', isEqualTo: input.typeId)
+        .get();
+
+    final typeHouseResponse = typeHouseSnapshot.docs.map((e) {
+      return HouseTypeResponse.fromJson(e.data());
+    });
+
     final articles = <ArticleEntity>[];
-    for (final address in addressResponse) {
-      final house = await getArticeById(address.houseId);
-      articles.add(house);
+    for (final type in typeHouseResponse) {
+      for (final address in addressResponse) {
+        if (type.houseId == address.houseId) {
+          final house = await getArticeById(address.houseId);
+          final rentalPrice = house.house?.rentalPrice ?? 0;
+          final minPrice = input.minPrice ?? 0;
+          final maxPrice = input.maxPrice ?? 1000000000;
+
+          if (rentalPrice >= minPrice && rentalPrice <= maxPrice) {
+            articles.add(house);
+          }
+        }
+      }
     }
     return articles;
   }
