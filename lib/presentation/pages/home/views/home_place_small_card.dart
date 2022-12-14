@@ -1,5 +1,6 @@
 import 'package:batru_house_rental/domain/entities/district/district_entity.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
+import 'package:batru_house_rental/presentation/utilities/constants.dart';
 import 'package:flutter/material.dart';
 
 class HomePlaceSmallCard extends StatelessWidget {
@@ -11,8 +12,7 @@ class HomePlaceSmallCard extends StatelessWidget {
 
   final VoidCallback onTap;
   final DistrictEntity district;
-  final mockThumbnail =
-      'https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/other/cat_relaxing_on_patio_other/1800x1200_cat_relaxing_on_patio_other.jpg';
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -35,7 +35,7 @@ class HomePlaceSmallCard extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: Image.network(
-        district.imageUrl ?? mockThumbnail,
+        district.imageUrl ?? Constants.mockThumbnail,
         fit: BoxFit.cover,
       ),
     );
