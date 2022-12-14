@@ -1,4 +1,3 @@
-
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/widgets/image/image_border.dart';
 import 'package:batru_house_rental/presentation/widgets/image/thumbnail_image_view.dart';
@@ -10,7 +9,7 @@ class ImageWithBorder extends StatelessWidget {
     this.tags = const [],
     this.aspectRatio = 16 / 9,
     this.borderRadius,
-    this.tagPadding = const EdgeInsets.fromLTRB(8, 8, 32, 8),
+    this.tagPadding = const EdgeInsets.fromLTRB(8, 8, 8, 8),
     Key? key,
   }) : super(key: key);
 
@@ -28,9 +27,13 @@ class ImageWithBorder extends StatelessWidget {
           context,
           url: url,
         ),
-        _buildTags(
-          padding: tagPadding,
-          children: tags,
+        Positioned(
+          right: 0,
+          top: 0,
+          child: _buildTags(
+            padding: tagPadding,
+            children: tags,
+          ),
         ),
       ],
     );
@@ -71,7 +74,7 @@ class ImageWithBorder extends StatelessWidget {
   Widget _buildTags({
     required List<Widget> children,
     double spacing = 6,
-    EdgeInsets padding = const EdgeInsets.fromLTRB(8, 8, 32, 8),
+    EdgeInsets padding = const EdgeInsets.fromLTRB(8, 8, 8, 8),
   }) {
     return Padding(
       padding: padding,
