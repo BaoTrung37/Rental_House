@@ -1,69 +1,69 @@
 enum PriceFilter {
-  e500k,
-  e1M,
-  e2M,
-  e3M,
-  e4M,
-  e5M,
-  e6M,
-  e7M,
-  e8M,
-  e9M,
-  p10M,
+  tam500nghin,
+  tam1trieu,
+  tam2trieu,
+  tam3trieu,
+  tam4trieu,
+  tam5trieu,
+  tam6trieu,
+  tam7trieu,
+  tam8trieu,
+  tam9trieu,
+  tam10trieu,
 }
 
 extension PriceFilterFunction on PriceFilter {
-  String get name {
+  String get title {
     switch (this) {
-      case PriceFilter.e500k:
+      case PriceFilter.tam500nghin:
         return '500 nghìn';
-      case PriceFilter.e1M:
+      case PriceFilter.tam1trieu:
         return '1 triệu';
-      case PriceFilter.e2M:
+      case PriceFilter.tam2trieu:
         return '2 triệu';
-      case PriceFilter.e3M:
+      case PriceFilter.tam3trieu:
         return '3 triệu';
-      case PriceFilter.e4M:
+      case PriceFilter.tam4trieu:
         return '4 triệu';
-      case PriceFilter.e5M:
+      case PriceFilter.tam5trieu:
         return '5 triệu';
-      case PriceFilter.e6M:
+      case PriceFilter.tam6trieu:
         return '6 triệu';
-      case PriceFilter.e7M:
+      case PriceFilter.tam7trieu:
         return '7 triệu';
-      case PriceFilter.e8M:
+      case PriceFilter.tam8trieu:
         return '8 triệu';
-      case PriceFilter.e9M:
+      case PriceFilter.tam9trieu:
         return '9 triệu';
-      case PriceFilter.p10M:
+      case PriceFilter.tam10trieu:
         return '10 triệu';
     }
   }
 
   int get value {
     switch (this) {
-      case PriceFilter.e500k:
+      case PriceFilter.tam500nghin:
         return 500000;
-      case PriceFilter.e1M:
+      case PriceFilter.tam1trieu:
         return 1000000;
-      case PriceFilter.e2M:
+      case PriceFilter.tam2trieu:
         return 2000000;
-      case PriceFilter.e3M:
+      case PriceFilter.tam3trieu:
         return 3000000;
-      case PriceFilter.e4M:
+      case PriceFilter.tam4trieu:
         return 4000000;
-      case PriceFilter.e5M:
+      case PriceFilter.tam5trieu:
         return 5000000;
-      case PriceFilter.e6M:
+      case PriceFilter.tam6trieu:
         return 6000000;
-      case PriceFilter.e7M:
+      case PriceFilter.tam7trieu:
         return 7000000;
-      case PriceFilter.e8M:
+      case PriceFilter.tam8trieu:
         return 8000000;
-      case PriceFilter.e9M:
+      case PriceFilter.tam9trieu:
         return 9000000;
-      case PriceFilter.p10M:
-        return 1000000;
+      case PriceFilter.tam10trieu:
+        return 10000000;
     }
   }
 }

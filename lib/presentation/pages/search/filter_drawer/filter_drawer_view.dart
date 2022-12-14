@@ -195,7 +195,7 @@ class _FilterDrawerViewState extends ConsumerState<FilterDrawerView> {
                 ),
                 isVisible: true,
               ),
-              items: _state.priceFilter.map((element) => element).toList(),
+              items: _state.minPriceFilter.map((element) => element).toList(),
               dropdownDecoratorProps: const DropDownDecoratorProps(
                 dropdownSearchDecoration: InputDecoration(
                   labelText: 'Giá thấp nhất',
@@ -203,6 +203,7 @@ class _FilterDrawerViewState extends ConsumerState<FilterDrawerView> {
                 ),
               ),
               onChanged: (value) async {
+                // debugPrint(value);
                 await _viewModel.onMinPriceChanged(value);
               },
               selectedItem: _state.minPrice?.name,
@@ -224,7 +225,7 @@ class _FilterDrawerViewState extends ConsumerState<FilterDrawerView> {
                 ),
                 isVisible: true,
               ),
-              items: _state.priceFilter.map((element) => element).toList(),
+              items: _state.maxPriceFilter.map((element) => element).toList(),
               dropdownDecoratorProps: const DropDownDecoratorProps(
                 dropdownSearchDecoration: InputDecoration(
                   labelText: 'Giá tối đa',

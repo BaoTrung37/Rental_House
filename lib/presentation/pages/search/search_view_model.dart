@@ -28,7 +28,7 @@ class SearchViewModel extends StateNotifier<SearchState> {
   Future<void> initData(String districtId) async {
     try {
       state = state.copyWith(status: LoadingStatus.inProgress);
-      final priceFilter = PriceFilter.values.map((e) => e.name).toList();
+      final priceFilter = PriceFilter.values.map((e) => e.title).toList();
       final provinces = await _getProvinceListUseCase.run();
       final types = await _getTypeListUseCase.run();
       final districts = await _getDistrictListUseCase.run('01');
@@ -42,7 +42,8 @@ class SearchViewModel extends StateNotifier<SearchState> {
       );
 
       state = state.copyWith(
-        priceFilter: priceFilter,
+        minPriceFilter: priceFilter,
+        maxPriceFilter: priceFilter,
         provinces: provinces,
         districts: districts,
         types: types,
@@ -94,22 +95,32 @@ class SearchViewModel extends StateNotifier<SearchState> {
   Future<void> onMinPriceChanged(String? value) async {
     state = state.copyWith(
       minPrice: PriceFilter.values.firstWhereOrNull(
-        (e) => e.name == value,
+        (e) => e.title == value,
       ),
     );
-    state = state.copyWith(
-      maxPrice: PriceFilter.values.firstWhereOrNull(
-        (e) => e.value >= state.minPrice!.value,
-      ),
-    );
+    await checkPricefilter();
   }
 
   Future<void> onMaxPriceChanged(String? value) async {
     state = state.copyWith(
       maxPrice: PriceFilter.values.firstWhereOrNull(
-        (e) => e.name == value,
+        (e) => e.title == value,
       ),
     );
+    await checkPricefilter();
+  }
+
+  Future<void> checkPricefilter() async {
+    // debugPrint('minPrice: ${state.minPrice?.value}');
+    // debugPrint('maxPrice: ${state.maxPrice?.value}');
+    if (state.minPrice != null && state.maxPrice != null) {
+      if (state.minPrice!.value > state.maxPrice!.value) {
+        state = state.copyWith(
+          minPrice: state.maxPrice,
+          maxPrice: state.minPrice,
+        );
+      }
+    }
   }
 
   Future<void> onTypeChanged(String? type) async {
