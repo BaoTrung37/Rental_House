@@ -320,7 +320,6 @@ class ArticleRepository {
       ArticleFilterInput input) async {
     final addressSnapshot = await _fireStore
         .collection('address')
-        .where('isApproved', isEqualTo: true)
         .where('districtId', isEqualTo: input.districtId)
         .where('communeId', isEqualTo: input.communeId)
         .get();
@@ -340,13 +339,15 @@ class ArticleRepository {
     for (final type in typeHouseResponse) {
       for (final address in addressResponse) {
         if (type.houseId == address.houseId) {
-          final house = await getArticeById(address.houseId);
-          final rentalPrice = house.house?.rentalPrice ?? 0;
+          final article = await getArticeById(address.houseId);
+          final rentalPrice = article.house?.rentalPrice ?? 0;
           final minPrice = input.minPrice ?? 0;
           final maxPrice = input.maxPrice ?? 1000000000;
 
-          if (rentalPrice >= minPrice && rentalPrice <= maxPrice) {
-            articles.add(house);
+          if (rentalPrice >= minPrice &&
+              rentalPrice <= maxPrice &&
+              article.house?.isApproved == true) {
+            articles.add(article);
           }
         }
       }
