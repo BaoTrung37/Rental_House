@@ -1,6 +1,6 @@
 import 'package:batru_house_rental/domain/entities/district/district_entity.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
-import 'package:batru_house_rental/presentation/utilities/constants.dart';
+import 'package:batru_house_rental/presentation/widgets/image/image_with_border.dart';
 import 'package:flutter/material.dart';
 
 class HomePlaceSmallCard extends StatelessWidget {
@@ -32,12 +32,10 @@ class HomePlaceSmallCard extends StatelessWidget {
   }
 
   Widget _buildImage() {
-    return ClipRRect(
+    return ImageWithBorder(
+      aspectRatio: 1.5,
+      url: district.imageUrl,
       borderRadius: BorderRadius.circular(10),
-      child: Image.network(
-        district.imageUrl ?? Constants.mockThumbnail,
-        fit: BoxFit.cover,
-      ),
     );
   }
 

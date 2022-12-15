@@ -1,6 +1,7 @@
 import 'package:batru_house_rental/domain/entities/article/article_entity.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/utilities/helper/number_format_helper.dart';
+import 'package:batru_house_rental/presentation/widgets/image/image_with_border.dart';
 import 'package:flutter/material.dart';
 
 class RelativeHouseItemView extends StatelessWidget {
@@ -18,16 +19,7 @@ class RelativeHouseItemView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: AspectRatio(
-              aspectRatio: 16 / 9,
-              child: Image.network(
-                articleEntity.imageList.first.url,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
+          _buildImage(),
           const SizedBox(height: 2),
           Text(
             'TÌM NGƯỜI THUÊ.',
@@ -71,6 +63,13 @@ class RelativeHouseItemView extends StatelessWidget {
           // )
         ],
       ),
+    );
+  }
+
+  Widget _buildImage() {
+    return ImageWithBorder(
+      borderRadius: BorderRadius.circular(10),
+      url: articleEntity.imageList.first.url,
     );
   }
 }

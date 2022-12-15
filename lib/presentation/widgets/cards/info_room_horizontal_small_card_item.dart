@@ -1,6 +1,7 @@
 import 'package:batru_house_rental/domain/entities/article/article_entity.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/utilities/helper/number_format_helper.dart';
+import 'package:batru_house_rental/presentation/widgets/image/image_with_border.dart';
 import 'package:flutter/material.dart';
 
 class InfoRoomHorizontalCardItemItem extends StatelessWidget {
@@ -111,15 +112,10 @@ class InfoRoomHorizontalCardItemItem extends StatelessWidget {
   }
 
   Widget _buildImage() {
-    return AspectRatio(
+    return ImageWithBorder(
       aspectRatio: 1.1,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: Image.network(
-          articleEntity?.imageList.first.url ?? mockThumbnail,
-          fit: BoxFit.cover,
-        ),
-      ),
+      url: articleEntity?.imageList.first.url,
+      borderRadius: BorderRadius.circular(10),
     );
   }
 }
