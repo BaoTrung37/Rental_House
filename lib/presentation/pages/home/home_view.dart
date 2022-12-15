@@ -12,6 +12,7 @@ import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
 import 'package:batru_house_rental/presentation/widgets/app_indicator/loading_view.dart';
 import 'package:batru_house_rental/presentation/widgets/cards/info_room_horizontal_small_card_item.dart';
+import 'package:batru_house_rental/presentation/widgets/image/image_with_border.dart';
 import 'package:batru_house_rental/presentation/widgets/infinite_list/refresh_view.dart';
 import 'package:batru_house_rental/presentation/widgets/snack_bar/error_snack_bar.dart';
 import 'package:flutter/material.dart';
@@ -34,8 +35,6 @@ class HomeView extends ConsumerStatefulWidget {
 }
 
 class _HomeViewState extends ConsumerState<HomeView> {
-  
-
   HomeViewModel get _viewModel => ref.read(homeViewProvider.notifier);
   HomeState get _state => ref.watch(homeViewProvider);
 
@@ -91,6 +90,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
         onRefresh: () async {
           await _viewModel.initData();
         },
+        color: Colors.transparent,
         triggerMode: RefreshIndicatorTriggerMode.anywhere,
         onOverScroll: (mode, distance, limit) {
           switch (mode) {
@@ -206,8 +206,6 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
   Widget _buildSlider(BuildContext context) {
     return Container(
-      height: MediaQuery.of(context).size.height * .25,
-      width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         color: context.colors.backgroundSecondary,
       ),
@@ -217,8 +215,6 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
   Widget _buildBanner(BuildContext context) {
     return SizedBox(
-      width: double.infinity,
-      height: MediaQuery.of(context).size.height * 0.15,
       child: _buildImage(),
     );
   }
@@ -251,12 +247,11 @@ class _HomeViewState extends ConsumerState<HomeView> {
   }
 
   Widget _buildImage() {
-    return ClipRRect(
+    return ImageWithBorder(
+      aspectRatio: 3,
+      url:
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR21hT8DpLDp4fyJzRHGFoZpPCX2MXdsR50nA&usqp=CAU',
       borderRadius: BorderRadius.circular(10),
-      child: Image.network(
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR21hT8DpLDp4fyJzRHGFoZpPCX2MXdsR50nA&usqp=CAU',
-        fit: BoxFit.cover,
-      ),
     );
   }
 

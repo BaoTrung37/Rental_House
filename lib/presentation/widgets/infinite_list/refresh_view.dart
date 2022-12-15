@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:flutter/material.dart';
 
 enum RefreshIndicatorMode {
@@ -76,7 +75,7 @@ class RefreshIndicatorState extends State<RefreshView>
   final _displacement = 20.0;
   final _triggerLimit = 80.0;
 
-  late final _color = widget.color ?? context.colors.iconPrimary;
+  late final _color = widget.color ?? Colors.white;
 
   @override
   void initState() {

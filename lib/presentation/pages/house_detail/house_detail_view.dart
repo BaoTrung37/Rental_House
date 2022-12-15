@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
+import 'package:batru_house_rental/domain/entities/image_house/image_house_entity.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_article_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_article_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
@@ -27,7 +28,7 @@ import 'package:batru_house_rental/presentation/widgets/app_divider/app_divider.
 import 'package:batru_house_rental/presentation/widgets/app_indicator/loading_view.dart';
 import 'package:batru_house_rental/presentation/widgets/base_app_bar/base_app_bar.dart';
 import 'package:batru_house_rental/presentation/widgets/buttons/app_button.dart';
-import 'package:batru_house_rental/presentation/widgets/image/image_border.dart';
+import 'package:batru_house_rental/presentation/widgets/image/image_with_border.dart';
 import 'package:batru_house_rental/presentation/widgets/input_text_field/input_text_field.dart';
 import 'package:batru_house_rental/presentation/widgets/snack_bar/error_snack_bar.dart';
 import 'package:flutter/material.dart';
@@ -333,19 +334,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
             child: Row(
               children: [
                 Expanded(
-                  child: ListView.builder(
-                    itemExtent: MediaQuery.of(context).size.width,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: imageList.length,
-                    itemBuilder: (context, index) {
-                      return ImageBorder(
-                        child: Image.network(
-                          imageList[index].url,
-                          fit: BoxFit.cover,
-                        ),
-                      );
-                    },
-                  ),
+                  child: _buildImageList(context, imageList),
                 ),
               ],
             ),
@@ -545,6 +534,28 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
         ),
         _buildHouseArticleRelativeList(),
       ],
+    );
+  }
+
+  Widget _buildImageList(
+      BuildContext context, List<ImageHouseEntity> imageList) {
+    return ListView.builder(
+      itemExtent: MediaQuery.of(context).size.width,
+      scrollDirection: Axis.horizontal,
+      itemCount: imageList.length,
+      itemBuilder: (context, index) {
+        return _buildImage(imageList[index].url);
+      },
+    );
+  }
+
+  // TODO: Show image
+  Widget _buildImage(String url) {
+    return GestureDetector(
+      onTap: () {},
+      child: ImageWithBorder(
+        url: url,
+      ),
     );
   }
 
