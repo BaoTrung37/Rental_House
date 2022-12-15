@@ -111,8 +111,6 @@ class SearchViewModel extends StateNotifier<SearchState> {
   }
 
   Future<void> checkPricefilter() async {
-    // debugPrint('minPrice: ${state.minPrice?.value}');
-    // debugPrint('maxPrice: ${state.maxPrice?.value}');
     if (state.minPrice != null && state.maxPrice != null) {
       if (state.minPrice!.value > state.maxPrice!.value) {
         state = state.copyWith(
