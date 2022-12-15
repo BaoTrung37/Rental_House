@@ -17,5 +17,7 @@ class HouseDetailState with _$HouseDetailState {
     ArticleEntity? article,
     UserEntity? onwerHouse,
     @Default(false) isYourHouse,
+    @Default(false) isFavorite,
+    String? favoriteId,
   }) = _HouseDetailState;
 }

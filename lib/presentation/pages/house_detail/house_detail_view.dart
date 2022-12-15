@@ -6,6 +6,9 @@ import 'package:batru_house_rental/domain/use_case/article/get_article_use_case.
 import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_user_by_id_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/post_chat_room_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/favorite/add_favorite_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/favorite/check_favorite_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/favorite/remove_favorite_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/house/remove_house_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
@@ -39,6 +42,9 @@ final _familyProvider = StateNotifierProvider.autoDispose
     injector.get<GetArticleListUseCase>(),
     injector.get<PostChatRoomUseCase>(),
     injector.get<RemoveHouseUseCase>(),
+    injector.get<CheckFavoriteUseCase>(),
+    injector.get<AddFavoriteUseCase>(),
+    injector.get<RemoveFavoriteUseCase>(),
   ),
 );
 
@@ -84,8 +90,6 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
     super.dispose();
   }
 
-  final mockThumbnail =
-      'https://img.webmd.com/dtmcms/live/webmd/consumer_assets/site_images/article_thumbnails/other/cat_relaxing_on_patio_other/1800x1200_cat_relaxing_on_patio_other.jpg';
   @override
   Widget build(BuildContext context) {
     ref.listen<HouseDetailState>(
@@ -108,13 +112,31 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
     );
 
     return Scaffold(
-      appBar: const BaseAppBar.titleAndBackButton(
+      appBar: BaseAppBar.titleAndBackButton(
         title: 'Chi tiết phòng',
         shouldShowBottomDivider: true,
+        widgets: [
+          _buildFavoriteIcon(context),
+        ],
       ),
       body: LoadingView(
         status: state.status,
         child: _buildBodyContent(context),
+      ),
+    );
+  }
+
+  Widget _buildFavoriteIcon(BuildContext context) {
+    return GestureDetector(
+      onTap: _viewModel.onFavoriteChanged,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Icon(
+          state.isFavorite ? Icons.favorite : Icons.favorite_border_rounded,
+          color: state.isFavorite
+              ? context.colors.contentSpecialMain
+              : context.colors.border,
+        ),
       ),
     );
   }
