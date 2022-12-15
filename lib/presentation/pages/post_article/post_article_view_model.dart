@@ -88,7 +88,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
         id: '',
         streetName: '',
         area: 0,
-        capacity: 1,
+        capacity: 0,
         depositMonth: 0,
         electricPrice: 0,
         waterPrice: 0,
@@ -107,28 +107,20 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
     );
   }
 
-  // Future<void> getArticleInitial() async {
-  //   state = state.copyWith(
-  //     article: ArticleEntity(
-  //       id: '',
-  //       title: '',
-  //       description: '',
-  //       userId: '',
-  //       houseId: '',
-  //       phoneNumber: '',
-  //       createdAt: DateTime.now(),
-  //       updatedAt: null,
-  //     ),
-  //   );
-  // }
-
-  // void setHouseAmount(int amount) {
-  //   state = state.house.;
-  // }
   String _getAddress() {
-    final houseNumber = '${state.house!.houseNumber}, ';
-    final streetName = '${state.house!.streetName}, ';
-    final communeName = '${state.currentCommune!.name}, ';
+    var houseNumber = state.house?.houseNumber;
+    if (houseNumber != null && houseNumber.isNotEmpty) {
+      houseNumber = '$houseNumber, ';
+    } else {
+      houseNumber = '';
+    }
+    var streetName = state.house?.streetName;
+    if (streetName != null && streetName.isNotEmpty) {
+      streetName = '$streetName, ';
+    } else {
+      streetName = '';
+    }
+    final communeName = '${state.currentCommune?.name}, ';
     final districtName = '${state.currentDistrict!.name}, ';
     const provinceName = 'Hà Nội';
 

@@ -16,6 +16,7 @@ class HouseEntity with _$HouseEntity {
     required String address,
     DateTime? updatedAt,
     @Default(false) isAvailableParking,
+    @Default(false) bool isApproved,
     @Default(0) int area,
     @Default(1) int capacity,
     @Default(500000) int rentalPrice,

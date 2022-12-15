@@ -22,18 +22,21 @@ class RelativeHouseItemView extends StatelessWidget {
           _buildImage(),
           const SizedBox(height: 2),
           Text(
-            'TÌM NGƯỜI THUÊ.',
+            articleEntity.type?.name ?? 'Tìm người thuê',
             style: AppTextStyles.labelXSmallLight.copyWith(
               color: context.colors.textSecondary,
             ),
           ),
           const SizedBox(height: 2),
           Expanded(
-            child: Text(
-              articleEntity.house?.title ?? '',
-              style: AppTextStyles.textMediumBold,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                articleEntity.house?.title ?? '',
+                style: AppTextStyles.textMediumBold,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ),
           const SizedBox(height: 2),

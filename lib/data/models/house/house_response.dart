@@ -24,6 +24,7 @@ class HouseResponse {
     required this.description,
     required this.createdAt,
     required this.address,
+    this.isApproved = false,
     this.updatedAt,
   });
   factory HouseResponse.fromJson(Map<String, dynamic> json) =>
@@ -47,6 +48,8 @@ class HouseResponse {
   final int parkingPrice;
   @JsonKey(defaultValue: false)
   final bool isAvailableParking;
+  @JsonKey(defaultValue: false)
+  final bool isApproved;
   final int rentalPrice;
   final String userId;
   final String title;
@@ -71,6 +74,7 @@ class HouseResponse {
         internetPrice: internetPrice,
         parkingPrice: parkingPrice,
         isAvailableParking: isAvailableParking,
+        isApproved: isApproved,
         rentalPrice: rentalPrice,
         userId: userId,
         title: title,
