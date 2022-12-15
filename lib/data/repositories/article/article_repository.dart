@@ -166,7 +166,7 @@ class ArticleRepository {
   Future<List<ArticleEntity>> getArticles(int limit) async {
     final houseSnapshot = await _fireStore
         .collection('house')
-        .orderBy('createdAt', descending: true)
+        .where('isApproved', isEqualTo: true)
         .limit(limit)
         .get();
 
@@ -236,7 +236,7 @@ class ArticleRepository {
     } catch (e) {
       debugPrint(e.toString());
     }
-
+    articles.sort((a, b) => b.id.compareTo(a.id));
     return articles;
   }
 
@@ -312,7 +312,7 @@ class ArticleRepository {
     } catch (e) {
       debugPrint(e.toString());
     }
-
+    articles.sort((a, b) => b.id.compareTo(a.id));
     return articles;
   }
 
@@ -320,6 +320,7 @@ class ArticleRepository {
       ArticleFilterInput input) async {
     final addressSnapshot = await _fireStore
         .collection('address')
+        .where('isApproved', isEqualTo: true)
         .where('districtId', isEqualTo: input.districtId)
         .where('communeId', isEqualTo: input.communeId)
         .get();
@@ -350,6 +351,7 @@ class ArticleRepository {
         }
       }
     }
+    articles.sort((a, b) => b.id.compareTo(a.id));
     return articles;
   }
 }

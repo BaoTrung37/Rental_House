@@ -170,7 +170,9 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
               buttonState: postButtonStatus.buttonState,
               title: isLastStep ? 'Đăng phòng' : 'Tiếp theo',
               onButtonTap: !isLastStep
-                  ? details.onStepContinue
+                  ? () {
+                      details.onStepContinue?.call();
+                    }
                   : () {
                       validate(
                         onSuccess: _onPostArticleButton,
@@ -218,10 +220,12 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
         ),
         const SizedBox(height: 8),
         InputTextField.singleLine(
+          initialText: state.house?.title,
           labelText: 'Tiêu đề bài đăng',
           placeholder: 'Nhập tiêu đề bài đăng',
           keyboardType: TextInputType.text,
           textInputAction: TextInputAction.next,
+          maxLength: 50,
           validator: Validator().required().minLength(1).maxLength(50).build(),
           onTextChange: (value) {
             _viewModel.setTitle(value!);
@@ -232,9 +236,8 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           labelText: 'Nội dung mô tả',
           placeholder: 'Nhập nội dung mô tả',
           minHeight: 3,
-          maxLength: 150,
           textInputAction: TextInputAction.next,
-          validator: Validator().required().minLength(1).maxLength(150).build(),
+          validator: Validator().required().minLength(1).build(),
           onTextChange: (value) {
             _viewModel.setDescription(value!);
           },
@@ -365,7 +368,6 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           keyboardType: TextInputType.text,
           initialText: state.house?.streetName,
           textInputAction: TextInputAction.next,
-          validator: Validator().required().minLength(1).maxLength(50).build(),
           onTextChange: (value) {
             _viewModel.setStreetName(value!);
           },
@@ -377,7 +379,6 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           keyboardType: TextInputType.text,
           initialText: state.house?.houseNumber,
           textInputAction: TextInputAction.next,
-          validator: Validator().required().minLength(1).maxLength(40).build(),
           onTextChange: (value) {
             _viewModel.setHouseNumber(value!);
           },
