@@ -35,4 +35,18 @@ class HouseRepository {
       return HouseResponse.fromJson(snapshot.data()!);
     });
   }
+
+  Future<void> postAvailableHouse(String id) async {
+    await _fireStore
+        .collection('house')
+        .doc(id)
+        .update({'isAvailablePost': true});
+  }
+
+  Future<void> unPostAvailableHouse(String id) async {
+    await _fireStore
+        .collection('house')
+        .doc(id)
+        .update({'isAvailablePost': false});
+  }
 }

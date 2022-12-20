@@ -16,7 +16,6 @@ class HouseResponse {
     required this.electricPrice,
     required this.internetPrice,
     required this.parkingPrice,
-    required this.isAvailableParking,
     required this.rentalPrice,
     required this.userId,
     required this.title,
@@ -24,6 +23,8 @@ class HouseResponse {
     required this.description,
     required this.createdAt,
     required this.address,
+    this.isAvailableParking = false,
+    this.isAvailablePost = true,
     this.isApproved = false,
     this.updatedAt,
   });
@@ -46,10 +47,9 @@ class HouseResponse {
   final int internetPrice;
   @JsonKey(defaultValue: 0)
   final int parkingPrice;
-  @JsonKey(defaultValue: false)
   final bool isAvailableParking;
-  @JsonKey(defaultValue: false)
   final bool isApproved;
+  final bool isAvailablePost;
   final int rentalPrice;
   final String userId;
   final String title;
@@ -75,6 +75,7 @@ class HouseResponse {
         parkingPrice: parkingPrice,
         isAvailableParking: isAvailableParking,
         isApproved: isApproved,
+        isAvailablePost: isAvailablePost,
         rentalPrice: rentalPrice,
         userId: userId,
         title: title,

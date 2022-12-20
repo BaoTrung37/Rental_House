@@ -39,11 +39,7 @@ class InfoRoomHorizontalCardItemItem extends StatelessWidget {
                         _buildTypeLabel(context),
                         const SizedBox(height: 4),
                         Expanded(
-                          child: Row(
-                            children: [
-                              _buildInfoHouseTitle(context),
-                            ],
-                          ),
+                          child: _buildInfoHouseTitle(context),
                         ),
                         _buildInfoStreet(context),
                         // _buildInfoDistrict(context),

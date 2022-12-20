@@ -10,7 +10,9 @@ import 'package:batru_house_rental/domain/use_case/chat/post_chat_room_use_case.
 import 'package:batru_house_rental/domain/use_case/favorite/add_favorite_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/favorite/check_favorite_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/favorite/remove_favorite_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/house/post_available_house_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/house/remove_house_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/house/un_post_available_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
 import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_state.dart';
@@ -46,6 +48,8 @@ final _familyProvider = StateNotifierProvider.autoDispose
     injector.get<CheckFavoriteUseCase>(),
     injector.get<AddFavoriteUseCase>(),
     injector.get<RemoveFavoriteUseCase>(),
+    injector.get<PostAvailableHouseUseCase>(),
+    injector.get<UnPostAvailableHouseUseCase>(),
   ),
 );
 
@@ -169,6 +173,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             _buildUpdateHouseButton(context),
+            _buildAvaliblePostButton(context),
             _buildRemoveHouseButton(context),
           ],
         ),
@@ -189,9 +194,6 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
               onAction: (_) async {
                 Navigator.of(context).pop();
                 await _viewModel.onRemoveHouse();
-                // ref
-                //     .read(appNavigatorProvider)
-                //     .popUntil(routeName: AppRoutes.mainMenu);
               },
             ),
             ActionAppDialog(
@@ -210,6 +212,24 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
       ),
       title: 'Xoá',
       backgroundColor: context.colors.error,
+    );
+  }
+
+  Widget _buildAvaliblePostButton(BuildContext context) {
+    final isAvalible = state.article?.house?.isAvailablePost ?? false;
+    return AppButton(
+      onButtonTap: () async {
+        await _viewModel.onAvailablePostChanged();
+      },
+      leftIcon: const Icon(
+        Icons.autorenew_sharp,
+        size: 16,
+        color: Colors.white,
+      ),
+      title: isAvalible ? 'Còn phòng' : 'Hết phòng',
+      backgroundColor: isAvalible
+          ? context.colors.primaryMain
+          : context.colors.iconSecondary,
     );
   }
 
@@ -784,6 +804,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
   }
 
   Widget _buildRoomStatusInfo(BuildContext context) {
+    final isAvalible = state.article?.house?.isAvailablePost ?? false;
     return Column(
       children: [
         Text(
@@ -793,7 +814,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
           ),
         ),
         Text(
-          'Còn',
+          isAvalible ? 'Còn' : 'Hết',
           style: AppTextStyles.labelSmallLight.copyWith(
             color: context.colors.contentSpecialText,
           ),
