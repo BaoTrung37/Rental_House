@@ -401,7 +401,9 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
                 const Text(
                   'Sức chứa',
                   style: AppTextStyles.labelMediumLight,
-                )
+                ),
+                const SizedBox(height: 10),
+                _buildCapacityView(),
                 // Add luu y
               ],
             ),
@@ -553,6 +555,99 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
           child: _buildBigDivider(),
         ),
         _buildHouseArticleRelativeList(),
+      ],
+    );
+  }
+
+  Widget _buildCapacityView() {
+    return Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '${state.smallQuantity} người +',
+                style: AppTextStyles.labelSmallLight.copyWith(
+                  color: Colors.orange[400],
+                ),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                height: 15,
+                decoration: BoxDecoration(
+                  color: Colors.orange[400],
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'Chật',
+                style: AppTextStyles.labelSmallLight,
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 4),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                '${state.normalQuantity} người',
+                style: AppTextStyles.labelSmallLight.copyWith(
+                  color: Colors.green[400],
+                ),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                height: 15,
+                decoration: BoxDecoration(
+                  color: Colors.green[400],
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'Ổn',
+                style: AppTextStyles.labelSmallLight,
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 4),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                '${state.largeQuantity} người',
+                style: AppTextStyles.labelSmallLight.copyWith(
+                  color: Colors.blue[300],
+                ),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                height: 15,
+                decoration: BoxDecoration(
+                  color: Colors.blue[300],
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'Rộng',
+                style: AppTextStyles.labelSmallLight,
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

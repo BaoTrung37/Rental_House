@@ -62,7 +62,6 @@ class HouseDetailViewModel extends StateNotifier<HouseDetailState> {
           houseId: article.house!.id,
         ),
       );
-
       state = state.copyWith(
         article: article,
         onwerHouse: ownerHouse,
@@ -72,10 +71,24 @@ class HouseDetailViewModel extends StateNotifier<HouseDetailState> {
         favoriteId: favoriteId,
         status: LoadingStatus.success,
       );
+      await quantityInit();
     } catch (e) {
       state = state.copyWith(status: LoadingStatus.error);
       debugPrint('House detail: $e');
     }
+  }
+
+  Future<void> quantityInit() async {
+    final area = state.article!.house!.area;
+    final normalQuantity = area ~/ 10 <= 0 ? 1 : area ~/ 10;
+    final smallQuantity = normalQuantity + 1;
+    final largeQuantity = normalQuantity - 1 <= 0 ? 1 : normalQuantity - 1;
+
+    state = state.copyWith(
+      normalQuantity: normalQuantity,
+      smallQuantity: smallQuantity,
+      largeQuantity: largeQuantity,
+    );
   }
 
   Future<void> onFavoriteChanged() async {
