@@ -19,5 +19,8 @@ class HouseDetailState with _$HouseDetailState {
     @Default(false) isYourHouse,
     @Default(false) isFavorite,
     String? favoriteId,
+    @Default(0) int largeQuantity,
+    @Default(0) int normalQuantity,
+    @Default(0) int smallQuantity,
   }) = _HouseDetailState;
 }
