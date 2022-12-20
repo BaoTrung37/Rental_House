@@ -36,8 +36,10 @@ import 'package:batru_house_rental/domain/use_case/favorite/check_favorite_use_c
 import 'package:batru_house_rental/domain/use_case/favorite/get_favorite_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/favorite/remove_favorite_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/house/get_house_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/house/post_available_house_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/house/post_house_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/house/remove_house_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/house/un_post_available_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/house_type/post_house_type_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/image_house/get_image_house_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/image_house/post_image_house_list_use_case.dart';
@@ -227,5 +229,13 @@ class AppModules {
     /// remove favorite use case
     injector.registerLazySingleton<RemoveFavoriteUseCase>(
         () => RemoveFavoriteUseCase());
+
+    /// post available house use case
+    injector.registerLazySingleton<PostAvailableHouseUseCase>(
+        () => PostAvailableHouseUseCase());
+
+    /// un post available house use case
+    injector.registerLazySingleton<UnPostAvailableHouseUseCase>(
+        () => UnPostAvailableHouseUseCase());
   }
 }

@@ -9,7 +9,9 @@ import 'package:batru_house_rental/domain/use_case/chat/post_chat_room_use_case.
 import 'package:batru_house_rental/domain/use_case/favorite/add_favorite_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/favorite/check_favorite_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/favorite/remove_favorite_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/house/post_available_house_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/house/remove_house_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/house/un_post_available_use_case.dart';
 import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_state.dart';
 import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +28,8 @@ class HouseDetailViewModel extends StateNotifier<HouseDetailState> {
     this._checkFavoriteUseCase,
     this._addFavoriteUseCase,
     this._removeFavoriteUseCase,
+    this._postAvailableHouseUseCase,
+    this._unPostAvailableHouseUseCase,
   ) : super(const HouseDetailState());
 
   final GetArticleUseCase _getArticleUseCase;
@@ -37,6 +41,9 @@ class HouseDetailViewModel extends StateNotifier<HouseDetailState> {
   final CheckFavoriteUseCase _checkFavoriteUseCase;
   final AddFavoriteUseCase _addFavoriteUseCase;
   final RemoveFavoriteUseCase _removeFavoriteUseCase;
+  final PostAvailableHouseUseCase _postAvailableHouseUseCase;
+  final UnPostAvailableHouseUseCase _unPostAvailableHouseUseCase;
+
   late String ownerHouseUserId;
   late String currentUserId;
   Future<void> init(String houseId) async {
@@ -100,6 +107,26 @@ class HouseDetailViewModel extends StateNotifier<HouseDetailState> {
         // appError: 'Lỗi xóa bài đăng',
       );
       debugPrint('Favorite changed: $e');
+    }
+  }
+
+  Future<void> onAvailablePostChanged() async {
+    try {
+      final isAvailablePost = state.article?.house?.isAvailablePost;
+      if (isAvailablePost == false) {
+        await _postAvailableHouseUseCase.run(state.article!.house!.id);
+      } else {
+        await _unPostAvailableHouseUseCase.run(state.article!.house!.id);
+      }
+      state = state.copyWith(
+        article: state.article!.copyWith(
+          house: state.article!.house!.copyWith(
+            isAvailablePost: !isAvailablePost!,
+          ),
+        ),
+      );
+    } catch (e) {
+      debugPrint('AvailablePost changed: $e');
     }
   }
 
