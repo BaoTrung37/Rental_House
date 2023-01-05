@@ -20,7 +20,7 @@ import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_
 import 'package:batru_house_rental/presentation/pages/house_detail/widgets/convenient_item.dart';
 import 'package:batru_house_rental/presentation/pages/house_detail/widgets/convenient_list_item.dart';
 import 'package:batru_house_rental/presentation/pages/house_detail/widgets/relative_house_item_view.dart';
-import 'package:batru_house_rental/presentation/pages/owner_article/owner_article_view.dart';
+import 'package:batru_house_rental/presentation/pages/more_article/more_article_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
 import 'package:batru_house_rental/presentation/utilities/helper/date_format_helper.dart';
@@ -519,8 +519,11 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
                   onPressed: () async {
                     final userId = await _viewModel.getOwnerHouseUserId();
                     await ref.read(appNavigatorProvider).navigateTo(
-                        AppRoutes.ownerHouse,
-                        arguments: OnwerArticleArguments(userId: userId));
+                          AppRoutes.moreArticle,
+                          arguments: MoreArticleArguments(
+                            userId: userId,
+                          ),
+                        );
                   },
                 )
               ],

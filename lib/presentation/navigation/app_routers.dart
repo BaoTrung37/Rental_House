@@ -37,4 +37,7 @@ class AppRoutes {
 
   /// owner house
   static const String ownerHouse = '/owner_house';
+
+  /// more article
+  static const String moreArticle = '/more_article';
 }
