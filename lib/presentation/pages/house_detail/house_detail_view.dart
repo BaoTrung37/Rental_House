@@ -20,7 +20,7 @@ import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_
 import 'package:batru_house_rental/presentation/pages/house_detail/widgets/convenient_item.dart';
 import 'package:batru_house_rental/presentation/pages/house_detail/widgets/convenient_list_item.dart';
 import 'package:batru_house_rental/presentation/pages/house_detail/widgets/relative_house_item_view.dart';
-import 'package:batru_house_rental/presentation/pages/owner_article/owner_article_view.dart';
+import 'package:batru_house_rental/presentation/pages/more_article/more_article_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
 import 'package:batru_house_rental/presentation/utilities/helper/date_format_helper.dart';
@@ -284,11 +284,11 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
     return AppButton(
       onButtonTap: () {},
       leftIcon: const Icon(
-        Icons.money_off_csred_outlined,
+        Icons.calendar_today,
         color: Colors.white,
         size: 16,
       ),
-      title: 'Đặt chỗ',
+      title: 'Lên lịch',
       backgroundColor: context.colors.contentAlert,
     );
   }
@@ -312,8 +312,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
                 placeholder: 'Nhập nội dung!',
                 initialText: state.message,
                 onTextChange: (value) {
-                  debugPrint(value!);
-                  _viewModel.onMessageChanged(value);
+                  _viewModel.onMessageChanged(value!);
                 },
               ),
             ],
@@ -503,7 +502,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
                         style: AppTextStyles.textMedium,
                       ),
                       Text(
-                        '1 phòng',
+                        'Xem thêm phòng',
                         style: AppTextStyles.labelSmall.copyWith(
                           color: context.colors.primaryText,
                         ),
@@ -520,8 +519,11 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
                   onPressed: () async {
                     final userId = await _viewModel.getOwnerHouseUserId();
                     await ref.read(appNavigatorProvider).navigateTo(
-                        AppRoutes.ownerHouse,
-                        arguments: OnwerArticleArguments(userId: userId));
+                          AppRoutes.moreArticle,
+                          arguments: MoreArticleArguments(
+                            userId: userId,
+                          ),
+                        );
                   },
                 )
               ],
@@ -542,10 +544,50 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
                   color: context.colors.contentSpecialMain,
                 ),
                 const SizedBox(width: 10),
-                Text(
-                  'Báo cáo tin đăng',
-                  style: AppTextStyles.headingXSmall
-                      .copyWith(color: context.colors.contentSpecialText),
+                GestureDetector(
+                  onTap: () {
+                    showAppDialog(
+                      context,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text('Lý do muốn báo cáo'),
+                          const SizedBox(height: 8),
+                          const AppDivider(),
+                          const SizedBox(height: 8),
+                          const Text(
+                              'Bạn vui lòng xác nhận lý do báo cáo để chúng tôi có thể xử lý nhanh nhất'),
+                          const SizedBox(height: 8),
+                          InputTextField(
+                            placeholder: 'Nhập lý do',
+                            onTextChange: (value) {
+                              debugPrint(value!);
+                            },
+                          ),
+                        ],
+                      ),
+                      actions: [
+                        ActionAppDialog(
+                          actionDialogTitle: 'Huỷ',
+                          onAction: (_) {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        ActionAppDialog(
+                          actionDialogTitle: 'Gửi',
+                          onAction: (_) async {
+                            Navigator.of(context).pop();
+                            // await _viewModel.onSendMessage();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                  child: Text(
+                    'Báo cáo sai phạm',
+                    style: AppTextStyles.headingXSmall
+                        .copyWith(color: context.colors.contentSpecialText),
+                  ),
                 ),
               ],
             ),

@@ -22,7 +22,7 @@ class AppIcons {
     double? size,
   }) {
     return Icon(
-      Icons.favorite_outline,
+      Icons.favorite_outlined,
       color: color,
       size: size,
     );
@@ -32,8 +32,8 @@ class AppIcons {
     Color? color,
     double? size,
   }) {
-    return SvgIcon.from(
-      '$_iconsPath/Message.svg',
+    return Icon(
+      Icons.messenger_rounded,
       color: color,
       size: size,
     );

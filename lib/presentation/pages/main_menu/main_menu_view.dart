@@ -34,7 +34,6 @@ class _MainMenuViewState extends ConsumerState<MainMenuView>
   MainMenuViewModel get _viewModel => ref.read(mainMenuProvider.notifier);
   @override
   void dispose() {
-    
     super.dispose();
   }
 
