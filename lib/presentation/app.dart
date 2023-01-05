@@ -32,6 +32,7 @@ class _MyAppState extends ConsumerState<_MyApp> {
 
     return MaterialApp(
       title: 'Project Name',
+      debugShowCheckedModeBanner: false,
       theme: getAppTheme(Brightness.light),
       darkTheme: getAppTheme(Brightness.dark),
       // themeMode: isDarkTheme ? ThemeMode.dark : ThemeMode.light,
