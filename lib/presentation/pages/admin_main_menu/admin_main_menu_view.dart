@@ -6,7 +6,7 @@ import 'package:batru_house_rental/data/providers/mypage_navigator_provider.dart
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
 import 'package:batru_house_rental/presentation/navigation/chat_navigator_view.dart';
 import 'package:batru_house_rental/presentation/navigation/mypage_navigator_view.dart';
-import 'package:batru_house_rental/presentation/pages/admin_home/admin_post_view.dart';
+import 'package:batru_house_rental/presentation/pages/admin_post/admin_post_view.dart';
 import 'package:batru_house_rental/presentation/pages/admin_main_menu/admin_main_menu_state.dart';
 import 'package:batru_house_rental/presentation/pages/admin_main_menu/admin_main_menu_view_model.dart';
 import 'package:batru_house_rental/presentation/pages/admin_report/admin_report_view.dart';
