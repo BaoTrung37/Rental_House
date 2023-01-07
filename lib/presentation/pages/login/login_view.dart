@@ -17,8 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intro_slider/intro_slider.dart';
 
-final _provider =
-    StateNotifierProvider.autoDispose<LoginViewModel, LoginState>(
+final _provider = StateNotifierProvider.autoDispose<LoginViewModel, LoginState>(
   (ref) => LoginViewModel(
     injector.get<GoogleLoginUseCase>(),
     injector.get<GetInitialArticleDataUseCase>(),
@@ -36,8 +35,6 @@ class LoginView extends ConsumerStatefulWidget {
 class _LoginViewState extends ConsumerState<LoginView> {
   LoginViewModel get _viewModel => ref.read(_provider.notifier);
   LoginState get _state => ref.watch(_provider);
-
-  
 
   @override
   void initState() {
@@ -60,8 +57,6 @@ class _LoginViewState extends ConsumerState<LoginView> {
             errorMessage: next.appError,
           );
         }
-
-        
       },
     );
 
@@ -187,7 +182,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
               if (isSuccess) {
                 await ref
                     .read(appNavigatorProvider)
-                    .navigateTo(AppRoutes.adminHome, shoulClearStack: true);
+                    .navigateTo(AppRoutes.adminMainMenu, shoulClearStack: true);
               }
             },
           ),

@@ -1,12 +1,12 @@
 import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'admin_home_state.freezed.dart';
+part 'admin_report_state.freezed.dart';
 
 @freezed
-class AdminHomeState with _$AdminHomeState {
-  const factory AdminHomeState({
+class AdminReportState with _$AdminReportState {
+  const factory AdminReportState({
     @Default(LoadingStatus.initial) LoadingStatus status,
-    String? errorMessage,
-  }) = _AdminHomeState;
+    String? appError,
+  }) = _AdminReportState;
 }
