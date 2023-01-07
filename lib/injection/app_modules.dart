@@ -13,12 +13,14 @@ import 'package:batru_house_rental/data/repositories/house_type/house_type_repos
 import 'package:batru_house_rental/data/repositories/image_house/image_house_repository.dart';
 import 'package:batru_house_rental/data/repositories/province/province_repository.dart';
 import 'package:batru_house_rental/data/repositories/type/type_repository.dart';
+import 'package:batru_house_rental/data/services/preference_services/shared_preferences_manager.dart';
 import 'package:batru_house_rental/domain/use_case/address/post_address_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_article_filter_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_article_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_article_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_articles_by_user_id_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_initial_article_data_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/auth/email_login_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_user_by_id_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/google_login_use_case.dart';
@@ -47,9 +49,22 @@ import 'package:batru_house_rental/domain/use_case/image_house/post_image_to_sto
 import 'package:batru_house_rental/domain/use_case/province/get_province_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/type/get_type_list_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AppModules {
   static Future<void> inject() async {
+    // SharedPreferences client
+    injector.registerSingletonAsync<SharedPreferences>(() async {
+      return SharedPreferences.getInstance();
+    });
+
+    // SharedPreferences manager
+    injector.registerLazySingleton<SharedPreferencesManager>(
+      () => SharedPreferencesManager(
+        injector.get<SharedPreferences>(),
+      ),
+    );
+
     /// chat message repository
     injector.registerLazySingleton<ChatMessageRepository>(
         () => ChatMessageRepository());
@@ -75,7 +90,11 @@ class AppModules {
         () => GetChatRoomListByUserIdUseCase());
 
     /// auth repository
-    injector.registerLazySingleton<AuthRepository>(() => AuthRepository());
+    injector.registerLazySingleton<AuthRepository>(
+      () => AuthRepository(
+        injector.get<SharedPreferencesManager>(),
+      ),
+    );
 
     /// auth use case
     injector
@@ -237,5 +256,9 @@ class AppModules {
     /// un post available house use case
     injector.registerLazySingleton<UnPostAvailableHouseUseCase>(
         () => UnPostAvailableHouseUseCase());
+
+    /// email login
+    injector
+        .registerLazySingleton<EmailLoginUseCase>(() => EmailLoginUseCase());
   }
 }

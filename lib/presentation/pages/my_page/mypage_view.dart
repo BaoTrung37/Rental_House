@@ -59,7 +59,7 @@ class _MyPageViewState extends ConsumerState<MyPageView>
             children: [
               Expanded(
                 child: Text(
-                  _state.user?.name ?? 'User1234',
+                  _state.user?.name ?? '',
                   style: AppTextStyles.headingMedium,
                 ),
               ),

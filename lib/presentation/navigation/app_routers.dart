@@ -40,4 +40,7 @@ class AppRoutes {
 
   /// more article
   static const String moreArticle = '/more_article';
+
+  /// admin home
+  static const String adminHome = '/admin_home';
 }
