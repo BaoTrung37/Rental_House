@@ -55,6 +55,7 @@ class _AdminMainMenuViewState extends ConsumerState<AdminMainMenuView>
         );
       }
     });
+    
     return AppWillPopScope(
       child: Scaffold(
         body: PageView(

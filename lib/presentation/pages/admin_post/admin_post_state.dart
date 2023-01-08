@@ -10,6 +10,6 @@ class AdminPostState with _$AdminPostState {
     @Default(LoadingStatus.initial) LoadingStatus status,
     @Default([]) List<ArticleEntity> articlePeddingList,
     @Default([]) List<ArticleEntity> articleApprovedList,
-    String? appError,
+    @Default('') appError,
   }) = _AdminPostState;
 }

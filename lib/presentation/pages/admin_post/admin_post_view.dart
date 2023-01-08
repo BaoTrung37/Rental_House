@@ -9,7 +9,9 @@ import 'package:batru_house_rental/presentation/pages/admin_post/admin_post_view
 import 'package:batru_house_rental/presentation/pages/article_detail/article_detail_view.dart';
 import 'package:batru_house_rental/presentation/pages/article_detail/widgets/relative_house_item_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
+import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
 import 'package:batru_house_rental/presentation/widgets/app_indicator/loading_view.dart';
+import 'package:batru_house_rental/presentation/widgets/snack_bar/error_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -43,6 +45,18 @@ class _AdminHomeViewState extends ConsumerState<AdminPostView> {
 
   @override
   Widget build(BuildContext context) {
+
+    ref.listen<AdminPostState>(_provider,
+        (AdminPostState? previousState, AdminPostState newState) {
+      
+      if (newState.status == LoadingStatus.error) {
+        showErrorSnackBar(
+          context: context,
+          errorMessage: newState.appError,
+        );
+      }
+    });
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(

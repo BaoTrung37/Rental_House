@@ -2,6 +2,7 @@ import 'package:batru_house_rental/data/services/preference_services/shared_pref
 import 'package:batru_house_rental/domain/use_case/auth/email_login_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/google_login_use_case.dart';
 import 'package:batru_house_rental/presentation/pages/login/login_state.dart';
+import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
 import 'package:batru_house_rental/presentation/utilities/enums/login_type.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -58,12 +59,21 @@ class LoginViewModel extends StateNotifier<LoginState> {
       return isSuccess;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        state = state.copyWith(appError: 'Không tìm thấy tài khoản này');
+        state = state.copyWith(
+          appError: 'Không tìm thấy tài khoản này',
+          status: LoadingStatus.error,
+        );
       } else if (e.code == 'wrong-password') {
-        state = state.copyWith(appError: 'Sai mật khẩu');
+        state = state.copyWith(
+          appError: 'Sai mật khẩu',
+          status: LoadingStatus.error,
+        );
       }
     } catch (e) {
-      debugPrint(e.toString());
+      state = state.copyWith(
+        status: LoadingStatus.error,
+      );
+      debugPrint('Login View $e');
     }
     return false;
   }
