@@ -2,21 +2,17 @@ import 'dart:ui';
 
 import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
 import 'package:batru_house_rental/domain/entities/image_house/image_house_entity.dart';
-import 'package:batru_house_rental/domain/use_case/article/get_approved_article_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_article_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/article/set_approve_article_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/article/set_reject_article_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_user_by_id_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/post_chat_room_use_case.dart';
-import 'package:batru_house_rental/domain/use_case/favorite/add_favorite_use_case.dart';
-import 'package:batru_house_rental/domain/use_case/favorite/check_favorite_use_case.dart';
-import 'package:batru_house_rental/domain/use_case/favorite/remove_favorite_use_case.dart';
-import 'package:batru_house_rental/domain/use_case/post/post_available_post_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/post/remove_post_use_case.dart';
-import 'package:batru_house_rental/domain/use_case/post/un_post_available_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
-import 'package:batru_house_rental/presentation/pages/article_detail/article_detail_state.dart';
-import 'package:batru_house_rental/presentation/pages/article_detail/article_detail_view_model.dart';
+import 'package:batru_house_rental/presentation/pages/admin_article_detail/admin_article_detail_state.dart';
+import 'package:batru_house_rental/presentation/pages/admin_article_detail/admin_article_detail_view_model.dart';
 import 'package:batru_house_rental/presentation/pages/article_detail/widgets/convenient_item.dart';
 import 'package:batru_house_rental/presentation/pages/article_detail/widgets/convenient_list_item.dart';
 import 'package:batru_house_rental/presentation/pages/more_article/more_article_view.dart';
@@ -30,37 +26,33 @@ import 'package:batru_house_rental/presentation/widgets/app_indicator/loading_vi
 import 'package:batru_house_rental/presentation/widgets/base_app_bar/base_app_bar.dart';
 import 'package:batru_house_rental/presentation/widgets/buttons/app_button.dart';
 import 'package:batru_house_rental/presentation/widgets/image/image_with_border.dart';
-import 'package:batru_house_rental/presentation/widgets/input_text_field/input_text_field.dart';
 import 'package:batru_house_rental/presentation/widgets/snack_bar/error_snack_bar.dart';
+import 'package:batru_house_rental/presentation/widgets/snack_bar/info_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final _familyProvider = StateNotifierProvider.autoDispose
-    .family<ArticleDetailViewModel, ArticleDetailState, String>(
-  (ref, argument) => ArticleDetailViewModel(
+    .family<AdminArticleDetailViewModel, AdminArticleDetailState, String>(
+  (ref, argument) => AdminArticleDetailViewModel(
     injector.get<GetArticleUseCase>(),
     injector.get<GetUserByIdUseCase>(),
     injector.get<GetCurrentUserInformationUseCase>(),
-    injector.get<GetApprovedArticleListUseCase>(),
-    injector.get<PostChatRoomUseCase>(),
     injector.get<RemovePostUseCase>(),
-    injector.get<CheckFavoriteUseCase>(),
-    injector.get<AddFavoriteUseCase>(),
-    injector.get<RemoveFavoriteUseCase>(),
-    injector.get<PostAvailablePostUseCase>(),
-    injector.get<UnPostAvailablePostUseCase>(),
+    injector.get<SetApproveArticleUseCase>(),
+    injector.get<SetRejectArticleUseCase>(),
+    injector.get<PostChatRoomUseCase>(),
   ),
 );
 
-class ArticleDetailArguments {
-  ArticleDetailArguments({
+class AdminArticleDetailArguments {
+  AdminArticleDetailArguments({
     required this.postId,
   });
   final String postId;
 }
 
-class ArticleDetailView extends ConsumerStatefulWidget {
-  const ArticleDetailView({
+class AdminArticleDetailView extends ConsumerStatefulWidget {
+  const AdminArticleDetailView({
     required this.postId,
     Key? key,
   }) : super(key: key);
@@ -69,15 +61,16 @@ class ArticleDetailView extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _ArticleDetailViewState();
+      _AdminArticleDetailViewState();
 }
 
-class _ArticleDetailViewState extends ConsumerState<ArticleDetailView> {
-  ArticleDetailViewModel get _viewModel => ref.read(_provider.notifier);
+class _AdminArticleDetailViewState
+    extends ConsumerState<AdminArticleDetailView> {
+  AdminArticleDetailViewModel get _viewModel => ref.read(_provider.notifier);
 
   late final _provider = _familyProvider(widget.postId);
 
-  ArticleDetailState get state => ref.watch(_provider);
+  AdminArticleDetailState get state => ref.watch(_provider);
 
   @override
   void initState() {
@@ -96,7 +89,7 @@ class _ArticleDetailViewState extends ConsumerState<ArticleDetailView> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen<ArticleDetailState>(
+    ref.listen<AdminArticleDetailState>(
       _provider,
       (previous, next) {
         if (next.status == LoadingStatus.error &&
@@ -112,35 +105,20 @@ class _ArticleDetailViewState extends ConsumerState<ArticleDetailView> {
               .read(appNavigatorProvider)
               .popUntil(routeName: AppRoutes.mainMenu);
         }
+        if (next.browsePostStatus == LoadingStatus.success) {
+          showInfoSnackBar(context: context, notifyMessage: 'Đã duyệt bài');
+        }
       },
     );
 
     return Scaffold(
-      appBar: BaseAppBar.titleAndBackButton(
+      appBar: const BaseAppBar.titleAndBackButton(
         title: 'Chi tiết bài đăng',
         shouldShowBottomDivider: true,
-        widgets: [
-          _buildFavoriteIcon(context),
-        ],
       ),
       body: LoadingView(
         status: state.status,
         child: _buildBodyContent(context),
-      ),
-    );
-  }
-
-  Widget _buildFavoriteIcon(BuildContext context) {
-    return GestureDetector(
-      onTap: _viewModel.onFavoriteChanged,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Icon(
-          state.isFavorite ? Icons.favorite : Icons.favorite_border_rounded,
-          color: state.isFavorite
-              ? context.colors.contentSpecialMain
-              : context.colors.border,
-        ),
       ),
     );
   }
@@ -151,32 +129,8 @@ class _ArticleDetailViewState extends ConsumerState<ArticleDetailView> {
         Expanded(
           child: _buildBodyView(context),
         ),
-        if (state.isYourHouse == true)
-          _buildOwnerBottomApp(context)
-        else
-          _buildCustomerBottomApp(context),
+        _buildAdminBottomApp(context),
       ],
-    );
-  }
-
-  Widget _buildOwnerBottomApp(BuildContext context) {
-    return Container(
-      height: 60,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: context.colors.backgroundSecondary,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _buildUpdateHouseButton(context),
-            _buildAvaliblePostButton(context),
-            _buildRemoveHouseButton(context),
-          ],
-        ),
-      ),
     );
   }
 
@@ -214,38 +168,7 @@ class _ArticleDetailViewState extends ConsumerState<ArticleDetailView> {
     );
   }
 
-  Widget _buildAvaliblePostButton(BuildContext context) {
-    final isAvalible = state.article?.post?.isAvailablePost ?? false;
-    return AppButton(
-      onButtonTap: () async {
-        await _viewModel.onAvailablePostChanged();
-      },
-      leftIcon: const Icon(
-        Icons.autorenew_sharp,
-        size: 16,
-        color: Colors.white,
-      ),
-      title: isAvalible ? 'Còn phòng' : 'Hết phòng',
-      backgroundColor: isAvalible
-          ? context.colors.primaryMain
-          : context.colors.iconSecondary,
-    );
-  }
-
-  Widget _buildUpdateHouseButton(BuildContext context) {
-    return AppButton(
-      onButtonTap: () {},
-      leftIcon: const Icon(
-        Icons.settings,
-        size: 16,
-        color: Colors.white,
-      ),
-      title: 'Sửa',
-      backgroundColor: context.colors.contentEntry,
-    );
-  }
-
-  Widget _buildCustomerBottomApp(BuildContext context) {
+  Widget _buildAdminBottomApp(BuildContext context) {
     return Container(
       height: 60,
       width: double.infinity,
@@ -257,62 +180,30 @@ class _ArticleDetailViewState extends ConsumerState<ArticleDetailView> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _buildChatButton(context),
-            _buildPhoneCallButton(context),
+            _buildApproveOrPenddingPostButton(context),
+            _buildRemoveHouseButton(context),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildPhoneCallButton(BuildContext context) {
+  Widget _buildApproveOrPenddingPostButton(BuildContext context) {
+    final isApproved = state.article?.post?.isApproved ?? false;
     return AppButton(
-      onButtonTap: () {},
-      leftIcon: const Icon(
-        Icons.phone,
-        size: 16,
-        color: Colors.white,
-      ),
-      title: 'Gọi',
-      backgroundColor: context.colors.contentEntry,
-    );
-  }
-
-  // Widget _buildDespoistButton(BuildContext context) {
-  //   return AppButton(
-  //     onButtonTap: () {},
-  //     leftIcon: const Icon(
-  //       Icons.calendar_today,
-  //       color: Colors.white,
-  //       size: 16,
-  //     ),
-  //     title: 'Lên lịch',
-  //     backgroundColor: context.colors.contentAlert,
-  //   );
-  // }
-
-  Widget _buildChatButton(BuildContext context) {
-    return AppButton(
-      onButtonTap: () {
-        showAppDialog(
+      onButtonTap: () async {
+        // await _viewModel.onAvailablePostChanged();
+        await showAppDialog(
           context,
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text('Chat với chủ nhà'),
-              const SizedBox(height: 8),
-              const AppDivider(),
-              const SizedBox(height: 8),
-              const Text(
-                  'Bạn vui lòng đọc kĩ mô tả trước khi hỏi nhé!\nBạn muốn hỏi gì nè?'),
-              const SizedBox(height: 8),
-              InputTextField(
-                placeholder: 'Nhập nội dung!',
-                initialText: state.message,
-                onTextChange: (value) {
-                  _viewModel.onMessageChanged(value!);
-                },
-              ),
+            children: const [
+              Text('Bạn muốn duyệt bài đăng này?'),
+              SizedBox(height: 8),
+              AppDivider(),
+              SizedBox(height: 8),
+              Text('Bạn vui lòng xem kĩ bài đăng trước khi duyệt!'),
+              SizedBox(height: 8),
             ],
           ),
           actions: [
@@ -323,21 +214,24 @@ class _ArticleDetailViewState extends ConsumerState<ArticleDetailView> {
               },
             ),
             ActionAppDialog(
-              actionDialogTitle: 'Gửi',
+              actionDialogTitle: 'Xác nhận',
               onAction: (_) async {
                 Navigator.of(context).pop();
-                await _viewModel.onSendMessage();
+                await _viewModel.setApprovedPost();
               },
             ),
           ],
         );
       },
       leftIcon: const Icon(
-        Icons.chat_bubble_outline_sharp,
+        Icons.autorenew_sharp,
         size: 16,
         color: Colors.white,
       ),
-      title: 'Chat',
+      title: isApproved ? 'Hủy duyệt' : 'Duyệt bài',
+      backgroundColor: !isApproved
+          ? context.colors.contentAlert
+          : context.colors.iconSecondary,
     );
   }
 
@@ -531,70 +425,6 @@ class _ArticleDetailViewState extends ConsumerState<ArticleDetailView> {
         SliverToBoxAdapter(
           child: _buildBigDivider(),
         ),
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-          sliver: SliverToBoxAdapter(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                AppIcons.flag(
-                  size: 20,
-                  color: context.colors.contentSpecialMain,
-                ),
-                const SizedBox(width: 10),
-                GestureDetector(
-                  onTap: () {
-                    showAppDialog(
-                      context,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Text('Lý do muốn báo cáo'),
-                          const SizedBox(height: 8),
-                          const AppDivider(),
-                          const SizedBox(height: 8),
-                          const Text(
-                              'Bạn vui lòng xác nhận lý do báo cáo để chúng tôi có thể xử lý nhanh nhất'),
-                          const SizedBox(height: 8),
-                          InputTextField(
-                            placeholder: 'Nhập lý do',
-                            onTextChange: (value) {
-                              debugPrint(value!);
-                            },
-                          ),
-                        ],
-                      ),
-                      actions: [
-                        ActionAppDialog(
-                          actionDialogTitle: 'Huỷ',
-                          onAction: (_) {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                        ActionAppDialog(
-                          actionDialogTitle: 'Gửi',
-                          onAction: (_) async {
-                            Navigator.of(context).pop();
-                            // await _viewModel.onSendMessage();
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                  child: Text(
-                    'Báo cáo sai phạm',
-                    style: AppTextStyles.headingXSmall
-                        .copyWith(color: context.colors.contentSpecialText),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        SliverToBoxAdapter(
-          child: _buildBigDivider(),
-        ),
-        // _buildHouseArticleRelativeList(),
       ],
     );
   }
@@ -747,46 +577,6 @@ class _ArticleDetailViewState extends ConsumerState<ArticleDetailView> {
       ],
     );
   }
-
-  // SliverPadding _buildHouseArticleRelativeList() {
-  //   final houseArticleList = state.houseArticleRelativeList;
-  //   return SliverPadding(
-  //     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-  //     sliver: SliverList(
-  //       delegate: SliverChildListDelegate(
-  //         [
-  //           const Text(
-  //             'Bài đăng liên quan',
-  //             style: AppTextStyles.headingXSmall,
-  //           ),
-  //           const SizedBox(height: 10),
-  //           GridView.builder(
-  //             itemCount: houseArticleList.length,
-  //             gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-  //               maxCrossAxisExtent: 220,
-  //               childAspectRatio: 0.80,
-  //               crossAxisSpacing: 10,
-  //               mainAxisSpacing: 10,
-  //             ),
-  //             itemBuilder: (context, index) => RelativeHouseItemView(
-  //               articleEntity: houseArticleList[index],
-  //               onTap: () {
-  //                 ref.read(appNavigatorProvider).navigateTo(
-  //                       AppRoutes.postDetail,
-  //                       arguments: ArticleDetailArguments(
-  //                         postId: houseArticleList[index].id,
-  //                       ),
-  //                     );
-  //               },
-  //             ),
-  //             shrinkWrap: true,
-  //             physics: const NeverScrollableScrollPhysics(),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
 
   SliverGrid _buildConvenientItemList() {
     final convenientList = ref.watch(_provider).article?.convenientList ?? [];

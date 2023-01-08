@@ -16,7 +16,7 @@ class ChatEntity {
 enum ChatType {
   message,
   image,
-  infoRoom,
+  post,
 }
 
 extension ChatTypeExtension on ChatType {
@@ -26,8 +26,8 @@ extension ChatTypeExtension on ChatType {
         return 'message';
       case ChatType.image:
         return 'image';
-      case ChatType.infoRoom:
-        return 'infoRoom';
+      case ChatType.post:
+        return 'post';
     }
   }
 }

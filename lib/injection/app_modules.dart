@@ -22,6 +22,8 @@ import 'package:batru_house_rental/domain/use_case/article/get_articles_by_user_
 import 'package:batru_house_rental/domain/use_case/article/get_initial_article_data_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_owner_article_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_pendding_article_list_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/article/set_approve_article_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/article/set_reject_article_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/email_login_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/email_logout_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
@@ -273,5 +275,13 @@ class AppModules {
     /// EmailLogoutUseCase
     injector
         .registerLazySingleton<EmailLogoutUseCase>(() => EmailLogoutUseCase());
+
+    /// SetApproveArticleUseCase
+    injector.registerLazySingleton<SetApproveArticleUseCase>(
+        () => SetApproveArticleUseCase());
+
+    /// SẻtUnApproveArticleUseCase
+    injector.registerLazySingleton<SetRejectArticleUseCase>(
+        () => SetRejectArticleUseCase());
   }
 }

@@ -15,6 +15,7 @@ class PostEntity with _$PostEntity {
     required DateTime createdAt,
     required String address,
     DateTime? updatedAt,
+    String? adminId,
     @Default(false) bool isAvailableParking,
     @Default(false) bool isAvailablePost,
     @Default(false) bool isApproved,

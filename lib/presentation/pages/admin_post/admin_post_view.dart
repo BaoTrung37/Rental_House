@@ -4,9 +4,9 @@ import 'package:batru_house_rental/domain/use_case/article/get_pendding_article_
 import 'package:batru_house_rental/domain/use_case/auth/email_logout_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
+import 'package:batru_house_rental/presentation/pages/admin_article_detail/admin_article_detail_view.dart';
 import 'package:batru_house_rental/presentation/pages/admin_post/admin_post_state.dart';
 import 'package:batru_house_rental/presentation/pages/admin_post/admin_post_view_model.dart';
-import 'package:batru_house_rental/presentation/pages/article_detail/article_detail_view.dart';
 import 'package:batru_house_rental/presentation/pages/article_detail/widgets/relative_house_item_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
@@ -45,10 +45,8 @@ class _AdminHomeViewState extends ConsumerState<AdminPostView> {
 
   @override
   Widget build(BuildContext context) {
-
     ref.listen<AdminPostState>(_provider,
         (AdminPostState? previousState, AdminPostState newState) {
-      
       if (newState.status == LoadingStatus.error) {
         showErrorSnackBar(
           context: context,
@@ -167,8 +165,8 @@ class _AdminHomeViewState extends ConsumerState<AdminPostView> {
         articleEntity: articlePeddingList[index],
         onTap: () {
           ref.read(appNavigatorProvider).navigateTo(
-                AppRoutes.postDetail,
-                arguments: ArticleDetailArguments(
+                AppRoutes.adminArticleDetail,
+                arguments: AdminArticleDetailArguments(
                   postId: articlePeddingList[index].id,
                 ),
               );
@@ -192,8 +190,8 @@ class _AdminHomeViewState extends ConsumerState<AdminPostView> {
         articleEntity: articleApprovedList[index],
         onTap: () {
           ref.read(appNavigatorProvider).navigateTo(
-                AppRoutes.postDetail,
-                arguments: ArticleDetailArguments(
+                AppRoutes.adminArticleDetail,
+                arguments: AdminArticleDetailArguments(
                   postId: articleApprovedList[index].id,
                 ),
               );

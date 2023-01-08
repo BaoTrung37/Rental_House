@@ -54,7 +54,6 @@ class ArticleDetailViewModel extends StateNotifier<ArticleDetailState> {
       ownerHouseUserId = article.post!.userId;
       currentUserId = currentUser.id;
       final ownerHouse = await _getUserByIdUseCase.run(article.post!.userId);
-      final houseArticleRelativeList = await _getArticleListUseCase.run(10);
 
       final favoriteId = await _checkFavoriteUseCase.run(
         GetFavoriteInput(
@@ -65,7 +64,6 @@ class ArticleDetailViewModel extends StateNotifier<ArticleDetailState> {
       state = state.copyWith(
         article: article,
         onwerHouse: ownerHouse,
-        houseArticleRelativeList: houseArticleRelativeList,
         isYourHouse: currentUser.id == ownerHouseUserId,
         isFavorite: favoriteId != null,
         favoriteId: favoriteId,

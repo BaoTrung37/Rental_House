@@ -11,6 +11,7 @@ import 'package:batru_house_rental/domain/entities/image_house/image_house_entit
 import 'package:batru_house_rental/domain/entities/post/post_entity.dart';
 import 'package:batru_house_rental/domain/entities/type/type_entity.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_article_filter_list_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/article/set_approve_article_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/post/remove_post_use_case.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -158,6 +159,29 @@ class ArticleRepository {
             .delete()
             .then((value) => debugPrint('Remove convenient: $e'));
       }),
+    );
+  }
+
+  Future<void> approveArticleById(SetApprovedArticleInput input) async {
+    final postId = input.postId;
+    final adminId = input.adminId;
+
+    await _fireStore.collection('post').doc(postId).update({
+      'isApproved': true,
+      'adminId': adminId,
+    }).then(
+      (value) => debugPrint('Approve post: $postId'),
+      onError: (e) => debugPrint('Error updating document $e'),
+    );
+  }
+
+  Future<void> rejectArticleById(String postId) async {
+    await _fireStore.collection('post').doc(postId).update({
+      'isApproved': false,
+      'adminId': '',
+    }).then(
+      (value) => debugPrint('UnApprove post: $postId'),
+      onError: (e) => debugPrint('Error updating document $e'),
     );
   }
 
