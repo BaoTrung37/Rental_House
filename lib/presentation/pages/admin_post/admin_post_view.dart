@@ -1,6 +1,7 @@
 import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_approved_article_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_pendding_article_list_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/auth/email_logout_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
 import 'package:batru_house_rental/presentation/pages/admin_post/admin_post_state.dart';
@@ -16,6 +17,7 @@ final _provider = StateNotifierProvider<AdminPostViewModel, AdminPostState>(
   (ref) => AdminPostViewModel(
     injector.get<GetApprovedArticleListUseCase>(),
     injector.get<GetPenddingArticleListUseCase>(),
+    injector.get<EmailLogoutUseCase>(),
   ),
 );
 
@@ -54,6 +56,21 @@ class _AdminHomeViewState extends ConsumerState<AdminPostView> {
           centerTitle: true,
           elevation: 0,
           backgroundColor: context.colors.backgroundPrimary,
+          actions: [
+            IconButton(
+              onPressed: () {
+                _viewModel.logout(() {
+                  ref.read(appNavigatorProvider).navigateTo(
+                        AppRoutes.login,
+                        shoulClearStack: true,
+                      );
+                });
+              },
+              icon: const Icon(
+                Icons.logout,
+              ),
+            )
+          ],
           bottom: TabBar(
             labelColor: context.colors.information,
             unselectedLabelColor: context.colors.textSecondary,

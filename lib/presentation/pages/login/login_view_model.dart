@@ -1,3 +1,4 @@
+import 'package:batru_house_rental/data/services/preference_services/shared_preferences_manager.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_initial_article_data_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/email_login_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/google_login_use_case.dart';
@@ -12,14 +13,22 @@ class LoginViewModel extends StateNotifier<LoginState> {
     this._googleLoginUseCase,
     this._getInitialArticleDataUseCase,
     this._emailLoginUseCase,
+    this._sharedPreferencesManager,
   ) : super(const LoginState());
 
   final GoogleLoginUseCase _googleLoginUseCase;
   final GetInitialArticleDataUseCase _getInitialArticleDataUseCase;
   final EmailLoginUseCase _emailLoginUseCase;
+  final SharedPreferencesManager _sharedPreferencesManager;
 
   Future<void> initData() async {
-    await _getInitialArticleDataUseCase.run();
+    // await _getInitialArticleDataUseCase.run();
+    state = state.copyWith(
+      loginType:
+          _sharedPreferencesManager.getLoginType() == LoginType.customer.index
+              ? LoginType.customer
+              : LoginType.admin,
+    );
   }
 
   Future<bool> customerLoginSuccess() async {

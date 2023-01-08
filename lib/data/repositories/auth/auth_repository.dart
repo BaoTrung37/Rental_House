@@ -72,15 +72,15 @@ class AuthRepository {
     final emailAddress = input.email;
     final password = input.password;
     // try {
-      final credential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: emailAddress, password: password);
-      final user = credential.user;
-      await sharedPreferencesManager.saveLoginType(param: LoginType.admin);
-      if (user != null) {
-        return true;
-      } else {
-        return false;
-      }
+    final credential = await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: emailAddress, password: password);
+    final user = credential.user;
+    await sharedPreferencesManager.saveLoginType(param: LoginType.admin);
+    if (user != null) {
+      return true;
+    } else {
+      return false;
+    }
     // } on FirebaseAuthException catch (e) {
     //   if (e.code == 'user-not-found') {
     //     debugPrint('No user found for that email.');
@@ -91,11 +91,16 @@ class AuthRepository {
     // return false;
   }
 
-  Future<void> signOut() async {
+  Future<void> googleLogout() async {
     await clearSharedPreferencesPropertiesWhenLogout();
     await fireAuth.signOut();
     await googleSignIn.disconnect();
     await googleSignIn.signOut();
+  }
+
+  Future<void> emailLogout() async {
+    await clearSharedPreferencesPropertiesWhenLogout();
+    await fireAuth.signOut();
   }
 
   Future clearSharedPreferencesPropertiesWhenLogout() => Future.wait([

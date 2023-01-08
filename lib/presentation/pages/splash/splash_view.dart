@@ -15,7 +15,6 @@ final _provider =
     StateNotifierProvider.autoDispose<SplashViewModel, SplashState>(
   (ref) => SplashViewModel(
     injector.get<GetInitialArticleDataUseCase>(),
-    // injector.get<SharedPreferences>(),
     injector.get<SharedPreferencesManager>(),
   ),
 );

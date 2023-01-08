@@ -7,13 +7,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class SplashViewModel extends StateNotifier<SplashState> {
   SplashViewModel(
     this._getInitialArticleDataUseCase,
-    // this._sharedPreferences,
     this._sharedPreferencesManager,
   ) : super(const SplashState());
 
   final GetInitialArticleDataUseCase _getInitialArticleDataUseCase;
   final SharedPreferencesManager _sharedPreferencesManager;
-  // final SharedPreferences _sharedPreferences;
 
   Future<void> initData() async {
     await _getInitialArticleDataUseCase.run();

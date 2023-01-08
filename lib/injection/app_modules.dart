@@ -23,10 +23,11 @@ import 'package:batru_house_rental/domain/use_case/article/get_initial_article_d
 import 'package:batru_house_rental/domain/use_case/article/get_owner_article_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_pendding_article_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/email_login_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/auth/email_logout_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_user_by_id_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/google_login_use_case.dart';
-import 'package:batru_house_rental/domain/use_case/auth/logout_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/auth/google_logout_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/get_chat_message_list_by_room_id_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/get_chat_room_list_by_user_id_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/post_chat_room_use_case.dart';
@@ -106,7 +107,8 @@ class AppModules {
         () => GetCurrentUserInformationUseCase());
 
     /// logout use case
-    injector.registerLazySingleton<LogoutUseCase>(() => LogoutUseCase());
+    injector.registerLazySingleton<GoogleLogoutUseCase>(
+        () => GoogleLogoutUseCase());
 
     /// type repository
     injector.registerLazySingleton<TypeRepository>(() => TypeRepository());
@@ -267,5 +269,9 @@ class AppModules {
     /// GetUnApprovedArticleListUseCase
     injector.registerLazySingleton<GetPenddingArticleListUseCase>(
         () => GetPenddingArticleListUseCase());
+
+    /// EmailLogoutUseCase
+    injector
+        .registerLazySingleton<EmailLogoutUseCase>(() => EmailLogoutUseCase());
   }
 }

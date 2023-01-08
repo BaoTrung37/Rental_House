@@ -1,4 +1,5 @@
 import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
+import 'package:batru_house_rental/data/services/preference_services/shared_preferences_manager.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_initial_article_data_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/email_login_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/google_login_use_case.dart';
@@ -22,6 +23,7 @@ final _provider = StateNotifierProvider.autoDispose<LoginViewModel, LoginState>(
     injector.get<GoogleLoginUseCase>(),
     injector.get<GetInitialArticleDataUseCase>(),
     injector.get<EmailLoginUseCase>(),
+    injector.get<SharedPreferencesManager>(),
   ),
 );
 
@@ -40,7 +42,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
   void initState() {
     // TODO: implement initState
     Future.delayed(Duration.zero, () async {
-      // await _viewModel.initData();
+      await _viewModel.initData();
     });
     super.initState();
   }
