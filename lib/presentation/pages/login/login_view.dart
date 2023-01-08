@@ -1,6 +1,5 @@
 import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
 import 'package:batru_house_rental/data/services/preference_services/shared_preferences_manager.dart';
-import 'package:batru_house_rental/domain/use_case/article/get_initial_article_data_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/email_login_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/google_login_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
@@ -21,7 +20,7 @@ import 'package:intro_slider/intro_slider.dart';
 final _provider = StateNotifierProvider.autoDispose<LoginViewModel, LoginState>(
   (ref) => LoginViewModel(
     injector.get<GoogleLoginUseCase>(),
-    injector.get<GetInitialArticleDataUseCase>(),
+    // injector.get<GetInitialArticleDataUseCase>(),
     injector.get<EmailLoginUseCase>(),
     injector.get<SharedPreferencesManager>(),
   ),

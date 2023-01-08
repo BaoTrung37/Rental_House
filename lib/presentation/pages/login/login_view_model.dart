@@ -1,5 +1,4 @@
 import 'package:batru_house_rental/data/services/preference_services/shared_preferences_manager.dart';
-import 'package:batru_house_rental/domain/use_case/article/get_initial_article_data_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/email_login_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/google_login_use_case.dart';
 import 'package:batru_house_rental/presentation/pages/login/login_state.dart';
@@ -11,13 +10,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class LoginViewModel extends StateNotifier<LoginState> {
   LoginViewModel(
     this._googleLoginUseCase,
-    this._getInitialArticleDataUseCase,
+    // this._getInitialArticleDataUseCase,
     this._emailLoginUseCase,
     this._sharedPreferencesManager,
   ) : super(const LoginState());
 
   final GoogleLoginUseCase _googleLoginUseCase;
-  final GetInitialArticleDataUseCase _getInitialArticleDataUseCase;
+  // final GetInitialArticleDataUseCase _getInitialArticleDataUseCase;
   final EmailLoginUseCase _emailLoginUseCase;
   final SharedPreferencesManager _sharedPreferencesManager;
 

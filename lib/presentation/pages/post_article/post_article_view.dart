@@ -13,8 +13,8 @@ import 'package:batru_house_rental/domain/use_case/province/get_province_list_us
 import 'package:batru_house_rental/domain/use_case/type/get_type_list_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
-import 'package:batru_house_rental/presentation/pages/home/home_view.dart';
 import 'package:batru_house_rental/presentation/pages/article_detail/article_detail_view.dart';
+import 'package:batru_house_rental/presentation/pages/home/home_view.dart';
 import 'package:batru_house_rental/presentation/pages/post_article/post_article_state.dart';
 import 'package:batru_house_rental/presentation/pages/post_article/post_article_view_model.dart';
 import 'package:batru_house_rental/presentation/pages/post_article/widgets/convenient_item.dart';
