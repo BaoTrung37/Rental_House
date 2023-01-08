@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:batru_house_rental/data/models/favorite/favorite_response.dart';
 import 'package:batru_house_rental/domain/entities/chat/chat_entity.dart';
-import 'package:batru_house_rental/domain/use_case/article/get_approved_article_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_article_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_user_by_id_use_case.dart';
