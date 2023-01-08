@@ -31,6 +31,7 @@ class AuthRepository {
 
   Future<bool> signInWithGoogle() async {
     final googleUser = await googleSignIn.signIn();
+    await sharedPreferencesManager.saveLoginType(param: LoginType.customer);
     if (googleUser != null) {
       final googleAuth = await googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
@@ -39,7 +40,7 @@ class AuthRepository {
       );
       final firebaseUser =
           (await fireAuth.signInWithCredential(credential)).user;
-      await sharedPreferencesManager.saveLoginType(param: LoginType.customer);
+
       if (firebaseUser != null) {
         final QuerySnapshot result = await firestore
             .collection(FirestoreConstants.pathUserCollection)
@@ -104,7 +105,7 @@ class AuthRepository {
   }
 
   Future clearSharedPreferencesPropertiesWhenLogout() => Future.wait([
-        sharedPreferencesManager.removeLoginType(),
+        // sharedPreferencesManager.removeLoginType(),
       ]);
 }
 

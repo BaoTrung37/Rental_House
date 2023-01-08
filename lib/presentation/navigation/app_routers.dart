@@ -49,4 +49,7 @@ class AppRoutes {
 
   /// admin report
   static const String adminReport = '/admin_report';
+
+  /// admin article detail
+  static const String adminArticleDetail = '/admin_article_detail';
 }

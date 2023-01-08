@@ -13,6 +13,7 @@ class GetCurrentUserInformationUseCase extends FutureOutputUseCase<UserEntity> {
       name: userResponse.name,
       avatar: userResponse.avatar,
       phoneNumber: userResponse.phoneNumber,
+      role: userResponse.role,
     );
   }
 }

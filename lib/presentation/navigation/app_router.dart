@@ -1,4 +1,5 @@
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
+import 'package:batru_house_rental/presentation/pages/admin_article_detail/admin_article_detail_view.dart';
 import 'package:batru_house_rental/presentation/pages/admin_main_menu/admin_main_menu_view.dart';
 import 'package:batru_house_rental/presentation/pages/admin_post/admin_post_view.dart';
 import 'package:batru_house_rental/presentation/pages/admin_report/admin_report_view.dart';
@@ -140,6 +141,14 @@ class AppRouter {
         return MaterialPageRoute(
           settings: settings,
           builder: (context) => const AdminReportView(),
+        );
+      case AppRoutes.adminArticleDetail:
+        final args = settings.arguments as AdminArticleDetailArguments;
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => AdminArticleDetailView(
+            postId: args.postId,
+          ),
         );
       default:
         return null;

@@ -27,6 +27,7 @@ class PostResponse {
     this.isAvailablePost = true,
     this.isApproved = false,
     this.updatedAt,
+    this.adminId,
   });
   factory PostResponse.fromJson(Map<String, dynamic> json) =>
       _$PostResponseFromJson(json);
@@ -52,6 +53,8 @@ class PostResponse {
   final bool isAvailablePost;
   final int rentalPrice;
   final String userId;
+  @JsonKey(required: false, includeIfNull: false)
+  final String? adminId;
   final String title;
   final String phoneNumber;
   final String description;

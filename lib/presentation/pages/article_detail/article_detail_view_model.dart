@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:batru_house_rental/data/models/favorite/favorite_response.dart';
 import 'package:batru_house_rental/domain/entities/chat/chat_entity.dart';
-import 'package:batru_house_rental/domain/use_case/article/get_approved_article_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_article_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_user_by_id_use_case.dart';
@@ -22,7 +21,7 @@ class ArticleDetailViewModel extends StateNotifier<ArticleDetailState> {
     this._getArticleUseCase,
     this._getUserByIdUseCase,
     this._getCurrentUserInformationUseCase,
-    this._getArticleListUseCase,
+    // this._getArticleListUseCase,
     this._postChatRoomUseCase,
     this._removeHouseUseCase,
     this._checkFavoriteUseCase,
@@ -35,7 +34,7 @@ class ArticleDetailViewModel extends StateNotifier<ArticleDetailState> {
   final GetArticleUseCase _getArticleUseCase;
   final GetUserByIdUseCase _getUserByIdUseCase;
   final GetCurrentUserInformationUseCase _getCurrentUserInformationUseCase;
-  final GetApprovedArticleListUseCase _getArticleListUseCase;
+  // final GetApprovedArticleListUseCase _getArticleListUseCase;
   final PostChatRoomUseCase _postChatRoomUseCase;
   final RemovePostUseCase _removeHouseUseCase;
   final CheckFavoriteUseCase _checkFavoriteUseCase;
@@ -54,7 +53,6 @@ class ArticleDetailViewModel extends StateNotifier<ArticleDetailState> {
       ownerHouseUserId = article.post!.userId;
       currentUserId = currentUser.id;
       final ownerHouse = await _getUserByIdUseCase.run(article.post!.userId);
-      final houseArticleRelativeList = await _getArticleListUseCase.run(10);
 
       final favoriteId = await _checkFavoriteUseCase.run(
         GetFavoriteInput(
@@ -65,7 +63,6 @@ class ArticleDetailViewModel extends StateNotifier<ArticleDetailState> {
       state = state.copyWith(
         article: article,
         onwerHouse: ownerHouse,
-        houseArticleRelativeList: houseArticleRelativeList,
         isYourHouse: currentUser.id == ownerHouseUserId,
         isFavorite: favoriteId != null,
         favoriteId: favoriteId,
