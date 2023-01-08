@@ -25,9 +25,9 @@ class LoginViewModel extends StateNotifier<LoginState> {
     // await _getInitialArticleDataUseCase.run();
     state = state.copyWith(
       loginType:
-          _sharedPreferencesManager.getLoginType() == LoginType.customer.index
-              ? LoginType.customer
-              : LoginType.admin,
+          _sharedPreferencesManager.getLoginType() == LoginType.admin.index
+              ? LoginType.admin
+              : LoginType.customer,
     );
   }
 
@@ -36,7 +36,7 @@ class LoginViewModel extends StateNotifier<LoginState> {
       final isSuccess = await _googleLoginUseCase.run();
       return isSuccess;
     } catch (e) {
-      debugPrint(e.toString());
+      debugPrint('Login View $e');
     }
     return false;
   }

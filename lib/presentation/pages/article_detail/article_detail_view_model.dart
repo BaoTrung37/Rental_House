@@ -22,7 +22,7 @@ class ArticleDetailViewModel extends StateNotifier<ArticleDetailState> {
     this._getArticleUseCase,
     this._getUserByIdUseCase,
     this._getCurrentUserInformationUseCase,
-    this._getArticleListUseCase,
+    // this._getArticleListUseCase,
     this._postChatRoomUseCase,
     this._removeHouseUseCase,
     this._checkFavoriteUseCase,
@@ -35,7 +35,7 @@ class ArticleDetailViewModel extends StateNotifier<ArticleDetailState> {
   final GetArticleUseCase _getArticleUseCase;
   final GetUserByIdUseCase _getUserByIdUseCase;
   final GetCurrentUserInformationUseCase _getCurrentUserInformationUseCase;
-  final GetApprovedArticleListUseCase _getArticleListUseCase;
+  // final GetApprovedArticleListUseCase _getArticleListUseCase;
   final PostChatRoomUseCase _postChatRoomUseCase;
   final RemovePostUseCase _removeHouseUseCase;
   final CheckFavoriteUseCase _checkFavoriteUseCase;
