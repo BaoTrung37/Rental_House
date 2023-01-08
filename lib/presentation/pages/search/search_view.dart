@@ -6,7 +6,7 @@ import 'package:batru_house_rental/domain/use_case/province/get_province_list_us
 import 'package:batru_house_rental/domain/use_case/type/get_type_list_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
-import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_view.dart';
+import 'package:batru_house_rental/presentation/pages/article_detail/article_detail_view.dart';
 import 'package:batru_house_rental/presentation/pages/search/filter_drawer/filter_drawer_view.dart';
 import 'package:batru_house_rental/presentation/pages/search/search_state.dart';
 import 'package:batru_house_rental/presentation/pages/search/search_view_model.dart';
@@ -123,9 +123,9 @@ class _SearchViewState extends ConsumerState<SearchView> {
         articleEntity: articles[index],
         onTap: () {
           ref.read(appNavigatorProvider).navigateTo(
-                AppRoutes.houseDetail,
-                arguments: HouseDetailArguments(
-                  houseId: articles[index].house!.id,
+                AppRoutes.postDetail,
+                arguments: ArticleDetailArguments(
+                  postId: articles[index].post!.id,
                 ),
               );
         },

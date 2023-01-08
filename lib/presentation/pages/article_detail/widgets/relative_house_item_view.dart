@@ -32,7 +32,7 @@ class RelativeHouseItemView extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                articleEntity.house?.title ?? '',
+                articleEntity.post?.title ?? '',
                 style: AppTextStyles.textMediumBold,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
@@ -41,7 +41,7 @@ class RelativeHouseItemView extends StatelessWidget {
           ),
           const SizedBox(height: 2),
           Text(
-            '${NumberFormatHelper.formatShortPrice(articleEntity.house?.rentalPrice ?? 0)}/phòng',
+            '${NumberFormatHelper.formatShortPrice(articleEntity.post?.rentalPrice ?? 0)}/phòng',
             style: AppTextStyles.textMediumBold.copyWith(
               color: context.colors.contentSpecialMain,
             ),
@@ -49,7 +49,7 @@ class RelativeHouseItemView extends StatelessWidget {
           const SizedBox(height: 2),
           // const Text('Nguyễn Văn A', style: AppTextStyles.,),
           Text(
-            articleEntity.house?.address ?? '',
+            articleEntity.post?.address ?? '',
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: AppTextStyles.labelSmall.copyWith(

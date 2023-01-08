@@ -1,12 +1,12 @@
 import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
-import 'package:batru_house_rental/domain/use_case/article/get_article_list_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/article/get_approved_article_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/district/get_district_list_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
+import 'package:batru_house_rental/presentation/pages/article_detail/article_detail_view.dart';
 import 'package:batru_house_rental/presentation/pages/home/home_state.dart';
 import 'package:batru_house_rental/presentation/pages/home/home_view_model.dart';
 import 'package:batru_house_rental/presentation/pages/home/views/home_place_small_card.dart';
-import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_view.dart';
 import 'package:batru_house_rental/presentation/pages/search/search_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
@@ -23,7 +23,7 @@ final homeViewProvider =
   (ref) => HomeViewModel(
     // injector.get<GetInitialArticleDataUseCase>(),
     injector.get<GetDistrictListUseCase>(),
-    injector.get<GetArticleListUseCase>(),
+    injector.get<GetApprovedArticleListUseCase>(),
   ),
 );
 
@@ -191,9 +191,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
             articleEntity: houseArticleList[index],
             onTap: () async {
               await ref.read(appNavigatorProvider).navigateTo(
-                    AppRoutes.houseDetail,
-                    arguments: HouseDetailArguments(
-                      houseId: houseArticleList[index].id,
+                    AppRoutes.postDetail,
+                    arguments: ArticleDetailArguments(
+                      postId: houseArticleList[index].id,
                     ),
                   );
             },

@@ -6,7 +6,7 @@ part 'favorite_entity.freezed.dart';
 class FavoriteEntity with _$FavoriteEntity {
   const factory FavoriteEntity({
     required String id,
-    required String houseId,
+    required String postId,
     required String userId,
     required String typeHouse,
     required String title,

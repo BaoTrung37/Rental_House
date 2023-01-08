@@ -6,14 +6,14 @@ part 'convenient_house_reponse.g.dart';
 class ConvenientHouseResponse {
   ConvenientHouseResponse({
     required this.id,
-    required this.houseId,
+    required this.postId,
     required this.convenientId,
   });
   factory ConvenientHouseResponse.fromJson(Map<String, dynamic> json) =>
       _$ConvenientHouseResponseFromJson(json);
 
   final String id;
-  final String houseId;
+  final String postId;
   final String convenientId;
 
   Map<String, dynamic> toJson() => _$ConvenientHouseResponseToJson(this);

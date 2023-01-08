@@ -1,11 +1,11 @@
-import 'package:batru_house_rental/domain/entities/house/house_entity.dart';
+import 'package:batru_house_rental/domain/entities/post/post_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'house_response.g.dart';
+part 'post_response.g.dart';
 
 @JsonSerializable()
-class HouseResponse {
-  HouseResponse({
+class PostResponse {
+  PostResponse({
     required this.id,
     required this.area,
     required this.capacity,
@@ -28,8 +28,8 @@ class HouseResponse {
     this.isApproved = false,
     this.updatedAt,
   });
-  factory HouseResponse.fromJson(Map<String, dynamic> json) =>
-      _$HouseResponseFromJson(json);
+  factory PostResponse.fromJson(Map<String, dynamic> json) =>
+      _$PostResponseFromJson(json);
 
   final String id;
   @JsonKey(defaultValue: 0)
@@ -60,29 +60,31 @@ class HouseResponse {
   final DateTime? updatedAt;
   final String address;
 
-  Map<String, dynamic> toJson() => _$HouseResponseToJson(this);
+  Map<String, dynamic> toJson() => _$PostResponseToJson(this);
 
-  HouseEntity toEntity() => HouseEntity(
-        id: id,
-        area: area,
-        capacity: capacity,
-        streetName: streetName,
-        houseNumber: houseNumber,
-        depositMonth: depositMonth,
-        waterPrice: waterPrice,
-        electricPrice: electricPrice,
-        internetPrice: internetPrice,
-        parkingPrice: parkingPrice,
-        isAvailableParking: isAvailableParking,
-        isApproved: isApproved,
-        isAvailablePost: isAvailablePost,
-        rentalPrice: rentalPrice,
-        userId: userId,
-        title: title,
-        phoneNumber: phoneNumber,
-        description: description,
-        createdAt: createdAt,
-        updatedAt: updatedAt,
-        address: address,
-      );
+  PostEntity toEntity() {
+    return PostEntity(
+      id: id,
+      area: area,
+      capacity: capacity,
+      streetName: streetName,
+      houseNumber: houseNumber,
+      depositMonth: depositMonth,
+      waterPrice: waterPrice,
+      electricPrice: electricPrice,
+      internetPrice: internetPrice,
+      parkingPrice: parkingPrice,
+      isAvailableParking: isAvailableParking,
+      isApproved: isApproved,
+      isAvailablePost: isAvailablePost,
+      rentalPrice: rentalPrice,
+      userId: userId,
+      title: title,
+      phoneNumber: phoneNumber,
+      description: description,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+      address: address,
+    );
+  }
 }

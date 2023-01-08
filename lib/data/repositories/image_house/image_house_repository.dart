@@ -11,7 +11,6 @@ class ImageHouseRepository {
 
   Future<void> postImageHouse(
       List<ImageHouseResponse> imageHouseResponseList) async {
-    debugPrint('${imageHouseResponseList.length}ahahahaah');
     await Future.wait(
       imageHouseResponseList.map(
         (e) async {
@@ -30,7 +29,7 @@ class ImageHouseRepository {
   }
 
   UploadTask upLoadImageFile(File image, String filename) {
-    final reference = _firebaseStorage.ref('/room_images').child(filename);
+    final reference = _firebaseStorage.ref('/post_images').child(filename);
     final uploadTask = reference.putFile(image);
     return uploadTask;
   }

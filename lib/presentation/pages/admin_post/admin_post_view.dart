@@ -1,7 +1,12 @@
-import 'package:batru_house_rental/domain/use_case/article/get_article_list_use_case.dart';
+import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
+import 'package:batru_house_rental/domain/use_case/article/get_approved_article_list_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/article/get_pendding_article_list_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
+import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
 import 'package:batru_house_rental/presentation/pages/admin_post/admin_post_state.dart';
 import 'package:batru_house_rental/presentation/pages/admin_post/admin_post_view_model.dart';
+import 'package:batru_house_rental/presentation/pages/article_detail/article_detail_view.dart';
+import 'package:batru_house_rental/presentation/pages/article_detail/widgets/relative_house_item_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/widgets/app_indicator/loading_view.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +14,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final _provider = StateNotifierProvider<AdminPostViewModel, AdminPostState>(
   (ref) => AdminPostViewModel(
-    injector.get<GetArticleListUseCase>(),
+    injector.get<GetApprovedArticleListUseCase>(),
+    injector.get<GetPenddingArticleListUseCase>(),
   ),
 );
 
@@ -25,12 +31,12 @@ class _AdminHomeViewState extends ConsumerState<AdminPostView> {
   AdminPostState get _state => ref.watch(_provider);
 
   @override
-  void dispose() {
-    // TODO: implement dispose
+  void initState() {
+    // TODO: implement initState
     Future.delayed(Duration.zero, () {
       _viewModel.initData();
     });
-    super.dispose();
+    super.initState();
   }
 
   @override
@@ -83,9 +89,8 @@ class _AdminHomeViewState extends ConsumerState<AdminPostView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 10),
-          const Text(
-            // 'Số phòng: ${_state.articleApprovedList.length}',
-            'Số phòng: ${1}',
+          Text(
+            'Số bài: ${_state.articleApprovedList.length}',
             style: AppTextStyles.headingXSmall,
           ),
           const SizedBox(height: 10),
@@ -104,9 +109,8 @@ class _AdminHomeViewState extends ConsumerState<AdminPostView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 10),
-          const Text(
-            // 'Số phòng: ${_state.articlePeddingList.length}',
-            'Số phòng: ${1}',
+          Text(
+            'Số bài: ${_state.articlePeddingList.length}',
             style: AppTextStyles.headingXSmall,
           ),
           const SizedBox(height: 10),
@@ -119,58 +123,50 @@ class _AdminHomeViewState extends ConsumerState<AdminPostView> {
   }
 
   Widget _buildPeddingHouseList() {
-    // final articlePeddingList = _state.articlePeddingList;
+    final articlePeddingList = _state.articlePeddingList;
     return GridView.builder(
-      itemCount: 1,
+      itemCount: articlePeddingList.length,
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 220,
         childAspectRatio: 0.80,
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
       ),
-      itemBuilder: (context, index) =>
-          //  RelativeHouseItemView(
-          //   articleEntity: articlePeddingList[index],
-          //   onTap: () {
-          //     ref.read(appNavigatorProvider).navigateTo(
-          //           AppRoutes.houseDetail,
-          //           arguments: HouseDetailArguments(
-          //             houseId: articlePeddingList[index].id,
-          //           ),
-          //         );
-          //   },
-          // ),
-          Container(
-        color: Colors.red,
+      itemBuilder: (context, index) => RelativeHouseItemView(
+        articleEntity: articlePeddingList[index],
+        onTap: () {
+          ref.read(appNavigatorProvider).navigateTo(
+                AppRoutes.postDetail,
+                arguments: ArticleDetailArguments(
+                  postId: articlePeddingList[index].id,
+                ),
+              );
+        },
       ),
       shrinkWrap: true,
     );
   }
 
   Widget _buildApprovedHouseList() {
-    // final articleApprovedList = _state.articleApprovedList;
+    final articleApprovedList = _state.articleApprovedList;
     return GridView.builder(
-      itemCount: 1,
+      itemCount: articleApprovedList.length,
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 220,
         childAspectRatio: 0.80,
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
       ),
-      itemBuilder: (context, index) =>
-          // RelativeHouseItemView(
-          //   articleEntity: articleApprovedList[index],
-          //   onTap: () {
-          //     ref.read(appNavigatorProvider).navigateTo(
-          //           AppRoutes.houseDetail,
-          //           arguments: HouseDetailArguments(
-          //             houseId: articleApprovedList[index].id,
-          //           ),
-          //         );
-          //   },
-          // ),
-          Container(
-        color: Colors.red,
+      itemBuilder: (context, index) => RelativeHouseItemView(
+        articleEntity: articleApprovedList[index],
+        onTap: () {
+          ref.read(appNavigatorProvider).navigateTo(
+                AppRoutes.postDetail,
+                arguments: ArticleDetailArguments(
+                  postId: articleApprovedList[index].id,
+                ),
+              );
+        },
       ),
       shrinkWrap: true,
     );

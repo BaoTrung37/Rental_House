@@ -2,21 +2,21 @@ import 'package:batru_house_rental/data/repositories/article/article_repository.
 import 'package:batru_house_rental/domain/use_case/use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 
-class RemoveHouseUseCase extends FutureUseCase<RemoveHouseInput, void> {
+class RemovePostUseCase extends FutureUseCase<RemovePostInput, void> {
   @override
-  Future<void> run(RemoveHouseInput input) async {
+  Future<void> run(RemovePostInput input) async {
     await injector.get<ArticleRepository>().removeArticleById(input);
   }
 }
 
-class RemoveHouseInput {
-  RemoveHouseInput({
-    required this.houseId,
+class RemovePostInput {
+  RemovePostInput({
+    required this.postId,
     required this.imageIdList,
     required this.convenientIdList,
     required this.houseTypeId,
   });
-  final String houseId;
+  final String postId;
   final List<String> imageIdList;
   final List<String> convenientIdList;
   final String houseTypeId;

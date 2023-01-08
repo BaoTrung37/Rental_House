@@ -1,3 +1,4 @@
+import 'package:batru_house_rental/domain/entities/article/article_entity.dart';
 import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -7,6 +8,8 @@ part 'admin_post_state.freezed.dart';
 class AdminPostState with _$AdminPostState {
   const factory AdminPostState({
     @Default(LoadingStatus.initial) LoadingStatus status,
-    String? errorMessage,
+    @Default([]) List<ArticleEntity> articlePeddingList,
+    @Default([]) List<ArticleEntity> articleApprovedList,
+    String? appError,
   }) = _AdminPostState;
 }

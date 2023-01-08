@@ -2,21 +2,21 @@ import 'dart:io';
 
 import 'package:batru_house_rental/data/models/address/address_reponse.dart';
 import 'package:batru_house_rental/data/models/convenient_house/convenient_house_reponse.dart';
-import 'package:batru_house_rental/data/models/house/house_response.dart';
 import 'package:batru_house_rental/data/models/house_type/house_type_response.dart';
 import 'package:batru_house_rental/data/models/image_house/image_house_response.dart';
+import 'package:batru_house_rental/data/models/post/post_response.dart';
 import 'package:batru_house_rental/domain/entities/convenient_house/convenient_house_entity.dart';
-import 'package:batru_house_rental/domain/entities/house/house_entity.dart';
+import 'package:batru_house_rental/domain/entities/post/post_entity.dart';
 import 'package:batru_house_rental/domain/use_case/address/post_address_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/commune/get_commune_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/convenient/get_convenient_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/convenient_house/post_convenient_house_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/district/get_district_list_use_case.dart';
-import 'package:batru_house_rental/domain/use_case/house/post_house_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/house_type/post_house_type_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/image_house/post_image_house_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/image_house/post_image_to_storage_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/post/post_the_post_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/province/get_province_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/type/get_type_list_use_case.dart';
 import 'package:batru_house_rental/presentation/pages/post_article/post_article_state.dart';
@@ -47,7 +47,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
   final GetDistrictListUseCase _getDistrictListUseCase;
   final GetCommuneListUseCase _getCommuneListUseCase;
   final GetConvenientListUseCase _getConvenientListUseCase;
-  final PostHouseUseCase _postHouseUseCase;
+  final PostThePostUseCase _postHouseUseCase;
   final PostConvenientHouseListUseCase _postConvenientHouseListUseCase;
   final PostImageHouseListUseCase _postImageHouseListUseCase;
   final PostImageToStorageUseCase _postImageToStorageUseCase;
@@ -83,7 +83,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
 
   Future<void> getHouseInitial() async {
     state = state.copyWith(
-      house: HouseEntity(
+      post: PostEntity(
         houseNumber: '',
         id: '',
         streetName: '',
@@ -108,13 +108,13 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
   }
 
   String _getAddress() {
-    var houseNumber = state.house?.houseNumber;
+    var houseNumber = state.post?.houseNumber;
     if (houseNumber != null && houseNumber.isNotEmpty) {
       houseNumber = '$houseNumber, ';
     } else {
       houseNumber = '';
     }
-    var streetName = state.house?.streetName;
+    var streetName = state.post?.streetName;
     if (streetName != null && streetName.isNotEmpty) {
       streetName = '$streetName, ';
     } else {
@@ -132,7 +132,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
       state = state.copyWith(
         postButtonStatus: LoadingStatus.inProgress,
       );
-      final houseId = DateTime.now().millisecondsSinceEpoch.toString();
+      final postId = DateTime.now().millisecondsSinceEpoch.toString();
       final addressId = DateTime.now()
           .add(const Duration(milliseconds: 1))
           .millisecondsSinceEpoch
@@ -140,27 +140,26 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
 
       final currentUser = await _getCurrentUserInformationUseCase.run();
       await _postHouseUseCase.run(
-        HouseResponse(
-          id: houseId,
-          area: state.house?.area ?? 0,
-          capacity: state.house?.capacity ?? 0,
-          streetName: state.house?.streetName ?? '',
-          houseNumber: state.house?.houseNumber ?? '',
-          depositMonth: state.house?.depositMonth ?? 0,
-          waterPrice: state.house?.waterPrice ?? 0,
-          electricPrice: state.house?.electricPrice ?? 0,
-          internetPrice: state.house?.internetPrice ?? 0,
+        PostResponse(
+          id: postId,
+          area: state.post?.area ?? 0,
+          capacity: state.post?.capacity ?? 0,
+          streetName: state.post?.streetName ?? '',
+          houseNumber: state.post?.houseNumber ?? '',
+          depositMonth: state.post?.depositMonth ?? 0,
+          waterPrice: state.post?.waterPrice ?? 0,
+          electricPrice: state.post?.electricPrice ?? 0,
+          internetPrice: state.post?.internetPrice ?? 0,
           isAvailableParking: state.isParkingSpaceAvailable,
-          parkingPrice: state.isParkingSpaceAvailable
-              ? state.house?.parkingPrice ?? 0
-              : 0,
-          rentalPrice: state.house!.rentalPrice,
+          parkingPrice:
+              state.isParkingSpaceAvailable ? state.post?.parkingPrice ?? 0 : 0,
+          rentalPrice: state.post!.rentalPrice,
           createdAt: DateTime.now(),
-          description: state.house?.description ?? '',
-          title: state.house?.title ?? '',
+          description: state.post?.description ?? '',
+          title: state.post?.title ?? '',
           userId: currentUser.id,
-          phoneNumber: state.house?.phoneNumber ?? '',
-          updatedAt: state.house?.updatedAt,
+          phoneNumber: state.post?.phoneNumber ?? '',
+          updatedAt: state.post?.updatedAt,
           address: _getAddress(),
         ),
       );
@@ -171,7 +170,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
               .add(const Duration(milliseconds: 2))
               .millisecondsSinceEpoch
               .toString(),
-          houseId: houseId,
+          postId: postId,
           typeId: state.currentType!.id,
         ),
       );
@@ -182,15 +181,15 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
           provinceId: state.currentProvince?.id ?? '01',
           districtId: state.currentDistrict!.id,
           communeId: state.currentCommune!.id,
-          houseId: houseId,
+          postId: postId,
         ),
       );
 
       await _postConvenientHouseListUseCase
           .run(state.convenientSelected.map((e) {
         return ConvenientHouseResponse(
-          id: e.convenientId + houseId,
-          houseId: houseId,
+          id: e.convenientId + postId,
+          postId: postId,
           convenientId: e.convenientId,
         );
       }).toList());
@@ -205,7 +204,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
                 .millisecondsSinceEpoch
                 .toString();
             debugPrint('imageId: $imageId');
-            return ImageHouseResponse(id: imageId, houseId: houseId, url: e);
+            return ImageHouseResponse(id: imageId, postId: postId, url: e);
           },
         ).toList(),
       );
@@ -213,7 +212,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
       state = state.copyWith(
         postButtonStatus: LoadingStatus.success,
       );
-      return houseId;
+      return postId;
     } catch (e) {
       state = state.copyWith(
         status: LoadingStatus.error,
@@ -226,7 +225,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
   void setHouseCapacity(String capacity) {
     try {
       state = state.copyWith(
-        house: state.house?.copyWith(
+        post: state.post?.copyWith(
           capacity: int.parse(capacity.replaceAll(',', '')),
         ),
       );
@@ -238,7 +237,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
   void setHouseArea(String area) {
     try {
       state = state.copyWith(
-        house: state.house?.copyWith(
+        post: state.post?.copyWith(
           area: int.parse(area.replaceAll(',', '')),
         ),
       );
@@ -250,7 +249,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
   void setRentalPrice(String rentalPrice) {
     try {
       state = state.copyWith(
-        house: state.house?.copyWith(
+        post: state.post?.copyWith(
           rentalPrice: int.parse(rentalPrice.replaceAll(',', '')),
         ),
       );
@@ -262,7 +261,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
   void setDipositPrice(String depositPrice) {
     try {
       state = state.copyWith(
-        house: state.house?.copyWith(
+        post: state.post?.copyWith(
           depositMonth: int.parse(depositPrice.replaceAll(',', '')),
         ),
       );
@@ -274,7 +273,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
   void setElectricPrice(String electricPrice) {
     try {
       state = state.copyWith(
-        house: state.house?.copyWith(
+        post: state.post?.copyWith(
           electricPrice: int.parse(electricPrice.replaceAll(',', '')),
         ),
       );
@@ -286,7 +285,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
   void setWaterPrice(String waterPrice) {
     try {
       state = state.copyWith(
-        house: state.house?.copyWith(
+        post: state.post?.copyWith(
           waterPrice: int.parse(waterPrice.replaceAll(',', '')),
         ),
       );
@@ -298,7 +297,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
   void setInternetPrice(String internetPrice) {
     try {
       state = state.copyWith(
-        house: state.house?.copyWith(
+        post: state.post?.copyWith(
           internetPrice: int.parse(internetPrice.replaceAll(',', '')),
         ),
       );
@@ -310,7 +309,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
   void setParkingPrice(String parkingPrice) {
     try {
       state = state.copyWith(
-        house: state.house?.copyWith(
+        post: state.post?.copyWith(
           parkingPrice: int.parse(parkingPrice.replaceAll(',', '')),
         ),
       );
@@ -321,7 +320,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
 
   void setStreetName(String streetName) {
     state = state.copyWith(
-      house: state.house?.copyWith(
+      post: state.post?.copyWith(
         streetName: streetName,
       ),
     );
@@ -329,7 +328,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
 
   void setHouseNumber(String houseNumber) {
     state = state.copyWith(
-      house: state.house?.copyWith(
+      post: state.post?.copyWith(
         houseNumber: houseNumber,
       ),
     );
@@ -337,7 +336,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
 
   void setPhoneNumber(String numberPhone) {
     state = state.copyWith(
-      house: state.house?.copyWith(
+      post: state.post?.copyWith(
         phoneNumber: numberPhone,
       ),
     );
@@ -345,7 +344,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
 
   void setDescription(String description) {
     state = state.copyWith(
-      house: state.house?.copyWith(
+      post: state.post?.copyWith(
         description: description,
       ),
     );
@@ -353,7 +352,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
 
   void setTitle(String title) {
     state = state.copyWith(
-      house: state.house?.copyWith(
+      post: state.post?.copyWith(
         title: title,
       ),
     );

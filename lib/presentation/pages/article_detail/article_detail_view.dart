@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
 import 'package:batru_house_rental/domain/entities/image_house/image_house_entity.dart';
-import 'package:batru_house_rental/domain/use_case/article/get_article_list_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/article/get_approved_article_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_article_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_user_by_id_use_case.dart';
@@ -10,16 +10,16 @@ import 'package:batru_house_rental/domain/use_case/chat/post_chat_room_use_case.
 import 'package:batru_house_rental/domain/use_case/favorite/add_favorite_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/favorite/check_favorite_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/favorite/remove_favorite_use_case.dart';
-import 'package:batru_house_rental/domain/use_case/house/post_available_house_use_case.dart';
-import 'package:batru_house_rental/domain/use_case/house/remove_house_use_case.dart';
-import 'package:batru_house_rental/domain/use_case/house/un_post_available_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/post/post_available_post_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/post/remove_post_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/post/un_post_available_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
-import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_state.dart';
-import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_view_model.dart';
-import 'package:batru_house_rental/presentation/pages/house_detail/widgets/convenient_item.dart';
-import 'package:batru_house_rental/presentation/pages/house_detail/widgets/convenient_list_item.dart';
-import 'package:batru_house_rental/presentation/pages/house_detail/widgets/relative_house_item_view.dart';
+import 'package:batru_house_rental/presentation/pages/article_detail/article_detail_state.dart';
+import 'package:batru_house_rental/presentation/pages/article_detail/article_detail_view_model.dart';
+import 'package:batru_house_rental/presentation/pages/article_detail/widgets/convenient_item.dart';
+import 'package:batru_house_rental/presentation/pages/article_detail/widgets/convenient_list_item.dart';
+import 'package:batru_house_rental/presentation/pages/article_detail/widgets/relative_house_item_view.dart';
 import 'package:batru_house_rental/presentation/pages/more_article/more_article_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
@@ -37,54 +37,54 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final _familyProvider = StateNotifierProvider.autoDispose
-    .family<HouseDetailViewModel, HouseDetailState, String>(
-  (ref, argument) => HouseDetailViewModel(
+    .family<ArticleDetailViewModel, ArticleDetailState, String>(
+  (ref, argument) => ArticleDetailViewModel(
     injector.get<GetArticleUseCase>(),
     injector.get<GetUserByIdUseCase>(),
     injector.get<GetCurrentUserInformationUseCase>(),
-    injector.get<GetArticleListUseCase>(),
+    injector.get<GetApprovedArticleListUseCase>(),
     injector.get<PostChatRoomUseCase>(),
-    injector.get<RemoveHouseUseCase>(),
+    injector.get<RemovePostUseCase>(),
     injector.get<CheckFavoriteUseCase>(),
     injector.get<AddFavoriteUseCase>(),
     injector.get<RemoveFavoriteUseCase>(),
-    injector.get<PostAvailableHouseUseCase>(),
-    injector.get<UnPostAvailableHouseUseCase>(),
+    injector.get<PostAvailablePostUseCase>(),
+    injector.get<UnPostAvailablePostUseCase>(),
   ),
 );
 
-class HouseDetailArguments {
-  HouseDetailArguments({
-    required this.houseId,
+class ArticleDetailArguments {
+  ArticleDetailArguments({
+    required this.postId,
   });
-  final String houseId;
+  final String postId;
 }
 
-class HouseDetailView extends ConsumerStatefulWidget {
-  const HouseDetailView({
-    required this.houseId,
+class ArticleDetailView extends ConsumerStatefulWidget {
+  const ArticleDetailView({
+    required this.postId,
     Key? key,
   }) : super(key: key);
 
-  final String houseId;
+  final String postId;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _HouseDetailViewState();
+      _ArticleDetailViewState();
 }
 
-class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
-  HouseDetailViewModel get _viewModel => ref.read(_provider.notifier);
+class _ArticleDetailViewState extends ConsumerState<ArticleDetailView> {
+  ArticleDetailViewModel get _viewModel => ref.read(_provider.notifier);
 
-  late final _provider = _familyProvider(widget.houseId);
+  late final _provider = _familyProvider(widget.postId);
 
-  HouseDetailState get state => ref.watch(_provider);
+  ArticleDetailState get state => ref.watch(_provider);
 
   @override
   void initState() {
     // TODO: implement initState
     Future.delayed(Duration.zero, () {
-      _viewModel.init(widget.houseId);
+      _viewModel.init(widget.postId);
     });
     super.initState();
   }
@@ -97,7 +97,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen<HouseDetailState>(
+    ref.listen<ArticleDetailState>(
       _provider,
       (previous, next) {
         if (next.status == LoadingStatus.error &&
@@ -118,7 +118,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
 
     return Scaffold(
       appBar: BaseAppBar.titleAndBackButton(
-        title: 'Chi tiết phòng',
+        title: 'Chi tiết bài đăng',
         shouldShowBottomDivider: true,
         widgets: [
           _buildFavoriteIcon(context),
@@ -216,7 +216,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
   }
 
   Widget _buildAvaliblePostButton(BuildContext context) {
-    final isAvalible = state.article?.house?.isAvailablePost ?? false;
+    final isAvalible = state.article?.post?.isAvailablePost ?? false;
     return AppButton(
       onButtonTap: () async {
         await _viewModel.onAvailablePostChanged();
@@ -717,12 +717,11 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
   }
 
   Widget _buildConvenientNeed() {
-    final internetPrice = state.article?.house?.internetPrice;
-    final electricPrice = state.article?.house?.electricPrice;
-    final waterPrice = state.article?.house?.waterPrice;
-    final isAvailableParking =
-        state.article?.house?.isAvailableParking ?? false;
-    final parkingPrice = state.article?.house?.parkingPrice;
+    final internetPrice = state.article?.post?.internetPrice;
+    final electricPrice = state.article?.post?.electricPrice;
+    final waterPrice = state.article?.post?.waterPrice;
+    final isAvailableParking = state.article?.post?.isAvailableParking ?? false;
+    final parkingPrice = state.article?.post?.parkingPrice;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -775,9 +774,9 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
                 articleEntity: houseArticleList[index],
                 onTap: () {
                   ref.read(appNavigatorProvider).navigateTo(
-                        AppRoutes.houseDetail,
-                        arguments: HouseDetailArguments(
-                          houseId: houseArticleList[index].id,
+                        AppRoutes.postDetail,
+                        arguments: ArticleDetailArguments(
+                          postId: houseArticleList[index].id,
                         ),
                       );
                 },
@@ -819,8 +818,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
         const SizedBox(width: 10),
         Expanded(
           child: Text(
-            state.article?.house?.createdAt.getPublishDatePastFormatString ??
-                '',
+            state.article?.post?.createdAt.getPublishDatePastFormatString ?? '',
             style: AppTextStyles.textMedium.copyWith(
               color: context.colors.textPrimary,
             ),
@@ -838,7 +836,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
       const Text('Tiện ích', style: AppTextStyles.headingXSmall);
 
   Row _buildSpecificPhoneNumberView(BuildContext context) {
-    final phoneNumber = ref.watch(_provider).article?.house?.phoneNumber;
+    final phoneNumber = ref.watch(_provider).article?.post?.phoneNumber;
     return Row(
       children: [
         const Icon(
@@ -866,7 +864,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
         const SizedBox(width: 10),
         Expanded(
           child: Text(
-            state.article?.house?.address ?? '',
+            state.article?.post?.address ?? '',
             style: AppTextStyles.textMedium.copyWith(
               color: context.colors.textPrimary,
             ),
@@ -893,7 +891,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
   Widget _buildDetailText(BuildContext context) {
     final article = ref.watch(_provider).article;
     return Text(
-      article?.house?.description ?? '',
+      article?.post?.description ?? '',
       overflow: TextOverflow.ellipsis,
       style: AppTextStyles.textMedium.copyWith(
         color: context.colors.textPrimary,
@@ -914,7 +912,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
   Center _buildRoomPrice(BuildContext context) {
     return Center(
       child: Text(
-        'Giá phòng: ${NumberFormatHelper.formatShortPrice(state.article?.house?.rentalPrice ?? 0)}/phòng',
+        'Giá phòng: ${NumberFormatHelper.formatShortPrice(state.article?.post?.rentalPrice ?? 0)}/phòng',
         style: AppTextStyles.textLarge.copyWith(
           color: context.colors.contentSpecialMain,
         ),
@@ -924,7 +922,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
 
   Widget _buildTitle(BuildContext context) {
     return Text(
-      state.article?.house?.title ?? '',
+      state.article?.post?.title ?? '',
       style: AppTextStyles.headingSmall.copyWith(
         color: context.colors.textPrimary,
       ),
@@ -933,7 +931,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
 
   Text _buildSubTitle(BuildContext context) {
     return Text(
-      'TÌM NGƯỜI THUÊ. ${state.article?.house?.capacity}',
+      'TÌM NGƯỜI THUÊ. ${state.article?.post?.capacity}',
       style: AppTextStyles.labelSmallLight.copyWith(
         color: context.colors.textSecondary,
       ),
@@ -941,7 +939,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
   }
 
   Widget _buildRoomStatusInfo(BuildContext context) {
-    final isAvalible = state.article?.house?.isAvailablePost ?? false;
+    final isAvalible = state.article?.post?.isAvailablePost ?? false;
     return Column(
       children: [
         Text(
@@ -974,7 +972,7 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
           child: Wrap(
             children: [
               Text(
-                '${state.article?.house?.area}m',
+                '${state.article?.post?.area}m',
                 style: TextStyle(
                   color: context.colors.contentSpecialText,
                 ),
@@ -1005,9 +1003,9 @@ class _HouseDetailViewState extends ConsumerState<HouseDetailView> {
           ),
         ),
         Text(
-          state.article?.house?.depositMonth == 0
+          state.article?.post?.depositMonth == 0
               ? 'Không'
-              : '${state.article?.house?.depositMonth} tháng',
+              : '${state.article?.post?.depositMonth} tháng',
           style: AppTextStyles.labelSmallLight.copyWith(
             color: context.colors.contentSpecialText,
           ),

@@ -87,7 +87,7 @@ class _MyPageViewState extends ConsumerState<MyPageView>
             final userId = await _viewModel.getCurrentUserId();
 
             await ref.read(appNavigatorProvider).navigateTo(
-                AppRoutes.ownerHouse,
+                AppRoutes.ownerArticle,
                 arguments: OnwerArticleArguments(userId: userId));
           },
           horizontalTitleGap: 1,

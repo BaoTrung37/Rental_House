@@ -3,11 +3,11 @@ import 'package:batru_house_rental/domain/entities/user/user_entity.dart';
 import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'house_detail_state.freezed.dart';
+part 'article_detail_state.freezed.dart';
 
 @freezed
-class HouseDetailState with _$HouseDetailState {
-  const factory HouseDetailState({
+class ArticleDetailState with _$ArticleDetailState {
+  const factory ArticleDetailState({
     @Default(LoadingStatus.initial) LoadingStatus status,
     @Default(LoadingStatus.initial) LoadingStatus sendMessageStatus,
     @Default(LoadingStatus.initial) LoadingStatus removeHouseStatus,
@@ -22,5 +22,5 @@ class HouseDetailState with _$HouseDetailState {
     @Default(0) int largeQuantity,
     @Default(0) int normalQuantity,
     @Default(0) int smallQuantity,
-  }) = _HouseDetailState;
+  }) = _ArticleDetailState;
 }

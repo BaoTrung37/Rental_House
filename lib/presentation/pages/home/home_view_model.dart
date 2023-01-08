@@ -1,4 +1,4 @@
-import 'package:batru_house_rental/domain/use_case/article/get_article_list_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/article/get_approved_article_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/district/get_district_list_use_case.dart';
 import 'package:batru_house_rental/presentation/pages/home/home_state.dart';
 import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
@@ -14,7 +14,7 @@ class HomeViewModel extends StateNotifier<HomeState> {
 
   // final GetInitialArticleDataUseCase _getInitialArticleDataUseCase;
   final GetDistrictListUseCase _getDistrictListUseCase;
-  final GetArticleListUseCase _getArticleListUseCase;
+  final GetApprovedArticleListUseCase _getArticleListUseCase;
 
   Future<void> initData() async {
     try {

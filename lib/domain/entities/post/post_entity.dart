@@ -1,10 +1,10 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'house_entity.freezed.dart';
+part 'post_entity.freezed.dart';
 
 @freezed
-class HouseEntity with _$HouseEntity {
-  const factory HouseEntity({
+class PostEntity with _$PostEntity {
+  const factory PostEntity({
     required String id,
     required String streetName,
     required String houseNumber,
@@ -26,5 +26,5 @@ class HouseEntity with _$HouseEntity {
     @Default(0) int electricPrice,
     @Default(0) int internetPrice,
     @Default(0) int parkingPrice,
-  }) = _HouseEntity;
+  }) = _PostEntity;
 }

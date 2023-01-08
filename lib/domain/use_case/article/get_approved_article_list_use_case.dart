@@ -3,10 +3,10 @@ import 'package:batru_house_rental/domain/entities/article/article_entity.dart';
 import 'package:batru_house_rental/domain/use_case/use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 
-class GetArticlesByUserIdUseCase
-    extends FutureUseCase<String, List<ArticleEntity>> {
+class GetApprovedArticleListUseCase
+    extends FutureUseCase<int, List<ArticleEntity>> {
   @override
-  Future<List<ArticleEntity>> run(String input) async {
-    return injector.get<ArticleRepository>().getArticlesByUserId(input, true);
+  Future<List<ArticleEntity>> run(int input) async {
+    return injector.get<ArticleRepository>().getApprovedArticles(input);
   }
 }

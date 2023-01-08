@@ -28,7 +28,7 @@ class FavoriteRepository {
 
   Future<String?> checkFavorite(GetFavoriteInput input) async {
     final userId = input.userId;
-    final houseId = input.houseId;
+    final houseId = input.postId;
 
     final snapshot = await _fireStore
         .collection('favorite')

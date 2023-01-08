@@ -2,11 +2,11 @@ import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
 import 'package:batru_house_rental/presentation/pages/admin_main_menu/admin_main_menu_view.dart';
 import 'package:batru_house_rental/presentation/pages/admin_post/admin_post_view.dart';
 import 'package:batru_house_rental/presentation/pages/admin_report/admin_report_view.dart';
+import 'package:batru_house_rental/presentation/pages/article_detail/article_detail_view.dart';
 import 'package:batru_house_rental/presentation/pages/chat/chat_view.dart';
 import 'package:batru_house_rental/presentation/pages/chat_list/chat_list_view.dart';
 import 'package:batru_house_rental/presentation/pages/favorite/favorite_view.dart';
 import 'package:batru_house_rental/presentation/pages/home/home_view.dart';
-import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_view.dart';
 import 'package:batru_house_rental/presentation/pages/login/login_view.dart';
 import 'package:batru_house_rental/presentation/pages/main_menu/main_menu_view.dart';
 import 'package:batru_house_rental/presentation/pages/more_article/more_article_view.dart';
@@ -65,12 +65,12 @@ class AppRouter {
           builder: (context) => const HomeView(),
         );
 
-      case AppRoutes.houseDetail:
-        final args = settings.arguments as HouseDetailArguments;
+      case AppRoutes.postDetail:
+        final args = settings.arguments as ArticleDetailArguments;
         return MaterialPageRoute(
           settings: settings,
-          builder: (context) => HouseDetailView(
-            houseId: args.houseId,
+          builder: (context) => ArticleDetailView(
+            postId: args.postId,
           ),
         );
 
@@ -112,7 +112,7 @@ class AppRouter {
           settings: settings,
           builder: (context) => const PostArticleView(),
         );
-      case AppRoutes.ownerHouse:
+      case AppRoutes.ownerArticle:
         return MaterialPageRoute(
           settings: settings,
           builder: (context) => OwnerArticleView(
