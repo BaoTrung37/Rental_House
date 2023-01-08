@@ -12,8 +12,8 @@ class CheckFavoriteUseCase extends FutureUseCase<GetFavoriteInput, String?> {
 class GetFavoriteInput {
   GetFavoriteInput({
     required this.userId,
-    required this.houseId,
+    required this.postId,
   });
   final String userId;
-  final String houseId;
+  final String postId;
 }

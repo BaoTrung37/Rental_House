@@ -7,6 +7,6 @@ class ImageHouseEntity with _$ImageHouseEntity {
   const factory ImageHouseEntity({
     required String id,
     required String url,
-    required String houseId,
+    required String postId,
   }) = _ImageHouseEntity;
 }

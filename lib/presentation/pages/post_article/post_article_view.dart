@@ -5,16 +5,16 @@ import 'package:batru_house_rental/domain/use_case/commune/get_commune_list_use_
 import 'package:batru_house_rental/domain/use_case/convenient/get_convenient_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/convenient_house/post_convenient_house_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/district/get_district_list_use_case.dart';
-import 'package:batru_house_rental/domain/use_case/house/post_house_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/house_type/post_house_type_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/image_house/post_image_house_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/image_house/post_image_to_storage_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/post/post_the_post_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/province/get_province_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/type/get_type_list_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
+import 'package:batru_house_rental/presentation/pages/article_detail/article_detail_view.dart';
 import 'package:batru_house_rental/presentation/pages/home/home_view.dart';
-import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_view.dart';
 import 'package:batru_house_rental/presentation/pages/post_article/post_article_state.dart';
 import 'package:batru_house_rental/presentation/pages/post_article/post_article_view_model.dart';
 import 'package:batru_house_rental/presentation/pages/post_article/widgets/convenient_item.dart';
@@ -40,7 +40,7 @@ final _provider =
     injector.get<GetDistrictListUseCase>(),
     injector.get<GetCommuneListUseCase>(),
     injector.get<GetConvenientListUseCase>(),
-    injector.get<PostHouseUseCase>(),
+    injector.get<PostThePostUseCase>(),
     injector.get<PostConvenientHouseListUseCase>(),
     injector.get<PostImageHouseListUseCase>(),
     injector.get<PostImageToStorageUseCase>(),
@@ -73,14 +73,14 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
   }
 
   Future<void> _onPostArticleButton() async {
-    final houseId = await _viewModel.postArticle();
+    final postId = await _viewModel.postArticle();
 
-    if (houseId != null) {
+    if (postId != null) {
       ref.read(homeViewProvider.notifier).setShouldReloadData(true);
       ref.read(appNavigatorProvider).goBack();
       await ref.read(appNavigatorProvider).navigateTo(
-            AppRoutes.houseDetail,
-            arguments: HouseDetailArguments(houseId: houseId),
+            AppRoutes.postDetail,
+            arguments: ArticleDetailArguments(postId: postId),
           );
     }
   }
@@ -220,7 +220,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
         ),
         const SizedBox(height: 8),
         InputTextField.singleLine(
-          initialText: state.house?.title,
+          initialText: state.post?.title,
           labelText: 'Tiêu đề bài đăng',
           placeholder: 'Nhập tiêu đề bài đăng',
           keyboardType: TextInputType.text,
@@ -283,7 +283,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
               color: context.colors.iconPrimary,
               size: 20,
             ),
-            title: 'Chụp hình',
+            title: 'Tải hình',
             onButtonTap: () {
               _viewModel.openImagePicker(context);
             },
@@ -366,7 +366,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           labelText: 'Tên đường',
           placeholder: 'Nhập tên đường',
           keyboardType: TextInputType.text,
-          initialText: state.house?.streetName,
+          initialText: state.post?.streetName,
           textInputAction: TextInputAction.next,
           onTextChange: (value) {
             _viewModel.setStreetName(value!);
@@ -377,7 +377,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           labelText: 'Số nhà',
           placeholder: 'Nhập địa chỉ nhà',
           keyboardType: TextInputType.text,
-          initialText: state.house?.houseNumber,
+          initialText: state.post?.houseNumber,
           textInputAction: TextInputAction.next,
           onTextChange: (value) {
             _viewModel.setHouseNumber(value!);
@@ -388,14 +388,14 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
   }
 
   Widget _buildInfomationInputView() {
-    final houseState = ref.watch(_provider).house;
+    final houseState = ref.watch(_provider).post;
     final isParkingSpaceAvailable =
         ref.watch(_provider).isParkingSpaceAvailable;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Thông tin phòng',
+          'Thông tin nhà',
           style: AppTextStyles.headingSmall,
         ),
         const SizedBox(height: 8),
@@ -439,7 +439,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
         const SizedBox(height: 8),
         InputTextField.singleLine(
           labelText: 'Diện tích (m2)',
-          placeholder: 'Diện tích phòng',
+          placeholder: 'Diện tích',
           initialText: houseState?.area.toString(),
           keyboardType: TextInputType.number,
           inputFormatters: [
@@ -475,7 +475,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
         InputTextField.singleLine(
           labelText: 'Giá cho thuê (VNĐ)',
           placeholder: 'Diện tích phòng',
-          initialText: state.house?.rentalPrice.toString(),
+          initialText: state.post?.rentalPrice.toString(),
           keyboardType: TextInputType.number,
           inputFormatters: [
             CurrencyTextInputFormatter(
@@ -493,7 +493,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
         InputTextField.singleLine(
           labelText: 'Đặt cọc (tháng)',
           placeholder: 'Số tháng cần đặt cọc',
-          initialText: state.house?.depositMonth.toString(),
+          initialText: state.post?.depositMonth.toString(),
           keyboardType: TextInputType.number,
           inputFormatters: [
             CurrencyTextInputFormatter(
@@ -510,7 +510,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
         InputTextField.singleLine(
           labelText: 'Tiền điện (VNĐ/kWh)',
           placeholder: 'Tiền điện',
-          initialText: state.house?.electricPrice.toString(),
+          initialText: state.post?.electricPrice.toString(),
           keyboardType: TextInputType.number,
           inputFormatters: [
             CurrencyTextInputFormatter(
@@ -528,7 +528,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
         InputTextField.singleLine(
           labelText: 'Tiền nước (VNĐ/người)',
           placeholder: 'Tiền nước',
-          initialText: state.house?.waterPrice.toString(),
+          initialText: state.post?.waterPrice.toString(),
           keyboardType: TextInputType.number,
           inputFormatters: [
             CurrencyTextInputFormatter(
@@ -546,7 +546,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
         InputTextField.singleLine(
           labelText: 'Tiền Internet (VNĐ)',
           placeholder: 'Tiền nước',
-          initialText: state.house?.internetPrice.toString(),
+          initialText: state.post?.internetPrice.toString(),
           keyboardType: TextInputType.number,
           inputFormatters: [
             CurrencyTextInputFormatter(
@@ -577,7 +577,7 @@ class _PostArticleViewState extends ConsumerState<PostArticleView>
           InputTextField.singleLine(
             labelText: 'Tiền gửi xe',
             placeholder: 'Tiền gửi xe',
-            initialText: state.house?.parkingPrice.toString(),
+            initialText: state.post?.parkingPrice.toString(),
             keyboardType: TextInputType.number,
             inputFormatters: [
               CurrencyTextInputFormatter(

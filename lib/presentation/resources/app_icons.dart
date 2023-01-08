@@ -490,6 +490,28 @@ class AppIcons {
     );
   }
 
+  static Widget post({
+    Color? color,
+    double? size,
+  }) {
+    return SvgIcon.from(
+      '$_iconsPath/post.svg',
+      color: color,
+      size: size,
+    );
+  }
+
+  static Widget report({
+    Color? color,
+    double? size,
+  }) {
+    return SvgIcon.from(
+      '$_iconsPath/report.svg',
+      color: color,
+      size: size,
+    );
+  }
+
   static Widget image({
     Color? color,
     double? size,

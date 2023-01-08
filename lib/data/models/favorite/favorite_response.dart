@@ -8,7 +8,7 @@ part 'favorite_response.g.dart';
 class FavoriteResponse {
   FavoriteResponse({
     required this.id,
-    required this.houseId,
+    required this.postId,
     required this.userId,
     required this.typeHouse,
     required this.title,
@@ -21,7 +21,7 @@ class FavoriteResponse {
       _$FavoriteResponseFromJson(json);
 
   final String id;
-  final String houseId;
+  final String postId;
   final String userId;
   final String typeHouse;
   final String title;
@@ -33,7 +33,7 @@ class FavoriteResponse {
 
   FavoriteEntity toEntity() => FavoriteEntity(
         id: id,
-        houseId: houseId,
+        postId: postId,
         userId: userId,
         typeHouse: typeHouse,
         title: title,

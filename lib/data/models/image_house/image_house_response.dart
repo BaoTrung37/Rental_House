@@ -7,7 +7,7 @@ part 'image_house_response.g.dart';
 class ImageHouseResponse {
   ImageHouseResponse({
     required this.id,
-    required this.houseId,
+    required this.postId,
     required this.url,
   });
 
@@ -15,14 +15,14 @@ class ImageHouseResponse {
       _$ImageHouseResponseFromJson(json);
 
   final String id;
-  final String houseId;
+  final String postId;
   final String url;
 
   Map<String, dynamic> toJson() => _$ImageHouseResponseToJson(this);
 
   ImageHouseEntity toEntity() => ImageHouseEntity(
         id: id,
-        houseId: houseId,
+        postId: postId,
         url: url,
       );
 }

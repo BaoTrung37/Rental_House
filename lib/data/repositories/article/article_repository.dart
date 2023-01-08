@@ -1,17 +1,17 @@
 import 'package:batru_house_rental/data/models/address/address_reponse.dart';
 import 'package:batru_house_rental/data/models/convenient/convenient_response.dart';
 import 'package:batru_house_rental/data/models/convenient_house/convenient_house_reponse.dart';
-import 'package:batru_house_rental/data/models/house/house_response.dart';
 import 'package:batru_house_rental/data/models/house_type/house_type_response.dart';
 import 'package:batru_house_rental/data/models/image_house/image_house_response.dart';
+import 'package:batru_house_rental/data/models/post/post_response.dart';
 import 'package:batru_house_rental/data/models/type/type_response.dart';
 import 'package:batru_house_rental/domain/entities/article/article_entity.dart';
 import 'package:batru_house_rental/domain/entities/convenient/convenient_entity.dart';
-import 'package:batru_house_rental/domain/entities/house/house_entity.dart';
 import 'package:batru_house_rental/domain/entities/image_house/image_house_entity.dart';
+import 'package:batru_house_rental/domain/entities/post/post_entity.dart';
 import 'package:batru_house_rental/domain/entities/type/type_entity.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_article_filter_list_use_case.dart';
-import 'package:batru_house_rental/domain/use_case/house/remove_house_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/post/remove_post_use_case.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -65,25 +65,23 @@ class ArticleRepository {
   //       .toList();
   // }
 
-  Future<ArticleEntity> getArticeById(String houseId) async {
-    final houseSnapshot =
-        await _fireStore.collection('house').doc(houseId).get();
+  Future<ArticleEntity> getArticeById(String postId) async {
+    final postSnapshot = await _fireStore.collection('post').doc(postId).get();
 
     final imageHouseSnapshot = await _fireStore
         .collection('imageHouse')
-        .where('houseId', isEqualTo: houseId)
+        .where('postId', isEqualTo: postId)
         .get();
     final convenientHouseSnapshot = await _fireStore
         .collection('convenientHouse')
-        .where('houseId', isEqualTo: houseId)
+        .where('postId', isEqualTo: postId)
         .get();
     final houseTypeSnapshot = await _fireStore
         .collection('houseType')
-        .where('houseId', isEqualTo: houseId)
+        .where('postId', isEqualTo: postId)
         .limit(1)
         .get();
-    final houseEntity =
-        HouseResponse.fromJson(houseSnapshot.data()!).toEntity();
+    final postEntity = PostResponse.fromJson(postSnapshot.data()!).toEntity();
     final houseTypeResponse = houseTypeSnapshot.docs.map((e) {
       return HouseTypeResponse.fromJson(e.data());
     });
@@ -112,21 +110,21 @@ class ArticleRepository {
         )
         .toList();
     return ArticleEntity(
-      id: houseEntity.id,
-      house: houseEntity,
+      id: postEntity.id,
+      post: postEntity,
       imageList: imageList,
       convenientList: convenientList,
       type: type,
     );
   }
 
-  Future<void> removeArticleById(RemoveHouseInput removeHouseInput) async {
-    final houseId = removeHouseInput.houseId;
-    final imageIdList = removeHouseInput.imageIdList;
-    final convenientIdList = removeHouseInput.convenientIdList;
-    final houseTypeId = removeHouseInput.houseTypeId;
-    await _fireStore.collection('house').doc(houseId).delete().then(
-        (value) => debugPrint('Remove house: $houseId'),
+  Future<void> removeArticleById(RemovePostInput removePostInput) async {
+    final postId = removePostInput.postId;
+    final imageIdList = removePostInput.imageIdList;
+    final convenientIdList = removePostInput.convenientIdList;
+    final houseTypeId = removePostInput.houseTypeId;
+    await _fireStore.collection('post').doc(postId).delete().then(
+        (value) => debugPrint('Remove post: $postId'),
         onError: (e) => debugPrint('Error updating document $e'));
 
     await _fireStore.collection('houseType').doc(houseTypeId).delete().then(
@@ -135,7 +133,7 @@ class ArticleRepository {
 
     final addressList = await _fireStore
         .collection('address')
-        .where('houseId', isEqualTo: houseId)
+        .where('postId', isEqualTo: postId)
         .get();
     await Future.wait(addressList.docs.map((e) async {
       await _fireStore.collection('address').doc(e.id).delete().then(
@@ -163,35 +161,35 @@ class ArticleRepository {
     );
   }
 
-  Future<List<ArticleEntity>> getArticles(int limit) async {
-    final houseSnapshot = await _fireStore
-        .collection('house')
+  Future<List<ArticleEntity>> getApprovedArticles(int limit) async {
+    final postSnapshot = await _fireStore
+        .collection('post')
         .where('isApproved', isEqualTo: true)
         .limit(limit)
         .get();
 
     final articles = <ArticleEntity>[];
     try {
-      for (final house in houseSnapshot.docs) {
-        HouseEntity houseEntity;
+      for (final post in postSnapshot.docs) {
+        PostEntity postEntity;
         TypeEntity type;
         List<ImageHouseEntity> imageList;
         List<ConvenientEntity> convenientList;
         try {
           final imageHouseSnapshot = await _fireStore
               .collection('imageHouse')
-              .where('houseId', isEqualTo: house.id)
+              .where('postId', isEqualTo: post.id)
               .get();
           final convenientHouseSnapshot = await _fireStore
               .collection('convenientHouse')
-              .where('houseId', isEqualTo: house.id)
+              .where('postId', isEqualTo: post.id)
               .get();
           final houseTypeSnapshot = await _fireStore
               .collection('houseType')
-              .where('houseId', isEqualTo: house.id)
+              .where('postId', isEqualTo: post.id)
               .limit(1)
               .get();
-          houseEntity = HouseResponse.fromJson(house.data()).toEntity();
+          postEntity = PostResponse.fromJson(post.data()).toEntity();
           final houseTypeResponse = houseTypeSnapshot.docs.map((e) {
             return HouseTypeResponse.fromJson(e.data());
           });
@@ -226,8 +224,8 @@ class ArticleRepository {
         }
 
         articles.add(ArticleEntity(
-          id: houseEntity.id,
-          house: houseEntity,
+          id: postEntity.id,
+          post: postEntity,
           imageList: imageList,
           convenientList: convenientList,
           type: type,
@@ -240,34 +238,35 @@ class ArticleRepository {
     return articles;
   }
 
-  Future<List<ArticleEntity>> getArticlesByUserId(String userId) async {
-    final houseSnapshot = await _fireStore
-        .collection('house')
-        .where('userId', isEqualTo: userId)
+  Future<List<ArticleEntity>> getPenddingArticles(int limit) async {
+    final postSnapshot = await _fireStore
+        .collection('post')
+        .where('isApproved', isEqualTo: false)
+        .limit(limit)
         .get();
 
     final articles = <ArticleEntity>[];
     try {
-      for (final house in houseSnapshot.docs) {
-        HouseEntity houseEntity;
+      for (final post in postSnapshot.docs) {
+        PostEntity postEntity;
         TypeEntity type;
         List<ImageHouseEntity> imageList;
         List<ConvenientEntity> convenientList;
         try {
           final imageHouseSnapshot = await _fireStore
               .collection('imageHouse')
-              .where('houseId', isEqualTo: house.id)
+              .where('postId', isEqualTo: post.id)
               .get();
           final convenientHouseSnapshot = await _fireStore
               .collection('convenientHouse')
-              .where('houseId', isEqualTo: house.id)
+              .where('postId', isEqualTo: post.id)
               .get();
           final houseTypeSnapshot = await _fireStore
               .collection('houseType')
-              .where('houseId', isEqualTo: house.id)
+              .where('postId', isEqualTo: post.id)
               .limit(1)
               .get();
-          houseEntity = HouseResponse.fromJson(house.data()).toEntity();
+          postEntity = PostResponse.fromJson(post.data()).toEntity();
           final houseTypeResponse = houseTypeSnapshot.docs.map((e) {
             return HouseTypeResponse.fromJson(e.data());
           });
@@ -302,8 +301,164 @@ class ArticleRepository {
         }
 
         articles.add(ArticleEntity(
-          id: houseEntity.id,
-          house: houseEntity,
+          id: postEntity.id,
+          post: postEntity,
+          imageList: imageList,
+          convenientList: convenientList,
+          type: type,
+        ));
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    articles.sort((a, b) => b.id.compareTo(a.id));
+    return articles;
+  }
+
+  Future<List<ArticleEntity>> getArticlesByUserId(
+    String userId, [
+    bool isApproved = false,
+  ]) async {
+    final postSnapshot = await _fireStore
+        .collection('post')
+        .where('userId', isEqualTo: userId)
+        .where('isApproved', isEqualTo: isApproved)
+        .get();
+
+    final articles = <ArticleEntity>[];
+    try {
+      for (final post in postSnapshot.docs) {
+        PostEntity postEntity;
+        TypeEntity type;
+        List<ImageHouseEntity> imageList;
+        List<ConvenientEntity> convenientList;
+        try {
+          final imageHouseSnapshot = await _fireStore
+              .collection('imageHouse')
+              .where('postId', isEqualTo: post.id)
+              .get();
+          final convenientHouseSnapshot = await _fireStore
+              .collection('convenientHouse')
+              .where('postId', isEqualTo: post.id)
+              .get();
+          final houseTypeSnapshot = await _fireStore
+              .collection('houseType')
+              .where('postId', isEqualTo: post.id)
+              .limit(1)
+              .get();
+          postEntity = PostResponse.fromJson(post.data()).toEntity();
+          final houseTypeResponse = houseTypeSnapshot.docs.map((e) {
+            return HouseTypeResponse.fromJson(e.data());
+          });
+
+          type = _types
+              .firstWhere(
+                  (element) => element.id == houseTypeResponse.first.typeId)
+              .toEntity();
+
+          imageList = imageHouseSnapshot.docs
+              .map(
+                (e) => ImageHouseResponse.fromJson(e.data()).toEntity(),
+              )
+              .toList();
+          //
+          final convenienHouseResponse = convenientHouseSnapshot.docs
+              .map(
+                (e) => ConvenientHouseResponse.fromJson(e.data()),
+              )
+              .toList();
+
+          convenientList = convenienHouseResponse
+              .map(
+                (e) => _convenients
+                    .firstWhere((element) => element.id == e.convenientId)
+                    .toEntity(),
+              )
+              .toList();
+        } catch (e) {
+          debugPrint(e.toString());
+          continue;
+        }
+
+        articles.add(ArticleEntity(
+          id: postEntity.id,
+          post: postEntity,
+          imageList: imageList,
+          convenientList: convenientList,
+          type: type,
+        ));
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+    articles.sort((a, b) => b.id.compareTo(a.id));
+    return articles;
+  }
+
+  Future<List<ArticleEntity>> getOwnerArticlesByUserId(String userId) async {
+    final postSnapshot = await _fireStore
+        .collection('post')
+        .where('userId', isEqualTo: userId)
+        .get();
+
+    final articles = <ArticleEntity>[];
+    try {
+      for (final post in postSnapshot.docs) {
+        PostEntity postEntity;
+        TypeEntity type;
+        List<ImageHouseEntity> imageList;
+        List<ConvenientEntity> convenientList;
+        try {
+          final imageHouseSnapshot = await _fireStore
+              .collection('imageHouse')
+              .where('postId', isEqualTo: post.id)
+              .get();
+          final convenientHouseSnapshot = await _fireStore
+              .collection('convenientHouse')
+              .where('postId', isEqualTo: post.id)
+              .get();
+          final houseTypeSnapshot = await _fireStore
+              .collection('houseType')
+              .where('postId', isEqualTo: post.id)
+              .limit(1)
+              .get();
+          postEntity = PostResponse.fromJson(post.data()).toEntity();
+          final houseTypeResponse = houseTypeSnapshot.docs.map((e) {
+            return HouseTypeResponse.fromJson(e.data());
+          });
+
+          type = _types
+              .firstWhere(
+                  (element) => element.id == houseTypeResponse.first.typeId)
+              .toEntity();
+
+          imageList = imageHouseSnapshot.docs
+              .map(
+                (e) => ImageHouseResponse.fromJson(e.data()).toEntity(),
+              )
+              .toList();
+          //
+          final convenienHouseResponse = convenientHouseSnapshot.docs
+              .map(
+                (e) => ConvenientHouseResponse.fromJson(e.data()),
+              )
+              .toList();
+
+          convenientList = convenienHouseResponse
+              .map(
+                (e) => _convenients
+                    .firstWhere((element) => element.id == e.convenientId)
+                    .toEntity(),
+              )
+              .toList();
+        } catch (e) {
+          debugPrint(e.toString());
+          continue;
+        }
+
+        articles.add(ArticleEntity(
+          id: postEntity.id,
+          post: postEntity,
           imageList: imageList,
           convenientList: convenientList,
           type: type,
@@ -338,15 +493,15 @@ class ArticleRepository {
     final articles = <ArticleEntity>[];
     for (final type in typeHouseResponse) {
       for (final address in addressResponse) {
-        if (type.houseId == address.houseId) {
-          final article = await getArticeById(address.houseId);
-          final rentalPrice = article.house?.rentalPrice ?? 0;
+        if (type.postId == address.postId) {
+          final article = await getArticeById(address.postId);
+          final rentalPrice = article.post?.rentalPrice ?? 0;
           final minPrice = input.minPrice ?? 0;
           final maxPrice = input.maxPrice ?? 1000000000;
 
           if (rentalPrice >= minPrice &&
               rentalPrice <= maxPrice &&
-              article.house?.isApproved == true) {
+              article.post?.isApproved == true) {
             articles.add(article);
           }
         }

@@ -7,6 +7,6 @@ class GetArticlesByUserIdUseCase
     extends FutureUseCase<String, List<ArticleEntity>> {
   @override
   Future<List<ArticleEntity>> run(String input) async {
-    return injector.get<ArticleRepository>().getArticlesByUserId(input);
+    return injector.get<ArticleRepository>().getArticlesByUserId(input, true);
   }
 }

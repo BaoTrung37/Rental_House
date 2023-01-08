@@ -8,21 +8,26 @@ import 'package:batru_house_rental/data/repositories/convenient/convenient_repos
 import 'package:batru_house_rental/data/repositories/convenient_house/convenient_house_repository.dart';
 import 'package:batru_house_rental/data/repositories/district/district_repository.dart';
 import 'package:batru_house_rental/data/repositories/favorite/favorite_repository.dart';
-import 'package:batru_house_rental/data/repositories/house/house_repository.dart';
 import 'package:batru_house_rental/data/repositories/house_type/house_type_repository.dart';
 import 'package:batru_house_rental/data/repositories/image_house/image_house_repository.dart';
+import 'package:batru_house_rental/data/repositories/post/post_repository.dart';
 import 'package:batru_house_rental/data/repositories/province/province_repository.dart';
 import 'package:batru_house_rental/data/repositories/type/type_repository.dart';
+import 'package:batru_house_rental/data/services/preference_services/shared_preferences_manager.dart';
 import 'package:batru_house_rental/domain/use_case/address/post_address_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/article/get_approved_article_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_article_filter_list_use_case.dart';
-import 'package:batru_house_rental/domain/use_case/article/get_article_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_article_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_articles_by_user_id_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_initial_article_data_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/article/get_owner_article_list_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/article/get_pendding_article_list_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/auth/email_login_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/auth/email_logout_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_user_by_id_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/google_login_use_case.dart';
-import 'package:batru_house_rental/domain/use_case/auth/logout_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/auth/google_logout_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/get_chat_message_list_by_room_id_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/get_chat_room_list_by_user_id_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/post_chat_room_use_case.dart';
@@ -35,21 +40,33 @@ import 'package:batru_house_rental/domain/use_case/favorite/add_favorite_use_cas
 import 'package:batru_house_rental/domain/use_case/favorite/check_favorite_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/favorite/get_favorite_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/favorite/remove_favorite_use_case.dart';
-import 'package:batru_house_rental/domain/use_case/house/get_house_use_case.dart';
-import 'package:batru_house_rental/domain/use_case/house/post_available_house_use_case.dart';
-import 'package:batru_house_rental/domain/use_case/house/post_house_use_case.dart';
-import 'package:batru_house_rental/domain/use_case/house/remove_house_use_case.dart';
-import 'package:batru_house_rental/domain/use_case/house/un_post_available_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/house_type/post_house_type_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/image_house/get_image_house_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/image_house/post_image_house_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/image_house/post_image_to_storage_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/post/post_available_post_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/post/post_the_post_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/post/remove_post_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/post/un_post_available_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/province/get_province_list_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/type/get_type_list_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AppModules {
   static Future<void> inject() async {
+    // SharedPreferences client
+    injector.registerSingletonAsync<SharedPreferences>(() async {
+      return SharedPreferences.getInstance();
+    });
+
+    // SharedPreferences manager
+    injector.registerLazySingleton<SharedPreferencesManager>(
+      () => SharedPreferencesManager(
+        injector.get<SharedPreferences>(),
+      ),
+    );
+
     /// chat message repository
     injector.registerLazySingleton<ChatMessageRepository>(
         () => ChatMessageRepository());
@@ -75,7 +92,11 @@ class AppModules {
         () => GetChatRoomListByUserIdUseCase());
 
     /// auth repository
-    injector.registerLazySingleton<AuthRepository>(() => AuthRepository());
+    injector.registerLazySingleton<AuthRepository>(
+      () => AuthRepository(
+        injector.get<SharedPreferencesManager>(),
+      ),
+    );
 
     /// auth use case
     injector
@@ -86,7 +107,8 @@ class AppModules {
         () => GetCurrentUserInformationUseCase());
 
     /// logout use case
-    injector.registerLazySingleton<LogoutUseCase>(() => LogoutUseCase());
+    injector.registerLazySingleton<GoogleLogoutUseCase>(
+        () => GoogleLogoutUseCase());
 
     /// type repository
     injector.registerLazySingleton<TypeRepository>(() => TypeRepository());
@@ -136,21 +158,19 @@ class AppModules {
         () => PostConvenientHouseListUseCase());
 
     /// house repository
-    injector.registerLazySingleton<HouseRepository>(() => HouseRepository());
-
-    /// house use case
-    injector.registerLazySingleton<GetHouseUseCase>(() => GetHouseUseCase());
+    injector.registerLazySingleton<PostRepository>(() => PostRepository());
 
     /// get user by house id use case
     injector
         .registerLazySingleton<GetUserByIdUseCase>(() => GetUserByIdUseCase());
 
     /// post house use case
-    injector.registerLazySingleton<PostHouseUseCase>(() => PostHouseUseCase());
+    injector
+        .registerLazySingleton<PostThePostUseCase>(() => PostThePostUseCase());
 
     /// remove house use case
     injector
-        .registerLazySingleton<RemoveHouseUseCase>(() => RemoveHouseUseCase());
+        .registerLazySingleton<RemovePostUseCase>(() => RemovePostUseCase());
 
     /// image house repository
     injector.registerLazySingleton<ImageHouseRepository>(
@@ -183,8 +203,8 @@ class AppModules {
         .registerLazySingleton<ArticleRepository>(() => ArticleRepository());
 
     /// get article list use case
-    injector.registerLazySingleton<GetArticleListUseCase>(
-        () => GetArticleListUseCase());
+    injector.registerLazySingleton<GetApprovedArticleListUseCase>(
+        () => GetApprovedArticleListUseCase());
 
     /// get article filter list use case
     injector.registerLazySingleton<GetArticleFilterListUseCase>(
@@ -231,11 +251,27 @@ class AppModules {
         () => RemoveFavoriteUseCase());
 
     /// post available house use case
-    injector.registerLazySingleton<PostAvailableHouseUseCase>(
-        () => PostAvailableHouseUseCase());
+    injector.registerLazySingleton<PostAvailablePostUseCase>(
+        () => PostAvailablePostUseCase());
 
     /// un post available house use case
-    injector.registerLazySingleton<UnPostAvailableHouseUseCase>(
-        () => UnPostAvailableHouseUseCase());
+    injector.registerLazySingleton<UnPostAvailablePostUseCase>(
+        () => UnPostAvailablePostUseCase());
+
+    /// email login
+    injector
+        .registerLazySingleton<EmailLoginUseCase>(() => EmailLoginUseCase());
+
+    /// GetOwnerArticleUseCase
+    injector.registerLazySingleton<GetOwnerArticleUseCase>(
+        () => GetOwnerArticleUseCase());
+
+    /// GetUnApprovedArticleListUseCase
+    injector.registerLazySingleton<GetPenddingArticleListUseCase>(
+        () => GetPenddingArticleListUseCase());
+
+    /// EmailLogoutUseCase
+    injector
+        .registerLazySingleton<EmailLogoutUseCase>(() => EmailLogoutUseCase());
   }
 }

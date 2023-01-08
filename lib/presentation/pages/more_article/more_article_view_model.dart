@@ -16,7 +16,7 @@ class MoreArticleViewModel extends StateNotifier<MoreArticleState> {
       final allArticleList = await _getArticlesByUserIdUseCase.run(userId);
 
       final articleList = allArticleList
-          .where((element) => element.house?.isApproved == true)
+          .where((element) => element.post?.isApproved == true)
           .toList();
       state = state.copyWith(
         articleList: articleList,

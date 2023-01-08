@@ -7,14 +7,14 @@ class HouseTypeResponse {
   HouseTypeResponse({
     required this.id,
     required this.typeId,
-    required this.houseId,
+    required this.postId,
   });
   factory HouseTypeResponse.fromJson(Map<String, dynamic> json) =>
       _$HouseTypeResponseFromJson(json);
 
   final String id;
   final String typeId;
-  final String houseId;
+  final String postId;
   
   Map<String, dynamic> toJson() => _$HouseTypeResponseToJson(this);
 }

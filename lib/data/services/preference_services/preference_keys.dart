@@ -1,0 +1,3 @@
+enum PreferenceKeys {
+  loginType,
+}

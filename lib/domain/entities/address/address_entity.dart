@@ -4,11 +4,11 @@ class AddressEntity {
     required this.districtId,
     required this.provinceId,
     required this.communeId,
-    required this.houseId,
+    required this.postId,
   });
   final String id;
   final String districtId;
   final String provinceId;
   final String communeId;
-  final String houseId;
+  final String postId;
 }

@@ -69,7 +69,7 @@ class InfoRoomHorizontalCardItemItem extends StatelessWidget {
 
   Widget _buildInfoStreet(BuildContext context) {
     return Text(
-      articleEntity?.house?.address.toString() ?? '',
+      articleEntity?.post?.address.toString() ?? '',
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
       style: AppTextStyles.labelSmallLight.copyWith(
@@ -80,7 +80,7 @@ class InfoRoomHorizontalCardItemItem extends StatelessWidget {
 
   Widget _buildInfoHouseTitle(BuildContext context) {
     return Text(
-      articleEntity?.house?.title ?? 'Chưa có tiêu đề',
+      articleEntity?.post?.title ?? 'Chưa có tiêu đề',
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
       style: AppTextStyles.headingXXSmall.copyWith(
@@ -94,11 +94,11 @@ class InfoRoomHorizontalCardItemItem extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          '${articleEntity?.type?.name ?? ''}. ${articleEntity?.house?.capacity ?? ''}',
+          '${articleEntity?.type?.name ?? ''}. ${articleEntity?.post?.capacity ?? ''}',
           style: AppTextStyles.labelSmallLight,
         ),
         Text(
-          '${NumberFormatHelper.formatPrice(articleEntity?.house?.rentalPrice ?? 0)} VND',
+          '${NumberFormatHelper.formatPrice(articleEntity?.post?.rentalPrice ?? 0)} VND',
           style: AppTextStyles.labelSmall.copyWith(
             color: context.colors.contentSpecialText,
           ),

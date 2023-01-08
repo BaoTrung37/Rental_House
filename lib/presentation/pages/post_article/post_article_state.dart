@@ -5,8 +5,8 @@ import 'package:batru_house_rental/domain/entities/commune/commune_entity.dart';
 import 'package:batru_house_rental/domain/entities/convenient/convenient_entity.dart';
 import 'package:batru_house_rental/domain/entities/convenient_house/convenient_house_entity.dart';
 import 'package:batru_house_rental/domain/entities/district/district_entity.dart';
-import 'package:batru_house_rental/domain/entities/house/house_entity.dart';
 import 'package:batru_house_rental/domain/entities/image_house/image_house_entity.dart';
+import 'package:batru_house_rental/domain/entities/post/post_entity.dart';
 import 'package:batru_house_rental/domain/entities/province/province_entity.dart';
 import 'package:batru_house_rental/domain/entities/type/type_entity.dart';
 import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
@@ -32,7 +32,7 @@ class PostArticleState with _$PostArticleState {
     ProvinceEntity? currentProvince,
     DistrictEntity? currentDistrict,
     CommuneEntity? currentCommune,
-    HouseEntity? house,
+    PostEntity? post,
     ImageHouseEntity? imageHouse,
     ArticleEntity? article,
   }) = _PostArticleState;

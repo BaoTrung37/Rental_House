@@ -1,9 +1,9 @@
 import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
-import 'package:batru_house_rental/domain/use_case/article/get_articles_by_user_id_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/article/get_owner_article_list_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
-import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_view.dart';
-import 'package:batru_house_rental/presentation/pages/house_detail/widgets/relative_house_item_view.dart';
+import 'package:batru_house_rental/presentation/pages/article_detail/article_detail_view.dart';
+import 'package:batru_house_rental/presentation/pages/article_detail/widgets/relative_house_item_view.dart';
 import 'package:batru_house_rental/presentation/pages/owner_article/owner_article_state.dart';
 import 'package:batru_house_rental/presentation/pages/owner_article/owner_article_view_model.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
@@ -14,7 +14,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 final _familyProvider = StateNotifierProvider.family
     .autoDispose<OwnerArticleViewModel, OwnerArticleState, String>(
   (ref, argument) => OwnerArticleViewModel(
-    injector.get<GetArticlesByUserIdUseCase>(),
+    injector.get<GetOwnerArticleUseCase>(),
   ),
 );
 
@@ -151,9 +151,9 @@ class _OwnerArticleViewState extends ConsumerState<OwnerArticleView> {
         articleEntity: articlePeddingList[index],
         onTap: () {
           ref.read(appNavigatorProvider).navigateTo(
-                AppRoutes.houseDetail,
-                arguments: HouseDetailArguments(
-                  houseId: articlePeddingList[index].id,
+                AppRoutes.postDetail,
+                arguments: ArticleDetailArguments(
+                  postId: articlePeddingList[index].id,
                 ),
               );
         },
@@ -176,9 +176,9 @@ class _OwnerArticleViewState extends ConsumerState<OwnerArticleView> {
         articleEntity: articleApprovedList[index],
         onTap: () {
           ref.read(appNavigatorProvider).navigateTo(
-                AppRoutes.houseDetail,
-                arguments: HouseDetailArguments(
-                  houseId: articleApprovedList[index].id,
+                AppRoutes.postDetail,
+                arguments: ArticleDetailArguments(
+                  postId: articleApprovedList[index].id,
                 ),
               );
         },

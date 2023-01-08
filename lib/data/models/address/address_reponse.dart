@@ -9,7 +9,7 @@ class AddressResponse {
     required this.provinceId,
     required this.districtId,
     required this.communeId,
-    required this.houseId,
+    required this.postId,
   });
   factory AddressResponse.fromJson(Map<String, dynamic> json) =>
       _$AddressResponseFromJson(json);
@@ -18,7 +18,7 @@ class AddressResponse {
   final String provinceId;
   final String districtId;
   final String communeId;
-  final String houseId;
+  final String postId;
 
   Map<String, dynamic> toJson() => _$AddressResponseToJson(this);
 }

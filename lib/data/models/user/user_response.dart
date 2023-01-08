@@ -9,6 +9,7 @@ class UserResponse {
     required this.id,
     required this.name,
     required this.avatar,
+    required this.role,
     this.phoneNumber,
   });
   factory UserResponse.fromJson(Map<String, dynamic> json) =>
@@ -19,6 +20,8 @@ class UserResponse {
   final String avatar;
   @JsonKey(includeIfNull: false)
   final String? phoneNumber;
+  @JsonKey(defaultValue: 0)
+  final int role;
 
   Map<String, dynamic> toJson() => _$UserResponseToJson(this);
 
@@ -27,5 +30,6 @@ class UserResponse {
         name: name,
         avatar: avatar,
         phoneNumber: phoneNumber,
+        role: role,
       );
 }

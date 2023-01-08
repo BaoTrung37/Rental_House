@@ -3,8 +3,8 @@ import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_articles_by_user_id_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
-import 'package:batru_house_rental/presentation/pages/house_detail/house_detail_view.dart';
-import 'package:batru_house_rental/presentation/pages/house_detail/widgets/relative_house_item_view.dart';
+import 'package:batru_house_rental/presentation/pages/article_detail/article_detail_view.dart';
+import 'package:batru_house_rental/presentation/pages/article_detail/widgets/relative_house_item_view.dart';
 import 'package:batru_house_rental/presentation/pages/more_article/more_article_state.dart';
 import 'package:batru_house_rental/presentation/pages/more_article/more_article_view_model.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
@@ -99,9 +99,9 @@ class _MoreArticleViewState extends ConsumerState<MoreArticleView> {
         articleEntity: articleList[index],
         onTap: () {
           ref.read(appNavigatorProvider).navigateTo(
-                AppRoutes.houseDetail,
-                arguments: HouseDetailArguments(
-                  houseId: articleList[index].id,
+                AppRoutes.postDetail,
+                arguments: ArticleDetailArguments(
+                  postId: articleList[index].id,
                 ),
               );
         },

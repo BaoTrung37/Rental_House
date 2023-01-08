@@ -1,6 +1,6 @@
 import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
-import 'package:batru_house_rental/domain/use_case/auth/logout_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/auth/google_logout_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
 import 'package:batru_house_rental/presentation/pages/my_page/mypage_state.dart';
@@ -15,7 +15,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 final _provider =
     StateNotifierProvider.autoDispose<MyPageViewModel, MyPageState>(
   (ref) => MyPageViewModel(
-    injector.get<LogoutUseCase>(),
+    injector.get<GoogleLogoutUseCase>(),
     injector.get<GetCurrentUserInformationUseCase>(),
   ),
 );
@@ -59,7 +59,7 @@ class _MyPageViewState extends ConsumerState<MyPageView>
             children: [
               Expanded(
                 child: Text(
-                  _state.user?.name ?? 'User1234',
+                  _state.user?.name ?? '',
                   style: AppTextStyles.headingMedium,
                 ),
               ),
@@ -87,7 +87,7 @@ class _MyPageViewState extends ConsumerState<MyPageView>
             final userId = await _viewModel.getCurrentUserId();
 
             await ref.read(appNavigatorProvider).navigateTo(
-                AppRoutes.ownerHouse,
+                AppRoutes.ownerArticle,
                 arguments: OnwerArticleArguments(userId: userId));
           },
           horizontalTitleGap: 1,
