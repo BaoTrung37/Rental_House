@@ -28,12 +28,12 @@ class FavoriteRepository {
 
   Future<String?> checkFavorite(GetFavoriteInput input) async {
     final userId = input.userId;
-    final houseId = input.postId;
+    final postId = input.postId;
 
     final snapshot = await _fireStore
         .collection('favorite')
         .where('userId', isEqualTo: userId)
-        .where('postId', isEqualTo: houseId)
+        .where('postId', isEqualTo: postId)
         .get();
     if (snapshot.docs.isEmpty) {
       return null;
