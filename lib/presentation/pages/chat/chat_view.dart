@@ -1,10 +1,14 @@
 import 'package:batru_house_rental/data/models/chat/chat_response.dart';
+import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
 import 'package:batru_house_rental/domain/entities/chat/chat_entity.dart';
 import 'package:batru_house_rental/domain/entities/user/user_entity.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/chat/get_article_to_message_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/get_chat_message_list_by_room_id_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/post_message_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
+import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
+import 'package:batru_house_rental/presentation/pages/article_detail/article_detail_view.dart';
 import 'package:batru_house_rental/presentation/pages/chat/chat_state.dart';
 import 'package:batru_house_rental/presentation/pages/chat/chat_view_model.dart';
 import 'package:batru_house_rental/presentation/pages/chat/widgets/chat_input_view.dart';
@@ -22,6 +26,7 @@ final chatProvider =
     injector.get<GetChatMessageListByIdUseCase>(),
     injector.get<GetCurrentUserInformationUseCase>(),
     injector.get<PostMessageUseCase>(),
+    injector.get<GetArticleToMessageUseCase>(),
   ),
 );
 
@@ -194,8 +199,27 @@ class _ChatViewState extends ConsumerState<ChatView> {
       final chatEntity =
           ChatResponse.fromJson(documentSnapshot.data() as Map<String, dynamic>)
               .toEntity();
+
+      if (chatEntity.type == ChatType.post.name) {
+        return ChatItem(
+          chatEntity: chatEntity,
+          chatPostOnTap: (postId) {
+            ref.read(appNavigatorProvider).navigateTo(
+                  AppRoutes.postDetail,
+                  arguments: ArticleDetailArguments(
+                    postId: postId,
+                  ),
+                );
+            debugPrint('postId: $postId');
+          },
+          chatId: chatEntity.id,
+          roomId: widget.chatArguments.roomId,
+          isMe: chatEntity.senderId != widget.chatArguments.receiverUser.id,
+        );
+      }
       return ChatItem(
         chatEntity: chatEntity,
+        // articleEntity: articleEntity,
         isMe: chatEntity.senderId != widget.chatArguments.receiverUser.id,
       );
     }

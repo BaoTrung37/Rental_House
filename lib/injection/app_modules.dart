@@ -30,8 +30,10 @@ import 'package:batru_house_rental/domain/use_case/auth/get_current_user_informa
 import 'package:batru_house_rental/domain/use_case/auth/get_user_by_id_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/google_login_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/google_logout_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/chat/get_article_to_message_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/get_chat_message_list_by_room_id_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/get_chat_room_list_by_user_id_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/chat/post_article_to_message_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/post_chat_room_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/post_message_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/commune/get_commune_list_use_case.dart';
@@ -283,5 +285,13 @@ class AppModules {
     /// SẻtUnApproveArticleUseCase
     injector.registerLazySingleton<SetRejectArticleUseCase>(
         () => SetRejectArticleUseCase());
+
+    /// PostArticleToMessageUseCase
+    injector.registerLazySingleton<PostArticleToMessageUseCase>(
+        () => PostArticleToMessageUseCase());
+
+    /// GetArticleToMessageUseCase
+    injector.registerLazySingleton<GetArticleToMessageUseCase>(
+        () => GetArticleToMessageUseCase());
   }
 }

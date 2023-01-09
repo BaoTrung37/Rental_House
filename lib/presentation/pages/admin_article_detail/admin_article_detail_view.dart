@@ -7,6 +7,7 @@ import 'package:batru_house_rental/domain/use_case/article/set_approve_article_u
 import 'package:batru_house_rental/domain/use_case/article/set_reject_article_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_user_by_id_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/chat/post_article_to_message_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/post_chat_room_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/post/remove_post_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
@@ -41,6 +42,7 @@ final _familyProvider = StateNotifierProvider.autoDispose
     injector.get<SetApproveArticleUseCase>(),
     injector.get<SetRejectArticleUseCase>(),
     injector.get<PostChatRoomUseCase>(),
+    injector.get<PostArticleToMessageUseCase>(),
   ),
 );
 
@@ -192,36 +194,67 @@ class _AdminArticleDetailViewState
     final isApproved = state.article?.post?.isApproved ?? false;
     return AppButton(
       onButtonTap: () async {
-        // await _viewModel.onAvailablePostChanged();
-        await showAppDialog(
-          context,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: const [
-              Text('Bạn muốn duyệt bài đăng này?'),
-              SizedBox(height: 8),
-              AppDivider(),
-              SizedBox(height: 8),
-              Text('Bạn vui lòng xem kĩ bài đăng trước khi duyệt!'),
-              SizedBox(height: 8),
+        if (!isApproved) {
+          await showAppDialog(
+            context,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                Text('Bạn muốn duyệt bài đăng này?'),
+                SizedBox(height: 8),
+                AppDivider(),
+                SizedBox(height: 8),
+                Text('Bạn vui lòng xem kĩ bài đăng trước khi duyệt!'),
+                SizedBox(height: 8),
+              ],
+            ),
+            actions: [
+              ActionAppDialog(
+                actionDialogTitle: 'Huỷ',
+                onAction: (_) {
+                  Navigator.of(context).pop();
+                },
+              ),
+              ActionAppDialog(
+                actionDialogTitle: 'Xác nhận',
+                onAction: (_) async {
+                  Navigator.of(context).pop();
+                  await _viewModel.setApprovedPost();
+                },
+              ),
             ],
-          ),
-          actions: [
-            ActionAppDialog(
-              actionDialogTitle: 'Huỷ',
-              onAction: (_) {
-                Navigator.of(context).pop();
-              },
+          );
+        } else {
+          await showAppDialog(
+            context,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                Text('Bạn muốn hủy duyệt bài đăng này?'),
+                SizedBox(height: 8),
+                AppDivider(),
+                SizedBox(height: 8),
+                Text('Bạn vui lòng xem kĩ bài đăng trước khi hủy duyệt!'),
+                SizedBox(height: 8),
+              ],
             ),
-            ActionAppDialog(
-              actionDialogTitle: 'Xác nhận',
-              onAction: (_) async {
-                Navigator.of(context).pop();
-                await _viewModel.setApprovedPost();
-              },
-            ),
-          ],
-        );
+            actions: [
+              ActionAppDialog(
+                actionDialogTitle: 'Huỷ',
+                onAction: (_) {
+                  Navigator.of(context).pop();
+                },
+              ),
+              ActionAppDialog(
+                actionDialogTitle: 'Xác nhận',
+                onAction: (_) async {
+                  Navigator.of(context).pop();
+                  await _viewModel.setUnApprovedPost();
+                },
+              ),
+            ],
+          );
+        }
       },
       leftIcon: const Icon(
         Icons.autorenew_sharp,

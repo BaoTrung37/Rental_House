@@ -71,6 +71,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
   @override
   Widget build(BuildContext context) {
+    
     ref.listen<HomeState>(homeViewProvider, (previous, next) {
       if (next.status == LoadingStatus.error &&
           next.status != previous?.status) {

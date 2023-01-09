@@ -68,7 +68,7 @@ class ChatRoomRepository {
         .collection('chatroom')
         .doc(roomId)
         .collection('chat')
-        .doc(DateTime.now().microsecondsSinceEpoch.toString())
+        .doc(chatEntity.id)
         .set(
           ChatResponse(
             id: chatEntity.id,
