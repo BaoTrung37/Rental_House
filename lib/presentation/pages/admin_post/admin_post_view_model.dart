@@ -22,8 +22,8 @@ class AdminPostViewModel extends StateNotifier<AdminPostState> {
     try {
       state = state.copyWith(status: LoadingStatus.inProgress);
 
-      final articlePeddingList = await _getPenddingArticleListUseCase.run(10);
-      final articleApprovedList = await _getApprovedArticleListUseCase.run(10);
+      final articlePeddingList = await _getPenddingArticleListUseCase.run(20);
+      final articleApprovedList = await _getApprovedArticleListUseCase.run(20);
 
       state = state.copyWith(
         articlePeddingList: articlePeddingList,
@@ -33,6 +33,23 @@ class AdminPostViewModel extends StateNotifier<AdminPostState> {
     } catch (e) {
       state = state.copyWith(status: LoadingStatus.error);
       debugPrint('Admin Post Init: $e');
+    }
+  }
+
+  Future<void> callData() async {
+    try {
+
+      final articlePeddingList = await _getPenddingArticleListUseCase.run(20);
+      final articleApprovedList = await _getApprovedArticleListUseCase.run(20);
+
+      state = state.copyWith(
+        articlePeddingList: articlePeddingList,
+        articleApprovedList: articleApprovedList,
+        status: LoadingStatus.success,
+      );
+    } catch (e) {
+      state = state.copyWith(status: LoadingStatus.error);
+      debugPrint('Admin Post call: $e');
     }
   }
 
@@ -52,6 +69,12 @@ class AdminPostViewModel extends StateNotifier<AdminPostState> {
 
     state = state.copyWith(
       status: LoadingStatus.success,
+    );
+  }
+
+  void setShouldReloadData(bool value) {
+    state = state.copyWith(
+      shouldReLoadData: value,
     );
   }
 }

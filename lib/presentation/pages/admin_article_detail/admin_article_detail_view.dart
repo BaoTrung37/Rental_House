@@ -14,6 +14,7 @@ import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
 import 'package:batru_house_rental/presentation/pages/admin_article_detail/admin_article_detail_state.dart';
 import 'package:batru_house_rental/presentation/pages/admin_article_detail/admin_article_detail_view_model.dart';
+import 'package:batru_house_rental/presentation/pages/admin_post/admin_post_view.dart';
 import 'package:batru_house_rental/presentation/pages/article_detail/widgets/convenient_item.dart';
 import 'package:batru_house_rental/presentation/pages/article_detail/widgets/convenient_list_item.dart';
 import 'package:batru_house_rental/presentation/pages/more_article/more_article_view.dart';
@@ -110,6 +111,7 @@ class _AdminArticleDetailViewState
         if (next.browsePostStatus == LoadingStatus.success &&
             next.browsePostStatus != previous?.browsePostStatus) {
           showInfoSnackBar(context: context, notifyMessage: next.appMessage);
+          ref.read(adminPostProvider.notifier).setShouldReloadData(true);
           ref.read(appNavigatorProvider).goBack();
         }
       },
