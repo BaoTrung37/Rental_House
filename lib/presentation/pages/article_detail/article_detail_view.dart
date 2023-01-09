@@ -1,10 +1,12 @@
 import 'dart:ui';
 
 import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
+import 'package:batru_house_rental/data/providers/main_menu_navigator_provider.dart';
 import 'package:batru_house_rental/domain/entities/image_house/image_house_entity.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_article_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_user_by_id_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/chat/post_article_to_message_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/post_chat_room_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/favorite/add_favorite_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/favorite/check_favorite_use_case.dart';
@@ -21,6 +23,7 @@ import 'package:batru_house_rental/presentation/pages/article_detail/widgets/con
 import 'package:batru_house_rental/presentation/pages/more_article/more_article_view.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
+import 'package:batru_house_rental/presentation/utilities/enums/tab_page.dart';
 import 'package:batru_house_rental/presentation/utilities/helper/date_format_helper.dart';
 import 'package:batru_house_rental/presentation/utilities/helper/number_format_helper.dart';
 import 'package:batru_house_rental/presentation/widgets/app_dialog/show_app_dialog.dart';
@@ -48,6 +51,7 @@ final _familyProvider = StateNotifierProvider.autoDispose
     injector.get<RemoveFavoriteUseCase>(),
     injector.get<PostAvailablePostUseCase>(),
     injector.get<UnPostAvailablePostUseCase>(),
+    injector.get<PostArticleToMessageUseCase>(),
   ),
 );
 
@@ -326,6 +330,12 @@ class _ArticleDetailViewState extends ConsumerState<ArticleDetailView> {
               onAction: (_) async {
                 Navigator.of(context).pop();
                 await _viewModel.onSendMessage();
+                ref
+                    .read(appNavigatorProvider)
+                    .popUntil(routeName: AppRoutes.mainMenu);
+                ref
+                    .read(mainMenuProvider.notifier)
+                    .changeTab(TabPage.chat.index);
               },
             ),
           ],

@@ -8,6 +8,7 @@ part 'chat_list_state.freezed.dart';
 class ChatListState with _$ChatListState {
   const factory ChatListState({
     @Default(LoadingStatus.initial) LoadingStatus loadingStatus,
+    @Default(false) bool shouldReLoadData,
     @Default([]) List<ChatRoomEntity> chatRoomList,
   }) = _ChatListState;
 }

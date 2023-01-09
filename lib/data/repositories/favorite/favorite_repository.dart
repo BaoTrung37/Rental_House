@@ -33,7 +33,7 @@ class FavoriteRepository {
     final snapshot = await _fireStore
         .collection('favorite')
         .where('userId', isEqualTo: userId)
-        .where('houseId', isEqualTo: houseId)
+        .where('postId', isEqualTo: houseId)
         .get();
     if (snapshot.docs.isEmpty) {
       return null;

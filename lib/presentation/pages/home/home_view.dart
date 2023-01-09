@@ -85,6 +85,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
         _viewModel.setShouldReloadData(false);
       }
     });
+    
     return Scaffold(
       backgroundColor: context.colors.backgroundSecondary,
       body: RefreshView(
