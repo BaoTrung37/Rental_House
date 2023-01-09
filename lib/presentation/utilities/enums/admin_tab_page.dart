@@ -5,7 +5,7 @@ enum AdminTabPage {
   post,
   report,
   chat,
-  myPage,
+  // myPage,
 }
 
 extension TabPageExtension on AdminTabPage {
@@ -17,8 +17,8 @@ extension TabPageExtension on AdminTabPage {
         return 'Báo cáo';
       case AdminTabPage.chat:
         return 'Tin nhắn';
-      case AdminTabPage.myPage:
-        return 'Cá nhân';
+      // case AdminTabPage.myPage:
+      //   return 'Cá nhân';
     }
   }
 
@@ -45,11 +45,11 @@ extension TabPageExtension on AdminTabPage {
           size: size,
           color: color,
         );
-      case AdminTabPage.myPage:
-        return AppIcons.myPage(
-          size: size,
-          color: color,
-        );
+      // case AdminTabPage.myPage:
+      //   return AppIcons.myPage(
+      //     size: size,
+      //     color: color,
+      //   );
     }
   }
 }

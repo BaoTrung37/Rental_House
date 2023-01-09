@@ -1,6 +1,8 @@
 import 'package:batru_house_rental/data/models/chat/chat_response.dart';
 import 'package:batru_house_rental/domain/entities/chat/chat_entity.dart';
+import 'package:batru_house_rental/domain/entities/chat/chat_post_entity.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/chat/get_article_to_message_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/get_chat_message_list_by_room_id_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/post_message_use_case.dart';
 import 'package:batru_house_rental/presentation/pages/chat/chat_state.dart';
@@ -14,11 +16,13 @@ class ChatViewModel extends StateNotifier<ChatState> {
     this._getChatRoomListByUserIdUseCase,
     this._getCurrentUserInformationUseCase,
     this._postMessageUseCase,
+    this._getArticleToMessageUseCase,
   ) : super(const ChatState());
 
   final GetChatMessageListByIdUseCase _getChatRoomListByUserIdUseCase;
   final GetCurrentUserInformationUseCase _getCurrentUserInformationUseCase;
   final PostMessageUseCase _postMessageUseCase;
+  final GetArticleToMessageUseCase _getArticleToMessageUseCase;
 
   Stream<QuerySnapshot> getChatMessageListStream(
     String roomId,
@@ -29,6 +33,16 @@ class ChatViewModel extends StateNotifier<ChatState> {
         roomId: roomId,
         limit: limit,
       ),
+    );
+  }
+
+  // Future<P> getArticle(String articleId) async {
+  // return _getArticleToMessageUseCase.run(articleId);
+  // }
+
+  Future<ChatPostEntity> getChatPost(String chatId, String roomId) async {
+    return _getArticleToMessageUseCase.run(
+      GetArticleToMessageInput(chatId: chatId, roomId: roomId),
     );
   }
 

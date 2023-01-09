@@ -14,8 +14,8 @@ class AppRoutes {
   /// home
   static const String home = '/home';
 
-  /// home detail
-  static const String postDetail = '/house_detail';
+  /// post detail
+  static const String postDetail = '/post_detail';
 
   /// favorite
   static const String favorite = '/favorite';

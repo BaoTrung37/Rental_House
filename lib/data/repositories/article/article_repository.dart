@@ -178,9 +178,9 @@ class ArticleRepository {
   Future<void> rejectArticleById(String postId) async {
     await _fireStore.collection('post').doc(postId).update({
       'isApproved': false,
-      'adminId': '',
+      'adminId': null,
     }).then(
-      (value) => debugPrint('UnApprove post: $postId'),
+      (value) => debugPrint('Reject post: $postId'),
       onError: (e) => debugPrint('Error updating document $e'),
     );
   }

@@ -1,11 +1,9 @@
 import 'package:batru_house_rental/data/providers/admin_main_menu_navigator_provider.dart';
+import 'package:batru_house_rental/data/providers/admin_post_provider.dart';
+import 'package:batru_house_rental/data/providers/admin_report_provider.dart';
 import 'package:batru_house_rental/data/providers/chat_navigator_provider.dart';
-import 'package:batru_house_rental/data/providers/favorite_navigator_provider.dart';
-import 'package:batru_house_rental/data/providers/home_navigator_provider.dart';
-import 'package:batru_house_rental/data/providers/mypage_navigator_provider.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
 import 'package:batru_house_rental/presentation/navigation/chat_navigator_view.dart';
-import 'package:batru_house_rental/presentation/navigation/mypage_navigator_view.dart';
 import 'package:batru_house_rental/presentation/pages/admin_main_menu/admin_main_menu_state.dart';
 import 'package:batru_house_rental/presentation/pages/admin_main_menu/admin_main_menu_view_model.dart';
 import 'package:batru_house_rental/presentation/pages/admin_post/admin_post_view.dart';
@@ -48,14 +46,15 @@ class _AdminMainMenuViewState extends ConsumerState<AdminMainMenuView>
       if (newState.currentTab != previousState?.currentTab) {
         _pageController.jumpToPage(newState.currentTab.index);
       }
-      if (newState.status == LoadingStatus.error) {
+      if (newState.status == LoadingStatus.error &&
+          newState.errorMessage != previousState?.errorMessage) {
         showErrorSnackBar(
           context: context,
           errorMessage: newState.errorMessage,
         );
       }
     });
-    
+
     return AppWillPopScope(
       child: Scaffold(
         body: PageView(
@@ -84,8 +83,8 @@ class _AdminMainMenuViewState extends ConsumerState<AdminMainMenuView>
           return const AdminReportView();
         case AdminTabPage.chat:
           return const ChatNavigatorView();
-        case AdminTabPage.myPage:
-          return const MyPageNavigatorView();
+        // case AdminTabPage.myPage:
+        //   return const MyPageNavigatorView();
       }
     }).toList();
   }
@@ -145,11 +144,11 @@ class _AdminMainMenuViewState extends ConsumerState<AdminMainMenuView>
                 routeName: AppRoutes.chat,
               );
           break;
-        case AdminTabPage.myPage:
-          ref.read(myPageNavigatorProvider).popUntil(
-                routeName: AppRoutes.myPage,
-              );
-          break;
+        // case AdminTabPage.myPage:
+        //   ref.read(myPageNavigatorProvider).popUntil(
+        //         routeName: AppRoutes.myPage,
+        //       );
+        //   break;
       }
       _viewModel.sendScrollRequest(tab);
     } else {

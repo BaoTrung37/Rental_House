@@ -22,8 +22,8 @@ class AdminPostViewModel extends StateNotifier<AdminPostState> {
     try {
       state = state.copyWith(status: LoadingStatus.inProgress);
 
-      final articlePeddingList = await _getPenddingArticleListUseCase.run(1);
-      final articleApprovedList = await _getApprovedArticleListUseCase.run(1);
+      final articlePeddingList = await _getPenddingArticleListUseCase.run(10);
+      final articleApprovedList = await _getApprovedArticleListUseCase.run(10);
 
       state = state.copyWith(
         articlePeddingList: articlePeddingList,

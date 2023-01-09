@@ -15,7 +15,8 @@ import 'package:batru_house_rental/presentation/widgets/snack_bar/error_snack_ba
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final _provider = StateNotifierProvider<AdminPostViewModel, AdminPostState>(
+final _provider =
+    StateNotifierProvider.autoDispose<AdminPostViewModel, AdminPostState>(
   (ref) => AdminPostViewModel(
     injector.get<GetApprovedArticleListUseCase>(),
     injector.get<GetPenddingArticleListUseCase>(),

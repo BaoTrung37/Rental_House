@@ -1,3 +1,4 @@
+import 'package:batru_house_rental/domain/entities/chat/chat_entity.dart';
 import 'package:batru_house_rental/domain/entities/chat_room/chat_room_entity.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/utilities/helper/date_format_helper.dart';
@@ -65,7 +66,11 @@ class BubbleChatItem extends StatelessWidget {
 
   Widget _buildMessageRev(BuildContext context) {
     return Text(
-      chatRoomEntity.lastMessage,
+      chatRoomEntity.type == ChatType.post.name
+          ? 'Đính kèm'
+          : chatRoomEntity.type == ChatType.image.name
+              ? ' Gửi một ảnh'
+              : chatRoomEntity.lastMessage,
       style: AppTextStyles.textSmall.copyWith(
         color: context.colors.textSecondary,
       ),

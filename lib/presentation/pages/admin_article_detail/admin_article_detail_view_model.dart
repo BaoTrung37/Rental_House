@@ -1,10 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:batru_house_rental/data/models/chat/chat_post_response.dart';
 import 'package:batru_house_rental/domain/entities/chat/chat_entity.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_article_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/article/set_approve_article_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/article/set_reject_article_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_user_by_id_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/chat/post_article_to_message_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/post_chat_room_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/post/remove_post_use_case.dart';
 import 'package:batru_house_rental/presentation/pages/admin_article_detail/admin_article_detail_state.dart';
@@ -22,6 +24,7 @@ class AdminArticleDetailViewModel
     this._setApproveArticleUseCase,
     this._setRejectArticleUseCase,
     this._postChatRoomUseCase,
+    this._postArticleToMessageUseCase,
   ) : super(const AdminArticleDetailState());
 
   final GetArticleUseCase _getArticleUseCase;
@@ -31,6 +34,7 @@ class AdminArticleDetailViewModel
   final SetApproveArticleUseCase _setApproveArticleUseCase;
   final SetRejectArticleUseCase _setRejectArticleUseCase;
   final PostChatRoomUseCase _postChatRoomUseCase;
+  final PostArticleToMessageUseCase _postArticleToMessageUseCase;
 
   late String ownerHouseUserId;
   late String currentUserId;
@@ -107,15 +111,37 @@ class AdminArticleDetailViewModel
           userId: currentUser.id,
         ),
       );
+      final chatId = DateTime.now()
+          .add(const Duration(milliseconds: 1))
+          .microsecondsSinceEpoch
+          .toString();
+
       await _postChatRoomUseCase.run(
         PostChatRoomInput(
           chatEntity: ChatEntity(
-            id: DateTime.now().microsecondsSinceEpoch.toString(),
+            id: chatId,
             createdAt: DateTime.now(),
-            message: currentPostId,
+            message: 'post',
             senderId: currentUser.id,
             type: ChatType.post.value,
           ),
+          receiverId: state.onwerHouse!.id,
+          userId: currentUser.id,
+        ),
+      );
+      await _postArticleToMessageUseCase.run(
+        PostArticleToMessageInput(
+          chatPostResponse: ChatPostResponse(
+            id: chatId,
+            address: state.article!.post!.address,
+            url: state.article!.imageList.first.url,
+            postId: state.article!.post!.id,
+            title: state.article!.post!.title,
+            rentalPrice: state.article!.post!.rentalPrice,
+            typeHouse: state.article!.type!.name,
+            userId: state.article!.post!.userId,
+          ),
+          chatId: chatId,
           receiverId: state.onwerHouse!.id,
           userId: currentUser.id,
         ),

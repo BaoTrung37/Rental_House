@@ -1,16 +1,26 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:batru_house_rental/domain/entities/chat/chat_entity.dart';
 import 'package:batru_house_rental/presentation/pages/chat/widgets/image_item.dart';
+import 'package:batru_house_rental/presentation/pages/chat/widgets/post_item_cell.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:flutter/material.dart';
 
 class ChatItem extends StatelessWidget {
   const ChatItem({
     required this.chatEntity,
-    required this.isMe,
+    this.chatPostOnTap,
+    this.isMe = false,
+    this.roomId,
+    this.chatId,
     Key? key,
   }) : super(key: key);
   final ChatEntity chatEntity;
   final bool isMe;
+  final String? roomId;
+  final String? chatId;
+
+  final Function(String postId)? chatPostOnTap;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -54,11 +64,19 @@ class ChatItem extends StatelessWidget {
             )
           : chatEntity.type == ChatType.image.value
               ? _buildImage()
-              : _buildRoomInfoMessage(),
+              : _buildPostInfoMessage(),
     );
   }
 
-  Widget _buildRoomInfoMessage() => const Text('info');
+  Widget _buildPostInfoMessage() {
+    return PostItemCell(
+      onTap: (postId) {
+        chatPostOnTap?.call(postId);
+      },
+      chatId: chatId,
+      roomId: roomId,
+    );
+  }
 
   Widget _buildImage() {
     return ImageItem(
@@ -71,7 +89,7 @@ class ChatItem extends StatelessWidget {
     return Text(
       chatEntity.message,
       textAlign: isMe ? TextAlign.end : TextAlign.start,
-      style: AppTextStyles.textSmall.copyWith(
+      style: AppTextStyles.textMedium.copyWith(
         color: context.colors.textPrimary,
       ),
     );
