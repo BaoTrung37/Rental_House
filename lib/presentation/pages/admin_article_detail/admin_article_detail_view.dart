@@ -107,8 +107,10 @@ class _AdminArticleDetailViewState
               .read(appNavigatorProvider)
               .popUntil(routeName: AppRoutes.mainMenu);
         }
-        if (next.browsePostStatus == LoadingStatus.success) {
-          showInfoSnackBar(context: context, notifyMessage: 'Đã duyệt bài');
+        if (next.browsePostStatus == LoadingStatus.success &&
+            next.browsePostStatus != previous?.browsePostStatus) {
+          showInfoSnackBar(context: context, notifyMessage: next.appMessage);
+          ref.read(appNavigatorProvider).goBack();
         }
       },
     );
