@@ -131,12 +131,12 @@ class _AdminMainMenuViewState extends ConsumerState<AdminMainMenuView>
     if (index == tab.index) {
       switch (tab) {
         case AdminTabPage.post:
-          ref.read(homeNavigatorProvider).popUntil(
+          ref.read(adminPostNavigatorProvider).popUntil(
                 routeName: AppRoutes.adminPost,
               );
           break;
         case AdminTabPage.report:
-          ref.read(favoriteNavigatorProvider).popUntil(
+          ref.read(adminReportNavigatorProvider).popUntil(
                 routeName: AppRoutes.adminReport,
               );
           break;
