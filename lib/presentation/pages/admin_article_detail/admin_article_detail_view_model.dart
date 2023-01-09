@@ -146,6 +146,10 @@ class AdminArticleDetailViewModel
           userId: currentUser.id,
         ),
       );
+      state = state.copyWith(
+        appMessage:
+            isApprove ? 'Bài đăng  đã được duyệt.' : 'Bài đăng  bị hủy duyệt.',
+      );
     } catch (e) {
       state = state.copyWith(status: LoadingStatus.error);
       debugPrint('Admin article detail: $e');
@@ -175,7 +179,9 @@ class AdminArticleDetailViewModel
             state.article!.convenientList.map((e) => e.id).toList(),
         houseTypeId: state.article!.type!.id,
       ));
-      state = state.copyWith(removeHouseStatus: LoadingStatus.success);
+      state = state.copyWith(
+          removeHouseStatus: LoadingStatus.success,
+          appMessage: 'Xóa bài đăng thành công');
     } catch (e) {
       state = state.copyWith(
         status: LoadingStatus.error,

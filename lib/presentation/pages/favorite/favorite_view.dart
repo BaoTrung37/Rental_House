@@ -9,7 +9,8 @@ import 'package:batru_house_rental/presentation/widgets/base_app_bar/base_app_ba
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final _provider = StateNotifierProvider<FavoriteViewModel, FavoriteState>(
+final _provider =
+    StateNotifierProvider.autoDispose<FavoriteViewModel, FavoriteState>(
   (ref) => FavoriteViewModel(
     injector.get<GetFavoriteListUsecase>(),
     injector.get<GetCurrentUserInformationUseCase>(),

@@ -117,6 +117,10 @@ class _ChatViewState extends ConsumerState<ChatView> {
     return Scaffold(
       appBar: BaseAppBar.titleAndBackButton(
         title: widget.chatArguments.receiverUser.name,
+        onBackButtonTap: () {
+          ref.read(appNavigatorProvider).goBack();
+          // ref.read(chatListProvider.notifier).setShouldReloadData(true);
+        },
       ),
       body: Column(
         children: [

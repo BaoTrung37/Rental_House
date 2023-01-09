@@ -70,4 +70,10 @@ class ChatListViewModel extends StateNotifier<ChatListState> {
     final currentUser = await _getCurrentUserInformationUseCase.run();
     return currentUser.id;
   }
+
+  void setShouldReloadData(bool value) {
+    state = state.copyWith(
+      shouldReLoadData: value,
+    );
+  }
 }

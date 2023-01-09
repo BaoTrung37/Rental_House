@@ -1,9 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:batru_house_rental/data/models/chat/chat_post_response.dart';
 import 'package:batru_house_rental/data/models/favorite/favorite_response.dart';
 import 'package:batru_house_rental/domain/entities/chat/chat_entity.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_article_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_user_by_id_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/chat/post_article_to_message_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/chat/post_chat_room_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/favorite/add_favorite_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/favorite/check_favorite_use_case.dart';
@@ -29,6 +31,7 @@ class ArticleDetailViewModel extends StateNotifier<ArticleDetailState> {
     this._removeFavoriteUseCase,
     this._postAvailableHouseUseCase,
     this._unPostAvailableHouseUseCase,
+    this._postArticleToMessageUseCase,
   ) : super(const ArticleDetailState());
 
   final GetArticleUseCase _getArticleUseCase;
@@ -42,6 +45,7 @@ class ArticleDetailViewModel extends StateNotifier<ArticleDetailState> {
   final RemoveFavoriteUseCase _removeFavoriteUseCase;
   final PostAvailablePostUseCase _postAvailableHouseUseCase;
   final UnPostAvailablePostUseCase _unPostAvailableHouseUseCase;
+  final PostArticleToMessageUseCase _postArticleToMessageUseCase;
 
   late String ownerHouseUserId;
   late String currentUserId;
@@ -173,6 +177,41 @@ class ArticleDetailViewModel extends StateNotifier<ArticleDetailState> {
             senderId: currentUser.id,
             type: ChatType.message.value,
           ),
+          receiverId: state.onwerHouse!.id,
+          userId: currentUser.id,
+        ),
+      );
+      final chatId = DateTime.now()
+          .add(const Duration(milliseconds: 1))
+          .microsecondsSinceEpoch
+          .toString();
+
+      await _postChatRoomUseCase.run(
+        PostChatRoomInput(
+          chatEntity: ChatEntity(
+            id: chatId,
+            createdAt: DateTime.now(),
+            message: 'post',
+            senderId: currentUser.id,
+            type: ChatType.post.value,
+          ),
+          receiverId: state.onwerHouse!.id,
+          userId: currentUser.id,
+        ),
+      );
+      await _postArticleToMessageUseCase.run(
+        PostArticleToMessageInput(
+          chatPostResponse: ChatPostResponse(
+            id: chatId,
+            address: state.article!.post!.address,
+            url: state.article!.imageList.first.url,
+            postId: state.article!.post!.id,
+            title: state.article!.post!.title,
+            rentalPrice: state.article!.post!.rentalPrice,
+            typeHouse: state.article!.type!.name,
+            userId: state.article!.post!.userId,
+          ),
+          chatId: chatId,
           receiverId: state.onwerHouse!.id,
           userId: currentUser.id,
         ),

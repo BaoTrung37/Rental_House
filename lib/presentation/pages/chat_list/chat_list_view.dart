@@ -14,7 +14,7 @@ import 'package:batru_house_rental/presentation/widgets/infinite_list/infinite_l
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final _provider =
+final chatListProvider =
     StateNotifierProvider.autoDispose<ChatListViewModel, ChatListState>(
   (ref) => ChatListViewModel(
     injector.get<GetChatRoomListByUserIdUseCase>(),
@@ -30,7 +30,7 @@ class ChatListView extends ConsumerStatefulWidget {
 }
 
 class _ChatListViewState extends ConsumerState<ChatListView> {
-  ChatListViewModel get _viewModel => ref.read(_provider.notifier);
+  ChatListViewModel get _viewModel => ref.read(chatListProvider.notifier);
 
   @override
   void initState() {
@@ -49,7 +49,21 @@ class _ChatListViewState extends ConsumerState<ChatListView> {
 
   @override
   Widget build(BuildContext context) {
-    ref.watch(_provider);
+    ref.watch(chatListProvider);
+    // ref.listen<ChatListState>(chatListProvider, (previous, next) {
+    //   if (next.loadingStatus == LoadingStatus.error &&
+    //       next.loadingStatus != previous?.loadingStatus) {
+    //     showErrorSnackBar(
+    //       context: context,
+    //       errorMessage: 'Có lỗi xảy ra, vui lòng thử lại',
+    //     );
+    //   }
+    //   if (next.shouldReLoadData) {
+    //     _viewModel.initData();
+    //     _viewModel.setShouldReloadData(false);
+    //   }
+    // });
+
     return Scaffold(
       appBar: const BaseAppBar.titleOnly(
         title: 'Tin nhắn',

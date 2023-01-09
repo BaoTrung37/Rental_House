@@ -11,11 +11,12 @@ import 'package:batru_house_rental/presentation/pages/article_detail/widgets/rel
 import 'package:batru_house_rental/presentation/resources/resources.dart';
 import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
 import 'package:batru_house_rental/presentation/widgets/app_indicator/loading_view.dart';
+import 'package:batru_house_rental/presentation/widgets/infinite_list/refresh_view.dart';
 import 'package:batru_house_rental/presentation/widgets/snack_bar/error_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final _provider =
+final adminPostProvider =
     StateNotifierProvider.autoDispose<AdminPostViewModel, AdminPostState>(
   (ref) => AdminPostViewModel(
     injector.get<GetApprovedArticleListUseCase>(),
@@ -32,8 +33,8 @@ class AdminPostView extends ConsumerStatefulWidget {
 }
 
 class _AdminHomeViewState extends ConsumerState<AdminPostView> {
-  AdminPostViewModel get _viewModel => ref.read(_provider.notifier);
-  AdminPostState get _state => ref.watch(_provider);
+  AdminPostViewModel get _viewModel => ref.read(adminPostProvider.notifier);
+  AdminPostState get _state => ref.watch(adminPostProvider);
 
   @override
   void initState() {
@@ -46,13 +47,17 @@ class _AdminHomeViewState extends ConsumerState<AdminPostView> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen<AdminPostState>(_provider,
+    ref.listen<AdminPostState>(adminPostProvider,
         (AdminPostState? previousState, AdminPostState newState) {
       if (newState.status == LoadingStatus.error) {
         showErrorSnackBar(
           context: context,
           errorMessage: newState.appError,
         );
+      }
+      if (newState.shouldReLoadData) {
+        _viewModel.callData();
+        _viewModel.setShouldReloadData(false);
       }
     });
 
@@ -99,13 +104,30 @@ class _AdminHomeViewState extends ConsumerState<AdminPostView> {
             ],
           ),
         ),
-        body: LoadingView(
-          status: _state.status,
-          child: TabBarView(
-            children: [
-              _buildArticlePeddingView(),
-              _buildArticleApprovedView(),
-            ],
+        body: RefreshView(
+          onRefresh: () async {
+            await _viewModel.initData();
+          },
+          color: Colors.transparent,
+          triggerMode: RefreshIndicatorTriggerMode.anywhere,
+          onOverScroll: (mode, distance, limit) {
+            switch (mode) {
+              case RefreshIndicatorMode.drag:
+              case RefreshIndicatorMode.armed:
+              case RefreshIndicatorMode.snap:
+              default:
+                setState(() {});
+                break;
+            }
+          },
+          child: LoadingView(
+            status: _state.status,
+            child: TabBarView(
+              children: [
+                _buildArticlePeddingView(),
+                _buildArticleApprovedView(),
+              ],
+            ),
           ),
         ),
       ),
