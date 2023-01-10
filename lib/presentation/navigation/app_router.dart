@@ -101,11 +101,10 @@ class AppRouter {
           builder: (context) => const MyPageView(),
         );
       case AppRoutes.search:
-        final args = settings.arguments as SearchArguments;
         return MaterialPageRoute(
           settings: settings,
           builder: (context) => SearchView(
-            districtId: args.districtId,
+            arguments: settings.arguments as SearchArguments,
           ),
         );
       case AppRoutes.postArticle:

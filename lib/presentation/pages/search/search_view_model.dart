@@ -25,7 +25,7 @@ class SearchViewModel extends StateNotifier<SearchState> {
   final GetCommuneListUseCase _getCommuneListUseCase;
   final GetArticleFilterListUseCase _getArticleFilterListUseCase;
 
-  Future<void> initData(String districtId) async {
+  Future<void> initDataWithDisstrictId(String districtId) async {
     try {
       state = state.copyWith(status: LoadingStatus.inProgress);
       final priceFilter = PriceFilter.values.map((e) => e.title).toList();
@@ -49,6 +49,30 @@ class SearchViewModel extends StateNotifier<SearchState> {
         types: types,
         articles: articles,
         communes: communes,
+        status: LoadingStatus.success,
+      );
+    } catch (e) {
+      debugPrint('Search view: $e');
+      state = state.copyWith(
+        status: LoadingStatus.error,
+      );
+    }
+  }
+
+  Future<void> initData() async {
+    try {
+      state = state.copyWith(status: LoadingStatus.inProgress);
+      final priceFilter = PriceFilter.values.map((e) => e.title).toList();
+      final provinces = await _getProvinceListUseCase.run();
+      final types = await _getTypeListUseCase.run();
+      final districts = await _getDistrictListUseCase.run('01');
+
+      state = state.copyWith(
+        minPriceFilter: priceFilter,
+        maxPriceFilter: priceFilter,
+        provinces: provinces,
+        districts: districts,
+        types: types,
         status: LoadingStatus.success,
       );
     } catch (e) {
