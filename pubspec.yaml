@@ -90,7 +90,10 @@ dependencies:
 
   #
   currency_text_input_formatter: ^2.1.8
-  
+
+  #
+  flutter_phone_direct_caller: ^2.1.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
