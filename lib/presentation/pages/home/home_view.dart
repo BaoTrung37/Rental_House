@@ -71,7 +71,6 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    
     ref.listen<HomeState>(homeViewProvider, (previous, next) {
       if (next.status == LoadingStatus.error &&
           next.status != previous?.status) {
@@ -85,7 +84,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
         _viewModel.setShouldReloadData(false);
       }
     });
-    
+
     return Scaffold(
       backgroundColor: context.colors.backgroundSecondary,
       body: RefreshView(
@@ -142,6 +141,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
     return CustomScrollView(
       controller: _scrollController,
       slivers: [
+        const SliverToBoxAdapter(
+          child: SizedBox(height: 20),
+        ),
         SliverToBoxAdapter(
           child: _buildSlider(context),
         ),
