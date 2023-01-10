@@ -36,6 +36,7 @@ import 'package:batru_house_rental/presentation/widgets/image/image_with_border.
 import 'package:batru_house_rental/presentation/widgets/input_text_field/input_text_field.dart';
 import 'package:batru_house_rental/presentation/widgets/snack_bar/error_snack_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final _familyProvider = StateNotifierProvider.autoDispose
@@ -272,7 +273,11 @@ class _ArticleDetailViewState extends ConsumerState<ArticleDetailView> {
 
   Widget _buildPhoneCallButton(BuildContext context) {
     return AppButton(
-      onButtonTap: () {},
+      onButtonTap: () {
+        // launch('tel://${state.article?.post?.phoneNumber}');
+        FlutterPhoneDirectCaller.callNumber(
+            state.article?.post?.phoneNumber ?? '');
+      },
       leftIcon: const Icon(
         Icons.phone,
         size: 16,
@@ -720,7 +725,14 @@ class _ArticleDetailViewState extends ConsumerState<ArticleDetailView> {
   // TODO: Show image
   Widget _buildImage(String url) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (context) => Image.network(
+            url,
+          ),
+        );
+      },
       child: ImageWithBorder(
         url: url,
       ),
