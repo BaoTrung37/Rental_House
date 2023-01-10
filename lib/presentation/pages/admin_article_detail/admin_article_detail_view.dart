@@ -574,7 +574,15 @@ class _AdminArticleDetailViewState
   // TODO: Show image
   Widget _buildImage(String url) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        showDialog(
+          context: context,
+          useRootNavigator: false,
+          builder: (context) => Image.network(
+            url,
+          ),
+        );
+      },
       child: ImageWithBorder(
         url: url,
       ),

@@ -732,6 +732,7 @@ class _ArticleDetailViewState extends ConsumerState<ArticleDetailView> {
       onTap: () {
         showDialog(
           context: context,
+          useRootNavigator: false,
           builder: (context) => Image.network(
             url,
           ),
