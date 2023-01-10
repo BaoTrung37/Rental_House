@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:batru_house_rental/data/models/chat/chat_post_response.dart';
 import 'package:batru_house_rental/data/models/favorite/favorite_response.dart';
+import 'package:batru_house_rental/data/models/report/report_response.dart';
 import 'package:batru_house_rental/domain/entities/chat/chat_entity.dart';
 import 'package:batru_house_rental/domain/use_case/article/get_article_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/auth/get_current_user_information_use_case.dart';
@@ -13,6 +14,7 @@ import 'package:batru_house_rental/domain/use_case/favorite/remove_favorite_use_
 import 'package:batru_house_rental/domain/use_case/post/post_available_post_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/post/remove_post_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/post/un_post_available_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/report/post_add_report_use_case.dart';
 import 'package:batru_house_rental/presentation/pages/article_detail/article_detail_state.dart';
 import 'package:batru_house_rental/presentation/utilities/enums/loading_status.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +34,7 @@ class ArticleDetailViewModel extends StateNotifier<ArticleDetailState> {
     this._postAvailableHouseUseCase,
     this._unPostAvailableHouseUseCase,
     this._postArticleToMessageUseCase,
+    this._postAddReportUseCase,
   ) : super(const ArticleDetailState());
 
   final GetArticleUseCase _getArticleUseCase;
@@ -46,16 +49,22 @@ class ArticleDetailViewModel extends StateNotifier<ArticleDetailState> {
   final PostAvailablePostUseCase _postAvailableHouseUseCase;
   final UnPostAvailablePostUseCase _unPostAvailableHouseUseCase;
   final PostArticleToMessageUseCase _postArticleToMessageUseCase;
+  final PostAddReportUseCase _postAddReportUseCase;
 
   late String ownerHouseUserId;
   late String currentUserId;
+  late String currentUserName;
+  late String currentPostId;
+
   Future<void> init(String postId) async {
     try {
+      currentPostId = postId;
       state = state.copyWith(status: LoadingStatus.inProgress);
       final article = await _getArticleUseCase.run(postId);
       final currentUser = await _getCurrentUserInformationUseCase.run();
       ownerHouseUserId = article.post!.userId;
       currentUserId = currentUser.id;
+      currentUserName = currentUser.name;
       final ownerHouse = await _getUserByIdUseCase.run(article.post!.userId);
 
       final favoriteId = await _checkFavoriteUseCase.run(
@@ -222,7 +231,7 @@ class ArticleDetailViewModel extends StateNotifier<ArticleDetailState> {
       );
     } catch (e) {
       state = state.copyWith(status: LoadingStatus.error);
-      debugPrint('House detail: $e');
+      debugPrint('Article detail: $e');
     }
   }
 
@@ -232,5 +241,37 @@ class ArticleDetailViewModel extends StateNotifier<ArticleDetailState> {
 
   void onMessageChanged(String message) {
     state = state.copyWith(message: message);
+  }
+
+  Future<void> onSendReport() async {
+    if (state.reportMessage.isEmpty) {
+      return;
+    }
+    try {
+      state = state.copyWith(reportStatus: LoadingStatus.inProgress);
+      final annunciator = currentUserName;
+      final reportedPerson = state.onwerHouse?.name ?? 'B';
+      await _postAddReportUseCase.run(
+        ReportResponse(
+          id: DateTime.now().microsecondsSinceEpoch.toString(),
+          title:
+              'Người dùng $annunciator đã báo cáo một bài đăng của người dùng $reportedPerson',
+          postId: currentPostId,
+          reason: state.reportMessage,
+          createdAt: DateTime.now(),
+        ),
+      );
+      state = state.copyWith(reportStatus: LoadingStatus.success);
+    } catch (e) {
+      state = state.copyWith(
+        status: LoadingStatus.error,
+        appError: 'Lỗi khi báo cáo',
+      );
+      debugPrint('Send Report: $e');
+    }
+  }
+
+  void onReportMessageChanged(String? reportMessage) {
+    state = state.copyWith(reportMessage: reportMessage ?? ' ');
   }
 }

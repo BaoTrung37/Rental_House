@@ -14,6 +14,7 @@ import 'package:batru_house_rental/domain/use_case/favorite/remove_favorite_use_
 import 'package:batru_house_rental/domain/use_case/post/post_available_post_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/post/remove_post_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/post/un_post_available_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/report/post_add_report_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
 import 'package:batru_house_rental/presentation/pages/article_detail/article_detail_state.dart';
@@ -52,6 +53,7 @@ final _familyProvider = StateNotifierProvider.autoDispose
     injector.get<PostAvailablePostUseCase>(),
     injector.get<UnPostAvailablePostUseCase>(),
     injector.get<PostArticleToMessageUseCase>(),
+    injector.get<PostAddReportUseCase>(),
   ),
 );
 
@@ -569,7 +571,7 @@ class _ArticleDetailViewState extends ConsumerState<ArticleDetailView> {
                             InputTextField(
                               placeholder: 'Nhập lý do',
                               onTextChange: (value) {
-                                debugPrint(value!);
+                                _viewModel.onReportMessageChanged(value);
                               },
                             ),
                           ],
@@ -585,7 +587,7 @@ class _ArticleDetailViewState extends ConsumerState<ArticleDetailView> {
                             actionDialogTitle: 'Gửi',
                             onAction: (_) async {
                               Navigator.of(context).pop();
-                              // await _viewModel.onSendMessage();
+                              await _viewModel.onSendReport();
                             },
                           ),
                         ],
