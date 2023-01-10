@@ -261,7 +261,10 @@ class ArticleDetailViewModel extends StateNotifier<ArticleDetailState> {
           createdAt: DateTime.now(),
         ),
       );
-      state = state.copyWith(reportStatus: LoadingStatus.success);
+      state = state.copyWith(
+        appMessage: 'Báo cáo thành công',
+        reportStatus: LoadingStatus.success,
+      );
     } catch (e) {
       state = state.copyWith(
         status: LoadingStatus.error,
