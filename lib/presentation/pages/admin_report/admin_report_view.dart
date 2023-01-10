@@ -1,5 +1,8 @@
+import 'package:batru_house_rental/data/providers/app_navigator_provider.dart';
 import 'package:batru_house_rental/domain/use_case/report/get_report_list_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
+import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
+import 'package:batru_house_rental/presentation/pages/admin_article_detail/admin_article_detail_view.dart';
 import 'package:batru_house_rental/presentation/pages/admin_report/admin_report_state.dart';
 import 'package:batru_house_rental/presentation/pages/admin_report/admin_report_view_model.dart';
 import 'package:batru_house_rental/presentation/pages/admin_report/widgets/report_item_view.dart';
@@ -50,7 +53,14 @@ class _AdminReportViewState extends ConsumerState<AdminReportView> {
     return ListView.builder(
       itemBuilder: (context, index) => ReportItemView(
         reportEntity: reportList[index],
-        onTap: () {},
+        onTap: () {
+          ref.read(appNavigatorProvider).navigateTo(
+                AppRoutes.adminArticleDetail,
+                arguments: AdminArticleDetailArguments(
+                  postId: reportList[index].postId,
+                ),
+              );
+        },
       ),
       itemCount: reportList.length,
     );
