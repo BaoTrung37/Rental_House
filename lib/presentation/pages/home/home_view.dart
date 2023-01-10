@@ -71,7 +71,6 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    
     ref.listen<HomeState>(homeViewProvider, (previous, next) {
       if (next.status == LoadingStatus.error &&
           next.status != previous?.status) {
@@ -85,7 +84,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
         _viewModel.setShouldReloadData(false);
       }
     });
-    
+
     return Scaffold(
       backgroundColor: context.colors.backgroundSecondary,
       body: RefreshView(
@@ -142,8 +141,24 @@ class _HomeViewState extends ConsumerState<HomeView> {
     return CustomScrollView(
       controller: _scrollController,
       slivers: [
+        const SliverToBoxAdapter(
+          child: SizedBox(height: 20),
+        ),
         SliverToBoxAdapter(
           child: _buildSlider(context),
+        ),
+        const SliverToBoxAdapter(
+          child: SizedBox(height: 20),
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          sliver: SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                _buildSearchTitle(context),
+              ],
+            ),
+          ),
         ),
         const SliverToBoxAdapter(
           child: SizedBox(height: 10),
@@ -153,10 +168,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
           sliver: SliverList(
             delegate: SliverChildListDelegate(
               [
-                // const HomeSearchCardView(),
-                const SizedBox(height: 24),
                 _buildPlaceTitle(),
-                const SizedBox(height: 10),
+                // const SizedBox(height: 10),
                 _buildSearchFamousListView(context),
               ],
             ),
@@ -180,6 +193,47 @@ class _HomeViewState extends ConsumerState<HomeView> {
         ),
         _buildHouseArticleListView(),
       ],
+    );
+  }
+
+  Widget _buildSearchTitle(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        ref.read(appNavigatorProvider).navigateTo(
+              AppRoutes.search,
+              arguments: SearchArguments(),
+            );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: context.colors.action,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 10,
+                vertical: 10,
+              ),
+              decoration: BoxDecoration(
+                color: context.colors.border,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                'Tìm kiếm',
+                style: AppTextStyles.labelSmallLight.copyWith(
+                  color: context.colors.error,
+                ),
+              ),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            const Text('Tìm kiếm theo quận, huyện, ...'),
+          ],
+        ),
+      ),
     );
   }
 

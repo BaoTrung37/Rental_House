@@ -30,18 +30,18 @@ final searchProvider =
 
 class SearchArguments {
   SearchArguments({
-    required this.districtId,
+    this.districtId,
   });
-  final String districtId;
+  final String? districtId;
 }
 
 class SearchView extends ConsumerStatefulWidget {
   const SearchView({
-    required this.districtId,
+    required this.arguments,
     Key? key,
   }) : super(key: key);
 
-  final String districtId;
+  final SearchArguments arguments;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _SearchViewState();
@@ -55,7 +55,11 @@ class _SearchViewState extends ConsumerState<SearchView> {
   @override
   void initState() {
     Future.delayed(Duration.zero, () async {
-      await _viewModel.initData(widget.districtId);
+      if (widget.arguments.districtId != null) {
+        await _viewModel.initDataWithDisstrictId(widget.arguments.districtId!);
+      } else {
+        await _viewModel.initData();
+      }
     });
 
     super.initState();
@@ -64,12 +68,19 @@ class _SearchViewState extends ConsumerState<SearchView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const BaseAppBar(
-        title: Text(
-          'Tìm phòng',
+      appBar: BaseAppBar(
+        title: const Text(
+          'Tìm kiếm phòng',
           style: AppTextStyles.headingXSmall,
         ),
-        widgets: [],
+        widgets: [
+          IconButton(
+            onPressed: () {
+              scaffoldKey.currentState!.openEndDrawer();
+            },
+            icon: AppIcons.filter(color: Colors.black, size: 24),
+          ),
+        ],
       ),
       body: LoadingView(
         status: _state.status,
@@ -88,7 +99,7 @@ class _SearchViewState extends ConsumerState<SearchView> {
         },
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         child: Column(
           children: [
             Row(
@@ -99,12 +110,12 @@ class _SearchViewState extends ConsumerState<SearchView> {
                     style: AppTextStyles.headingSmall,
                   ),
                 ),
-                IconButton(
-                  onPressed: () {
-                    scaffoldKey.currentState!.openEndDrawer();
-                  },
-                  icon: AppIcons.filter(color: Colors.black, size: 24),
-                ),
+                // IconButton(
+                //   onPressed: () {
+                //     scaffoldKey.currentState!.openEndDrawer();
+                //   },
+                //   icon: AppIcons.filter(color: Colors.black, size: 24),
+                // ),
               ],
             ),
             Expanded(
