@@ -12,6 +12,7 @@ import 'package:batru_house_rental/data/repositories/house_type/house_type_repos
 import 'package:batru_house_rental/data/repositories/image_house/image_house_repository.dart';
 import 'package:batru_house_rental/data/repositories/post/post_repository.dart';
 import 'package:batru_house_rental/data/repositories/province/province_repository.dart';
+import 'package:batru_house_rental/data/repositories/report/report_repository.dart';
 import 'package:batru_house_rental/data/repositories/type/type_repository.dart';
 import 'package:batru_house_rental/data/services/preference_services/shared_preferences_manager.dart';
 import 'package:batru_house_rental/domain/use_case/address/post_address_use_case.dart';
@@ -53,6 +54,9 @@ import 'package:batru_house_rental/domain/use_case/post/post_the_post_use_case.d
 import 'package:batru_house_rental/domain/use_case/post/remove_post_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/post/un_post_available_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/province/get_province_list_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/report/get_report_by_id_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/report/get_report_list_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/report/post_add_report_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/type/get_type_list_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -293,5 +297,20 @@ class AppModules {
     /// GetArticleToMessageUseCase
     injector.registerLazySingleton<GetArticleToMessageUseCase>(
         () => GetArticleToMessageUseCase());
+
+    /// ReportRepository
+    injector.registerLazySingleton<ReportRepository>(() => ReportRepository());
+
+    /// get report list use case
+    injector.registerLazySingleton<GetReportListUseCase>(
+        () => GetReportListUseCase());
+
+    /// get report by id use case
+    injector.registerLazySingleton<GetReportByIdUseCase>(
+        () => GetReportByIdUseCase());
+
+    /// post add report use case
+    injector.registerLazySingleton<PostAddReportUseCase>(
+        () => PostAddReportUseCase());
   }
 }

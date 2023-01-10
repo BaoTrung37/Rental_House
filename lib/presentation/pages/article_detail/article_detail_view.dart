@@ -14,6 +14,7 @@ import 'package:batru_house_rental/domain/use_case/favorite/remove_favorite_use_
 import 'package:batru_house_rental/domain/use_case/post/post_available_post_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/post/remove_post_use_case.dart';
 import 'package:batru_house_rental/domain/use_case/post/un_post_available_use_case.dart';
+import 'package:batru_house_rental/domain/use_case/report/post_add_report_use_case.dart';
 import 'package:batru_house_rental/injection/injector.dart';
 import 'package:batru_house_rental/presentation/navigation/app_routers.dart';
 import 'package:batru_house_rental/presentation/pages/article_detail/article_detail_state.dart';
@@ -52,6 +53,7 @@ final _familyProvider = StateNotifierProvider.autoDispose
     injector.get<PostAvailablePostUseCase>(),
     injector.get<UnPostAvailablePostUseCase>(),
     injector.get<PostArticleToMessageUseCase>(),
+    injector.get<PostAddReportUseCase>(),
   ),
 );
 
@@ -487,119 +489,121 @@ class _ArticleDetailViewState extends ConsumerState<ArticleDetailView> {
         SliverToBoxAdapter(
           child: _buildBigDivider(),
         ),
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-          sliver: SliverToBoxAdapter(
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 20,
-                  backgroundImage: NetworkImage(
-                    state.onwerHouse?.avatar ?? 'https://picsum.photos/200',
+        if (state.isYourHouse != true) ...[
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+            sliver: SliverToBoxAdapter(
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 20,
+                    backgroundImage: NetworkImage(
+                      state.onwerHouse?.avatar ?? 'https://picsum.photos/200',
+                    ),
                   ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        state.onwerHouse?.name ?? '',
-                        style: AppTextStyles.textMedium,
-                      ),
-                      Text(
-                        'Xem thêm phòng',
-                        style: AppTextStyles.labelSmall.copyWith(
-                          color: context.colors.primaryText,
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          state.onwerHouse?.name ?? '',
+                          style: AppTextStyles.textMedium,
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 10),
-                IconButton(
-                  icon: const Icon(
-                    Icons.arrow_forward_ios_sharp,
-                    size: 16,
-                  ),
-                  onPressed: () async {
-                    final userId = await _viewModel.getOwnerHouseUserId();
-                    await ref.read(appNavigatorProvider).navigateTo(
-                          AppRoutes.moreArticle,
-                          arguments: MoreArticleArguments(
-                            userId: userId,
+                        Text(
+                          'Xem thêm phòng',
+                          style: AppTextStyles.labelSmall.copyWith(
+                            color: context.colors.primaryText,
                           ),
-                        );
-                  },
-                )
-              ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.arrow_forward_ios_sharp,
+                      size: 16,
+                    ),
+                    onPressed: () async {
+                      final userId = await _viewModel.getOwnerHouseUserId();
+                      await ref.read(appNavigatorProvider).navigateTo(
+                            AppRoutes.moreArticle,
+                            arguments: MoreArticleArguments(
+                              userId: userId,
+                            ),
+                          );
+                    },
+                  )
+                ],
+              ),
             ),
           ),
-        ),
-        SliverToBoxAdapter(
-          child: _buildBigDivider(),
-        ),
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-          sliver: SliverToBoxAdapter(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                AppIcons.flag(
-                  size: 20,
-                  color: context.colors.contentSpecialMain,
-                ),
-                const SizedBox(width: 10),
-                GestureDetector(
-                  onTap: () {
-                    showAppDialog(
-                      context,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Text('Lý do muốn báo cáo'),
-                          const SizedBox(height: 8),
-                          const AppDivider(),
-                          const SizedBox(height: 8),
-                          const Text(
-                              'Bạn vui lòng xác nhận lý do báo cáo để chúng tôi có thể xử lý nhanh nhất'),
-                          const SizedBox(height: 8),
-                          InputTextField(
-                            placeholder: 'Nhập lý do',
-                            onTextChange: (value) {
-                              debugPrint(value!);
+          SliverToBoxAdapter(
+            child: _buildBigDivider(),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+            sliver: SliverToBoxAdapter(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  AppIcons.flag(
+                    size: 20,
+                    color: context.colors.contentSpecialMain,
+                  ),
+                  const SizedBox(width: 10),
+                  GestureDetector(
+                    onTap: () {
+                      showAppDialog(
+                        context,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Text('Lý do muốn báo cáo'),
+                            const SizedBox(height: 8),
+                            const AppDivider(),
+                            const SizedBox(height: 8),
+                            const Text(
+                                'Bạn vui lòng xác nhận lý do báo cáo để chúng tôi có thể xử lý nhanh nhất'),
+                            const SizedBox(height: 8),
+                            InputTextField(
+                              placeholder: 'Nhập lý do',
+                              onTextChange: (value) {
+                                _viewModel.onReportMessageChanged(value);
+                              },
+                            ),
+                          ],
+                        ),
+                        actions: [
+                          ActionAppDialog(
+                            actionDialogTitle: 'Huỷ',
+                            onAction: (_) {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                          ActionAppDialog(
+                            actionDialogTitle: 'Gửi',
+                            onAction: (_) async {
+                              Navigator.of(context).pop();
+                              await _viewModel.onSendReport();
                             },
                           ),
                         ],
-                      ),
-                      actions: [
-                        ActionAppDialog(
-                          actionDialogTitle: 'Huỷ',
-                          onAction: (_) {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                        ActionAppDialog(
-                          actionDialogTitle: 'Gửi',
-                          onAction: (_) async {
-                            Navigator.of(context).pop();
-                            // await _viewModel.onSendMessage();
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                  child: Text(
-                    'Báo cáo sai phạm',
-                    style: AppTextStyles.headingXSmall
-                        .copyWith(color: context.colors.contentSpecialText),
+                      );
+                    },
+                    child: Text(
+                      'Báo cáo sai phạm',
+                      style: AppTextStyles.headingXSmall
+                          .copyWith(color: context.colors.contentSpecialText),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
+        ],
         SliverToBoxAdapter(
           child: _buildBigDivider(),
         ),

@@ -13,8 +13,12 @@ class BubbleChatItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 90,
+    return Container(
+      margin: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: context.colors.action,
+      ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Row(
@@ -69,7 +73,7 @@ class BubbleChatItem extends StatelessWidget {
       chatRoomEntity.type == ChatType.post.name
           ? 'Đính kèm'
           : chatRoomEntity.type == ChatType.image.name
-              ? ' Gửi một ảnh'
+              ? 'Đã gửi một ảnh'
               : chatRoomEntity.lastMessage,
       style: AppTextStyles.textSmall.copyWith(
         color: context.colors.textSecondary,

@@ -3,6 +3,7 @@ import 'package:batru_house_rental/domain/entities/chat/chat_entity.dart';
 import 'package:batru_house_rental/presentation/pages/chat/widgets/image_item.dart';
 import 'package:batru_house_rental/presentation/pages/chat/widgets/post_item_cell.dart';
 import 'package:batru_house_rental/presentation/resources/resources.dart';
+import 'package:batru_house_rental/presentation/utilities/helper/date_format_helper.dart';
 import 'package:flutter/material.dart';
 
 class ChatItem extends StatelessWidget {
@@ -36,35 +37,45 @@ class ChatItem extends StatelessWidget {
     );
   }
 
-  Container _buildMessageBody(BuildContext context) {
-    return Container(
-      constraints:
-          BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.7),
-      // width: MediaQuery.of(context).size.width * 0.7,
-      decoration: BoxDecoration(
-        color: isMe
-            ? context.colors.secondaryBackgroundPrimary
-            : context.colors.backgroundSecondary,
-        borderRadius: BorderRadius.only(
-          topLeft: const Radius.circular(12),
-          topRight: const Radius.circular(12),
-          bottomLeft:
-              isMe ? const Radius.circular(12) : const Radius.circular(0),
-          bottomRight:
-              !isMe ? const Radius.circular(12) : const Radius.circular(0),
+  Widget _buildMessageBody(BuildContext context) {
+    return Column(
+      crossAxisAlignment:
+          isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      children: [
+        Container(
+          constraints:
+              BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.7),
+          // width: MediaQuery.of(context).size.width * 0.7,
+          decoration: BoxDecoration(
+            color: isMe
+                ? context.colors.secondaryBackgroundPrimary
+                : context.colors.backgroundSecondary,
+            borderRadius: BorderRadius.only(
+              topLeft: const Radius.circular(12),
+              topRight: const Radius.circular(12),
+              bottomLeft:
+                  isMe ? const Radius.circular(12) : const Radius.circular(0),
+              bottomRight:
+                  !isMe ? const Radius.circular(12) : const Radius.circular(0),
+            ),
+          ),
+          child: chatEntity.type == ChatType.message.value
+              ? Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 17,
+                    vertical: 12,
+                  ),
+                  child: _buildMessage(context),
+                )
+              : chatEntity.type == ChatType.image.value
+                  ? _buildImage()
+                  : _buildPostInfoMessage(),
         ),
-      ),
-      child: chatEntity.type == ChatType.message.value
-          ? Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 17,
-                vertical: 12,
-              ),
-              child: _buildMessage(context),
-            )
-          : chatEntity.type == ChatType.image.value
-              ? _buildImage()
-              : _buildPostInfoMessage(),
+        Text(
+          chatEntity.createdAt.getPublishDatePastFormatString,
+          style: AppTextStyles.textSmallBold,
+        ),
+      ],
     );
   }
 
