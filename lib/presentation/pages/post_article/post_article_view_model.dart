@@ -201,7 +201,7 @@ class PostArticleViewModel extends StateNotifier<PostArticleState> {
           (e) {
             final imageId = DateTime.now()
                 .add(const Duration(microseconds: 1))
-                .millisecondsSinceEpoch
+                .microsecondsSinceEpoch
                 .toString();
             debugPrint('imageId: $imageId');
             return ImageHouseResponse(id: imageId, postId: postId, url: e);
