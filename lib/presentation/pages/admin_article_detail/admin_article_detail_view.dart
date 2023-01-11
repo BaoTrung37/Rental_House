@@ -32,6 +32,7 @@ import 'package:batru_house_rental/presentation/widgets/snack_bar/error_snack_ba
 import 'package:batru_house_rental/presentation/widgets/snack_bar/info_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:photo_view/photo_view.dart';
 
 final _familyProvider = StateNotifierProvider.autoDispose
     .family<AdminArticleDetailViewModel, AdminArticleDetailState, String>(
@@ -578,8 +579,8 @@ class _AdminArticleDetailViewState
         showDialog(
           context: context,
           useRootNavigator: false,
-          builder: (context) => Image.network(
-            url,
+          builder: (context) => PhotoView(
+            imageProvider: NetworkImage(url),
           ),
         );
       },
